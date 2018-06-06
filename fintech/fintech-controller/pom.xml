@@ -1,25 +1,87 @@
 <?xml version="1.0"?>
 <project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-  <modelVersion>4.0.0</modelVersion>
-  <parent>
-    <groupId>com.fintech</groupId>
-    <artifactId>fintech</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
-  </parent>
-  <groupId>fintech-controller</groupId>
-  <artifactId>fintech-controller</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
-  <packaging>war</packaging>
-  <name>fintech-controller Maven Webapp</name>
-  <url>http://maven.apache.org</url>
+ <parent>
+        <artifactId>fintech</artifactId>
+        <groupId>com.fintech</groupId>
+        <version>1.0-SNAPSHOT</version> 
+    </parent>
+     <modelVersion>4.0.0</modelVersion>
+    <artifactId>fintech-web</artifactId>
+    <packaging>war</packaging>
+    
   <dependencies>
+  
+  <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+            <!-- 如果在使用自带tomcat请注释下面，如果使用第三方tomcat不要注释下面 -->
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-tomcat</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        
+   <!-- 子项目引入 -->
+	<dependency>
+		<groupId>com.fintech</groupId>
+		<artifactId>fintech-dao</artifactId>
+	</dependency>
+	<dependency>
+		<groupId>com.fintech</groupId>
+		<artifactId>fintech-util</artifactId>
+	</dependency>
+	<dependency>
+		<groupId>com.fintech</groupId>
+		<artifactId>fintech-model</artifactId>
+	</dependency>
+	<dependency>
+		<groupId>com.fintech</groupId>
+		<artifactId>fintech-service</artifactId>
+	</dependency>
+	
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
-      <version>3.8.1</version>
       <scope>test</scope>
     </dependency>
+    
+    <!--spring boot tomcat plugin-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-tomcat</artifactId>
+            <!--<scope>provided</scope>-->
+        </dependency>
+        <!--配置servlet-->
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+        </dependency>
+        <dependency>
+	        <groupId>mysql</groupId>
+	        <artifactId>mysql-connector-java</artifactId>
+	    </dependency>
+	    
+	    <dependency>
+				<groupId>com.fasterxml.jackson.core</groupId>
+				<artifactId>jackson-databind</artifactId>
+			</dependency>
+			<dependency>
+				<groupId>com.fasterxml.jackson.core</groupId>
+				<artifactId>jackson-core</artifactId>
+			</dependency>
+			<dependency>
+				<groupId>com.fasterxml.jackson.core</groupId>
+				<artifactId>jackson-annotations</artifactId>
+			</dependency>
+			
+			<dependency>
+                <groupId>org.apache.tomcat.embed</groupId>
+                <artifactId>tomcat-embed-jasper</artifactId>
+            </dependency>
+        
   </dependencies>
   <properties>
   		<!-- 文件拷贝时的编码 -->  
@@ -31,19 +93,13 @@
   
 <profiles>
         <profile>
-            <id>dev</id>
-            <properties>
-                <env>dev</env>
-            </properties>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
-        </profile>
-        <profile>
             <id>test</id>
             <properties>
                 <env>test</env>
             </properties>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
         </profile>
         <profile>
             <id>prod</id>
@@ -54,13 +110,13 @@
     </profiles>
 
     <build>
-        <finalName>web</finalName>
+        <finalName>fintech-web</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
-                    <mainClass>com.qiaorong.app.Application</mainClass>
+                    <mainClass>com.fintech.controller.Application</mainClass>
                 </configuration>
                 <executions>
                     <execution>
@@ -106,6 +162,7 @@
                 <filtering>false</filtering>
             </resource>
         </resources>
-
     </build>
+    
+   
 </project>

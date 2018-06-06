@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+        PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+
+<generatorConfiguration>
+    <classPathEntry location="D:/generatorConfig/mysql-connector-java-5.1.30.jar"/>
+    <context id="context1" targetRuntime="MyBatis3">
+
+        <!--<plugin type="tk.mybatis.mapper.generator.MapperPlugin">-->
+            <!--<property name="mappers" value="tk.mybatis.mapper.common.Mapper"/>-->
+            <!--&lt;!&ndash; caseSensitive默认false，当数据库表名区分大小写时，可以将该属性设置为true &ndash;&gt;-->
+            <!--&lt;!&ndash;<property name="caseSensitive" value="false"/>&ndash;&gt;-->
+        <!--</plugin>-->
+
+        <commentGenerator>
+            <property name="suppressDate" value="true"/><!-- 是否取消注释 -->
+            <property name="suppressAllComments" value="true"/><!-- 是否生成注释代时间戳-->
+        </commentGenerator>
+        <!--<jdbcConnection driverClass="com.mysql.jdbc.Driver"-->
+                        <!--connectionURL="jdbc:mysql://139.196.45.193:3306/medcfc_admin?useUnicode=true&amp;characterEncoding=UTF-8"-->
+                        <!--userId="medcfc" password="medcfc!Q@W#E456"/>-->
+        <!--<jdbcConnection driverClass="com.mysql.jdbc.Driver"-->
+                        <!--connectionURL="jdbc:mysql://192.168.17.226:3306/medcfc_Merchant?useUnicode=true&amp;characterEncoding=UTF-8"-->
+                        <!--userId="medcfc" password="Ulse04vi"/>-->
+		<!-- yfq_data_center新数据库地址 -->
+        <jdbcConnection driverClass="com.mysql.jdbc.Driver"
+                        connectionURL="jdbc:mysql://rm-uf6pnuf480169p1dpwo.mysql.rds.aliyuncs.com:3306/fintech-test?useUnicode=true&amp;characterEncoding=UTF-8"
+                        userId="root" password="19840723cJ"/>
+
+		<!-- 生成实体类地址 -->
+        <javaModelGenerator targetPackage="com.fintech.model"
+                            targetProject="D:/generatorConfig">
+            <!-- 是否在当前路径下新加一层schema,eg：fase路径com.oop.eksp.user.model, true:com.oop.eksp.user.model.[schemaName] -->
+            <!--<property name="rootClass" value="com.MutiModule.common.mybatis.base.BaseEntity"/>-->
+        </javaModelGenerator>
+       	 <!-- 生成mapxml文件 -->  
+        <sqlMapGenerator targetPackage="mapper.fintech"
+                         targetProject="D:/generatorConfig">
+        </sqlMapGenerator>
+        
+        <!-- 生成mapxml对应client，也就是接口dao -->    
+        <javaClientGenerator targetPackage="com.fintech.dao"
+                             targetProject="D:/generatorConfig" type="XMLMAPPER">
+            <!--<property name="rootInterface" value="com.MutiModule.common.mybatis.base.BaseEntity"/>-->
+        </javaClientGenerator>
+         <!-- 配置表信息 -->
+        <table schema="fintech" tableName="user_returnplan"
+               enableCountByExample="false" enableUpdateByExample="false"
+               enableDeleteByExample="false" enableSelectByExample="false"
+               selectByExampleQueryId="false">
+        </table>
+    </context>
+</generatorConfiguration>

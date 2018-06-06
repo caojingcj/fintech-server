@@ -1,0 +1,22 @@
+#是否开始权限过滤器(0：不开启，1：开启)
+#permOpen: 0
+
+#test environment
+server:  
+  port: 8084  
+  session-timeout: 30  
+  tomcat.max-threads: 0  
+  tomcat.uri-encoding: UTF-8
+
+#配置分页插件pagehelper
+pagehelper:
+    helperDialect: mysql
+    reasonable: true
+    supportMethodsArguments: true
+    params: count=countSql
+    
+    fintech:
+    url: jdbc:mysql://rm-uf6pnuf480169p1dpwo.mysql.rds.aliyuncs.com:3306/fintech-test?characterEncoding=UTF-8@&autoReconnect=true&zeroDateTimeBehavior=convertToNull&useUnicode=true&characterEncoding=utf-8
+    username: root
+    password: 19840723cJ
+    driver: com.mysql.jdbc.Driver
