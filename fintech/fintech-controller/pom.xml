@@ -1,0 +1,111 @@
+<?xml version="1.0"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>com.fintech</groupId>
+    <artifactId>fintech</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+  </parent>
+  <groupId>fintech-controller</groupId>
+  <artifactId>fintech-controller</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  <packaging>war</packaging>
+  <name>fintech-controller Maven Webapp</name>
+  <url>http://maven.apache.org</url>
+  <dependencies>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>3.8.1</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+  <properties>
+  		<!-- 文件拷贝时的编码 -->  
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>  
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>  
+        <!-- 编译时的编码 -->  
+        <maven.compiler.encoding>UTF-8</maven.compiler.encoding>  
+  </properties>
+  
+<profiles>
+        <profile>
+            <id>dev</id>
+            <properties>
+                <env>dev</env>
+            </properties>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+        </profile>
+        <profile>
+            <id>test</id>
+            <properties>
+                <env>test</env>
+            </properties>
+        </profile>
+        <profile>
+            <id>prod</id>
+            <properties>
+                <env>prod</env>
+            </properties>
+        </profile>
+    </profiles>
+
+    <build>
+        <finalName>web</finalName>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <mainClass>com.qiaorong.app.Application</mainClass>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <!-- 拷贝当前环境文件 -->
+            <plugin>
+                <artifactId>maven-resources-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>copy-resources</id>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.directory}/classes/</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>src/main/resources/config/${env}</directory>
+                                    <filtering>true</filtering>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+        <!-- 过滤当前环境文件 -->
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <includes>
+                    <include>*.*</include>
+                    <include>templates/**</include>
+                    <!--<include>config/dev/*.properties</include>-->
+                    <!--<include>config/${env}/*.properties</include>-->
+                </includes>
+                <filtering>false</filtering>
+            </resource>
+        </resources>
+
+    </build>
+</project>
