@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.fintech.dao.UserReturnplanMapper" >
+  <resultMap id="BaseResultMap" type="com.fintech.model.UserReturnplan" >
+    <id column="ID" property="id" jdbcType="INTEGER" />
+    <result column="ORDER_ID" property="orderId" jdbcType="VARCHAR" />
+    <result column="CONTRACT_ID" property="contractId" jdbcType="VARCHAR" />
+    <result column="CUST_CELLPHONE" property="custCellphone" jdbcType="CHAR" />
+    <result column="COMPANY_ID" property="companyId" jdbcType="CHAR" />
+    <result column="CURRENT_PERIOD" property="currentPeriod" jdbcType="INTEGER" />
+    <result column="TOTAL_PERIOD" property="totalPeriod" jdbcType="INTEGER" />
+    <result column="RETURN_STATUS" property="returnStatus" jdbcType="CHAR" />
+    <result column="RETURN_CHANNEL" property="returnChannel" jdbcType="CHAR" />
+    <result column="RETURN_DATE" property="returnDate" jdbcType="DATE" />
+    <result column="PRINCIPAL_AMOUNT" property="principalAmount" jdbcType="DECIMAL" />
+    <result column="INTEREST_AMOUNT" property="interestAmount" jdbcType="DECIMAL" />
+    <result column="MANAGEMENT_AMOUNT" property="managementAmount" jdbcType="DECIMAL" />
+    <result column="IS_OVERDUE" property="isOverdue" jdbcType="BIT" />
+    <result column="OVERDUE_DAYS" property="overdueDays" jdbcType="INTEGER" />
+    <result column="OVERDUE_AMOUNT" property="overdueAmount" jdbcType="DECIMAL" />
+    <result column="RETURN_DATE_AC" property="returnDateAc" jdbcType="TIMESTAMP" />
+    <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, ORDER_ID, CONTRACT_ID, CUST_CELLPHONE, COMPANY_ID, CURRENT_PERIOD, TOTAL_PERIOD, 
+    RETURN_STATUS, RETURN_CHANNEL, RETURN_DATE, PRINCIPAL_AMOUNT, INTEREST_AMOUNT, MANAGEMENT_AMOUNT, 
+    IS_OVERDUE, OVERDUE_DAYS, OVERDUE_AMOUNT, RETURN_DATE_AC, CREATE_TIME, UPDATE_TIME
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from user_returnplan
+    where ID = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from user_returnplan
+    where ID = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.fintech.model.UserReturnplan" >
+    insert into user_returnplan (ID, ORDER_ID, CONTRACT_ID, 
+      CUST_CELLPHONE, COMPANY_ID, CURRENT_PERIOD, 
+      TOTAL_PERIOD, RETURN_STATUS, RETURN_CHANNEL, 
+      RETURN_DATE, PRINCIPAL_AMOUNT, INTEREST_AMOUNT, 
+      MANAGEMENT_AMOUNT, IS_OVERDUE, OVERDUE_DAYS, 
+      OVERDUE_AMOUNT, RETURN_DATE_AC, CREATE_TIME, 
+      UPDATE_TIME)
+    values (#{id,jdbcType=INTEGER}, #{orderId,jdbcType=VARCHAR}, #{contractId,jdbcType=VARCHAR}, 
+      #{custCellphone,jdbcType=CHAR}, #{companyId,jdbcType=CHAR}, #{currentPeriod,jdbcType=INTEGER}, 
+      #{totalPeriod,jdbcType=INTEGER}, #{returnStatus,jdbcType=CHAR}, #{returnChannel,jdbcType=CHAR}, 
+      #{returnDate,jdbcType=DATE}, #{principalAmount,jdbcType=DECIMAL}, #{interestAmount,jdbcType=DECIMAL}, 
+      #{managementAmount,jdbcType=DECIMAL}, #{isOverdue,jdbcType=BIT}, #{overdueDays,jdbcType=INTEGER}, 
+      #{overdueAmount,jdbcType=DECIMAL}, #{returnDateAc,jdbcType=TIMESTAMP}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.fintech.model.UserReturnplan" >
+    insert into user_returnplan
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="orderId != null" >
+        ORDER_ID,
+      </if>
+      <if test="contractId != null" >
+        CONTRACT_ID,
+      </if>
+      <if test="custCellphone != null" >
+        CUST_CELLPHONE,
+      </if>
+      <if test="companyId != null" >
+        COMPANY_ID,
+      </if>
+      <if test="currentPeriod != null" >
+        CURRENT_PERIOD,
+      </if>
+      <if test="totalPeriod != null" >
+        TOTAL_PERIOD,
+      </if>
+      <if test="returnStatus != null" >
+        RETURN_STATUS,
+      </if>
+      <if test="returnChannel != null" >
+        RETURN_CHANNEL,
+      </if>
+      <if test="returnDate != null" >
+        RETURN_DATE,
+      </if>
+      <if test="principalAmount != null" >
+        PRINCIPAL_AMOUNT,
+      </if>
+      <if test="interestAmount != null" >
+        INTEREST_AMOUNT,
+      </if>
+      <if test="managementAmount != null" >
+        MANAGEMENT_AMOUNT,
+      </if>
+      <if test="isOverdue != null" >
+        IS_OVERDUE,
+      </if>
+      <if test="overdueDays != null" >
+        OVERDUE_DAYS,
+      </if>
+      <if test="overdueAmount != null" >
+        OVERDUE_AMOUNT,
+      </if>
+      <if test="returnDateAc != null" >
+        RETURN_DATE_AC,
+      </if>
+      <if test="createTime != null" >
+        CREATE_TIME,
+      </if>
+      <if test="updateTime != null" >
+        UPDATE_TIME,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="orderId != null" >
+        #{orderId,jdbcType=VARCHAR},
+      </if>
+      <if test="contractId != null" >
+        #{contractId,jdbcType=VARCHAR},
+      </if>
+      <if test="custCellphone != null" >
+        #{custCellphone,jdbcType=CHAR},
+      </if>
+      <if test="companyId != null" >
+        #{companyId,jdbcType=CHAR},
+      </if>
+      <if test="currentPeriod != null" >
+        #{currentPeriod,jdbcType=INTEGER},
+      </if>
+      <if test="totalPeriod != null" >
+        #{totalPeriod,jdbcType=INTEGER},
+      </if>
+      <if test="returnStatus != null" >
+        #{returnStatus,jdbcType=CHAR},
+      </if>
+      <if test="returnChannel != null" >
+        #{returnChannel,jdbcType=CHAR},
+      </if>
+      <if test="returnDate != null" >
+        #{returnDate,jdbcType=DATE},
+      </if>
+      <if test="principalAmount != null" >
+        #{principalAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="interestAmount != null" >
+        #{interestAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="managementAmount != null" >
+        #{managementAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="isOverdue != null" >
+        #{isOverdue,jdbcType=BIT},
+      </if>
+      <if test="overdueDays != null" >
+        #{overdueDays,jdbcType=INTEGER},
+      </if>
+      <if test="overdueAmount != null" >
+        #{overdueAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="returnDateAc != null" >
+        #{returnDateAc,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.fintech.model.UserReturnplan" >
+    update user_returnplan
+    <set >
+      <if test="orderId != null" >
+        ORDER_ID = #{orderId,jdbcType=VARCHAR},
+      </if>
+      <if test="contractId != null" >
+        CONTRACT_ID = #{contractId,jdbcType=VARCHAR},
+      </if>
+      <if test="custCellphone != null" >
+        CUST_CELLPHONE = #{custCellphone,jdbcType=CHAR},
+      </if>
+      <if test="companyId != null" >
+        COMPANY_ID = #{companyId,jdbcType=CHAR},
+      </if>
+      <if test="currentPeriod != null" >
+        CURRENT_PERIOD = #{currentPeriod,jdbcType=INTEGER},
+      </if>
+      <if test="totalPeriod != null" >
+        TOTAL_PERIOD = #{totalPeriod,jdbcType=INTEGER},
+      </if>
+      <if test="returnStatus != null" >
+        RETURN_STATUS = #{returnStatus,jdbcType=CHAR},
+      </if>
+      <if test="returnChannel != null" >
+        RETURN_CHANNEL = #{returnChannel,jdbcType=CHAR},
+      </if>
+      <if test="returnDate != null" >
+        RETURN_DATE = #{returnDate,jdbcType=DATE},
+      </if>
+      <if test="principalAmount != null" >
+        PRINCIPAL_AMOUNT = #{principalAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="interestAmount != null" >
+        INTEREST_AMOUNT = #{interestAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="managementAmount != null" >
+        MANAGEMENT_AMOUNT = #{managementAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="isOverdue != null" >
+        IS_OVERDUE = #{isOverdue,jdbcType=BIT},
+      </if>
+      <if test="overdueDays != null" >
+        OVERDUE_DAYS = #{overdueDays,jdbcType=INTEGER},
+      </if>
+      <if test="overdueAmount != null" >
+        OVERDUE_AMOUNT = #{overdueAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="returnDateAc != null" >
+        RETURN_DATE_AC = #{returnDateAc,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createTime != null" >
+        CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.fintech.model.UserReturnplan" >
+    update user_returnplan
+    set ORDER_ID = #{orderId,jdbcType=VARCHAR},
+      CONTRACT_ID = #{contractId,jdbcType=VARCHAR},
+      CUST_CELLPHONE = #{custCellphone,jdbcType=CHAR},
+      COMPANY_ID = #{companyId,jdbcType=CHAR},
+      CURRENT_PERIOD = #{currentPeriod,jdbcType=INTEGER},
+      TOTAL_PERIOD = #{totalPeriod,jdbcType=INTEGER},
+      RETURN_STATUS = #{returnStatus,jdbcType=CHAR},
+      RETURN_CHANNEL = #{returnChannel,jdbcType=CHAR},
+      RETURN_DATE = #{returnDate,jdbcType=DATE},
+      PRINCIPAL_AMOUNT = #{principalAmount,jdbcType=DECIMAL},
+      INTEREST_AMOUNT = #{interestAmount,jdbcType=DECIMAL},
+      MANAGEMENT_AMOUNT = #{managementAmount,jdbcType=DECIMAL},
+      IS_OVERDUE = #{isOverdue,jdbcType=BIT},
+      OVERDUE_DAYS = #{overdueDays,jdbcType=INTEGER},
+      OVERDUE_AMOUNT = #{overdueAmount,jdbcType=DECIMAL},
+      RETURN_DATE_AC = #{returnDateAc,jdbcType=TIMESTAMP},
+      CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

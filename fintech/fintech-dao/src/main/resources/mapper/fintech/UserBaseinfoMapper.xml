@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.fintech.dao.UserBaseinfoMapper" >
+  <resultMap id="BaseResultMap" type="com.fintech.model.UserBaseinfo" >
+    <id column="ID" property="id" jdbcType="INTEGER" />
+    <result column="USER_REALNAME" property="userRealname" jdbcType="VARCHAR" />
+    <result column="USER_LOGIN_NAME" property="userLoginName" jdbcType="VARCHAR" />
+    <result column="USER_LOGIN_PASSWORD" property="userLoginPassword" jdbcType="VARCHAR" />
+    <result column="USER_TYPE" property="userType" jdbcType="CHAR" />
+    <result column="USER_COMPANY_ID" property="userCompanyId" jdbcType="CHAR" />
+    <result column="IS_ENABLED" property="isEnabled" jdbcType="BIT" />
+    <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="UPDATETIME" property="updatetime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, USER_REALNAME, USER_LOGIN_NAME, USER_LOGIN_PASSWORD, USER_TYPE, USER_COMPANY_ID, 
+    IS_ENABLED, CREATE_TIME, UPDATETIME
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from user_baseinfo
+    where ID = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from user_baseinfo
+    where ID = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.fintech.model.UserBaseinfo" >
+    insert into user_baseinfo (ID, USER_REALNAME, USER_LOGIN_NAME, 
+      USER_LOGIN_PASSWORD, USER_TYPE, USER_COMPANY_ID, 
+      IS_ENABLED, CREATE_TIME, UPDATETIME
+      )
+    values (#{id,jdbcType=INTEGER}, #{userRealname,jdbcType=VARCHAR}, #{userLoginName,jdbcType=VARCHAR}, 
+      #{userLoginPassword,jdbcType=VARCHAR}, #{userType,jdbcType=CHAR}, #{userCompanyId,jdbcType=CHAR}, 
+      #{isEnabled,jdbcType=BIT}, #{createTime,jdbcType=TIMESTAMP}, #{updatetime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.fintech.model.UserBaseinfo" >
+    insert into user_baseinfo
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="userRealname != null" >
+        USER_REALNAME,
+      </if>
+      <if test="userLoginName != null" >
+        USER_LOGIN_NAME,
+      </if>
+      <if test="userLoginPassword != null" >
+        USER_LOGIN_PASSWORD,
+      </if>
+      <if test="userType != null" >
+        USER_TYPE,
+      </if>
+      <if test="userCompanyId != null" >
+        USER_COMPANY_ID,
+      </if>
+      <if test="isEnabled != null" >
+        IS_ENABLED,
+      </if>
+      <if test="createTime != null" >
+        CREATE_TIME,
+      </if>
+      <if test="updatetime != null" >
+        UPDATETIME,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="userRealname != null" >
+        #{userRealname,jdbcType=VARCHAR},
+      </if>
+      <if test="userLoginName != null" >
+        #{userLoginName,jdbcType=VARCHAR},
+      </if>
+      <if test="userLoginPassword != null" >
+        #{userLoginPassword,jdbcType=VARCHAR},
+      </if>
+      <if test="userType != null" >
+        #{userType,jdbcType=CHAR},
+      </if>
+      <if test="userCompanyId != null" >
+        #{userCompanyId,jdbcType=CHAR},
+      </if>
+      <if test="isEnabled != null" >
+        #{isEnabled,jdbcType=BIT},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatetime != null" >
+        #{updatetime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.fintech.model.UserBaseinfo" >
+    update user_baseinfo
+    <set >
+      <if test="userRealname != null" >
+        USER_REALNAME = #{userRealname,jdbcType=VARCHAR},
+      </if>
+      <if test="userLoginName != null" >
+        USER_LOGIN_NAME = #{userLoginName,jdbcType=VARCHAR},
+      </if>
+      <if test="userLoginPassword != null" >
+        USER_LOGIN_PASSWORD = #{userLoginPassword,jdbcType=VARCHAR},
+      </if>
+      <if test="userType != null" >
+        USER_TYPE = #{userType,jdbcType=CHAR},
+      </if>
+      <if test="userCompanyId != null" >
+        USER_COMPANY_ID = #{userCompanyId,jdbcType=CHAR},
+      </if>
+      <if test="isEnabled != null" >
+        IS_ENABLED = #{isEnabled,jdbcType=BIT},
+      </if>
+      <if test="createTime != null" >
+        CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatetime != null" >
+        UPDATETIME = #{updatetime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.fintech.model.UserBaseinfo" >
+    update user_baseinfo
+    set USER_REALNAME = #{userRealname,jdbcType=VARCHAR},
+      USER_LOGIN_NAME = #{userLoginName,jdbcType=VARCHAR},
+      USER_LOGIN_PASSWORD = #{userLoginPassword,jdbcType=VARCHAR},
+      USER_TYPE = #{userType,jdbcType=CHAR},
+      USER_COMPANY_ID = #{userCompanyId,jdbcType=CHAR},
+      IS_ENABLED = #{isEnabled,jdbcType=BIT},
+      CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      UPDATETIME = #{updatetime,jdbcType=TIMESTAMP}
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

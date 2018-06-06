@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.fintech.dao.OrderDetailinfoMapper" >
+  <resultMap id="BaseResultMap" type="com.fintech.model.OrderDetailinfo" >
+    <id column="ORDER_ID" property="orderId" jdbcType="VARCHAR" />
+    <result column="MARITAL_STATUS" property="maritalStatus" jdbcType="CHAR" />
+    <result column="EDUCATIONAL_STATUS" property="educationalStatus" jdbcType="CHAR" />
+    <result column="VOCATION_STATUS" property="vocationStatus" jdbcType="CHAR" />
+    <result column="COMM_ADDR_PROVINCE" property="commAddrProvince" jdbcType="INTEGER" />
+    <result column="COMM_ADDR_CITY" property="commAddrCity" jdbcType="INTEGER" />
+    <result column="COMM_ADDR_DISTRICT" property="commAddrDistrict" jdbcType="INTEGER" />
+    <result column="COMM_ADDR" property="commAddr" jdbcType="VARCHAR" />
+    <result column="CONTACT_NAME" property="contactName" jdbcType="VARCHAR" />
+    <result column="CONTACT_PHONE" property="contactPhone" jdbcType="CHAR" />
+    <result column="DEPOSIT_AMOUNT" property="depositAmount" jdbcType="DECIMAL" />
+    <result column="COMPANY_CHANNEL_ID" property="companyChannelId" jdbcType="INTEGER" />
+    <result column="COMPANY_CHANNEL_NAME" property="companyChannelName" jdbcType="VARCHAR" />
+    <result column="COMPANY_CHANNEL_PHONE" property="companyChannelPhone" jdbcType="CHAR" />
+    <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ORDER_ID, MARITAL_STATUS, EDUCATIONAL_STATUS, VOCATION_STATUS, COMM_ADDR_PROVINCE, 
+    COMM_ADDR_CITY, COMM_ADDR_DISTRICT, COMM_ADDR, CONTACT_NAME, CONTACT_PHONE, DEPOSIT_AMOUNT, 
+    COMPANY_CHANNEL_ID, COMPANY_CHANNEL_NAME, COMPANY_CHANNEL_PHONE, CREATE_TIME, UPDATE_TIME
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from order_detailinfo
+    where ORDER_ID = #{orderId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from order_detailinfo
+    where ORDER_ID = #{orderId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.fintech.model.OrderDetailinfo" >
+    insert into order_detailinfo (ORDER_ID, MARITAL_STATUS, EDUCATIONAL_STATUS, 
+      VOCATION_STATUS, COMM_ADDR_PROVINCE, COMM_ADDR_CITY, 
+      COMM_ADDR_DISTRICT, COMM_ADDR, CONTACT_NAME, 
+      CONTACT_PHONE, DEPOSIT_AMOUNT, COMPANY_CHANNEL_ID, 
+      COMPANY_CHANNEL_NAME, COMPANY_CHANNEL_PHONE, CREATE_TIME, 
+      UPDATE_TIME)
+    values (#{orderId,jdbcType=VARCHAR}, #{maritalStatus,jdbcType=CHAR}, #{educationalStatus,jdbcType=CHAR}, 
+      #{vocationStatus,jdbcType=CHAR}, #{commAddrProvince,jdbcType=INTEGER}, #{commAddrCity,jdbcType=INTEGER}, 
+      #{commAddrDistrict,jdbcType=INTEGER}, #{commAddr,jdbcType=VARCHAR}, #{contactName,jdbcType=VARCHAR}, 
+      #{contactPhone,jdbcType=CHAR}, #{depositAmount,jdbcType=DECIMAL}, #{companyChannelId,jdbcType=INTEGER}, 
+      #{companyChannelName,jdbcType=VARCHAR}, #{companyChannelPhone,jdbcType=CHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.fintech.model.OrderDetailinfo" >
+    insert into order_detailinfo
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="orderId != null" >
+        ORDER_ID,
+      </if>
+      <if test="maritalStatus != null" >
+        MARITAL_STATUS,
+      </if>
+      <if test="educationalStatus != null" >
+        EDUCATIONAL_STATUS,
+      </if>
+      <if test="vocationStatus != null" >
+        VOCATION_STATUS,
+      </if>
+      <if test="commAddrProvince != null" >
+        COMM_ADDR_PROVINCE,
+      </if>
+      <if test="commAddrCity != null" >
+        COMM_ADDR_CITY,
+      </if>
+      <if test="commAddrDistrict != null" >
+        COMM_ADDR_DISTRICT,
+      </if>
+      <if test="commAddr != null" >
+        COMM_ADDR,
+      </if>
+      <if test="contactName != null" >
+        CONTACT_NAME,
+      </if>
+      <if test="contactPhone != null" >
+        CONTACT_PHONE,
+      </if>
+      <if test="depositAmount != null" >
+        DEPOSIT_AMOUNT,
+      </if>
+      <if test="companyChannelId != null" >
+        COMPANY_CHANNEL_ID,
+      </if>
+      <if test="companyChannelName != null" >
+        COMPANY_CHANNEL_NAME,
+      </if>
+      <if test="companyChannelPhone != null" >
+        COMPANY_CHANNEL_PHONE,
+      </if>
+      <if test="createTime != null" >
+        CREATE_TIME,
+      </if>
+      <if test="updateTime != null" >
+        UPDATE_TIME,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="orderId != null" >
+        #{orderId,jdbcType=VARCHAR},
+      </if>
+      <if test="maritalStatus != null" >
+        #{maritalStatus,jdbcType=CHAR},
+      </if>
+      <if test="educationalStatus != null" >
+        #{educationalStatus,jdbcType=CHAR},
+      </if>
+      <if test="vocationStatus != null" >
+        #{vocationStatus,jdbcType=CHAR},
+      </if>
+      <if test="commAddrProvince != null" >
+        #{commAddrProvince,jdbcType=INTEGER},
+      </if>
+      <if test="commAddrCity != null" >
+        #{commAddrCity,jdbcType=INTEGER},
+      </if>
+      <if test="commAddrDistrict != null" >
+        #{commAddrDistrict,jdbcType=INTEGER},
+      </if>
+      <if test="commAddr != null" >
+        #{commAddr,jdbcType=VARCHAR},
+      </if>
+      <if test="contactName != null" >
+        #{contactName,jdbcType=VARCHAR},
+      </if>
+      <if test="contactPhone != null" >
+        #{contactPhone,jdbcType=CHAR},
+      </if>
+      <if test="depositAmount != null" >
+        #{depositAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="companyChannelId != null" >
+        #{companyChannelId,jdbcType=INTEGER},
+      </if>
+      <if test="companyChannelName != null" >
+        #{companyChannelName,jdbcType=VARCHAR},
+      </if>
+      <if test="companyChannelPhone != null" >
+        #{companyChannelPhone,jdbcType=CHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.fintech.model.OrderDetailinfo" >
+    update order_detailinfo
+    <set >
+      <if test="maritalStatus != null" >
+        MARITAL_STATUS = #{maritalStatus,jdbcType=CHAR},
+      </if>
+      <if test="educationalStatus != null" >
+        EDUCATIONAL_STATUS = #{educationalStatus,jdbcType=CHAR},
+      </if>
+      <if test="vocationStatus != null" >
+        VOCATION_STATUS = #{vocationStatus,jdbcType=CHAR},
+      </if>
+      <if test="commAddrProvince != null" >
+        COMM_ADDR_PROVINCE = #{commAddrProvince,jdbcType=INTEGER},
+      </if>
+      <if test="commAddrCity != null" >
+        COMM_ADDR_CITY = #{commAddrCity,jdbcType=INTEGER},
+      </if>
+      <if test="commAddrDistrict != null" >
+        COMM_ADDR_DISTRICT = #{commAddrDistrict,jdbcType=INTEGER},
+      </if>
+      <if test="commAddr != null" >
+        COMM_ADDR = #{commAddr,jdbcType=VARCHAR},
+      </if>
+      <if test="contactName != null" >
+        CONTACT_NAME = #{contactName,jdbcType=VARCHAR},
+      </if>
+      <if test="contactPhone != null" >
+        CONTACT_PHONE = #{contactPhone,jdbcType=CHAR},
+      </if>
+      <if test="depositAmount != null" >
+        DEPOSIT_AMOUNT = #{depositAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="companyChannelId != null" >
+        COMPANY_CHANNEL_ID = #{companyChannelId,jdbcType=INTEGER},
+      </if>
+      <if test="companyChannelName != null" >
+        COMPANY_CHANNEL_NAME = #{companyChannelName,jdbcType=VARCHAR},
+      </if>
+      <if test="companyChannelPhone != null" >
+        COMPANY_CHANNEL_PHONE = #{companyChannelPhone,jdbcType=CHAR},
+      </if>
+      <if test="createTime != null" >
+        CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where ORDER_ID = #{orderId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.fintech.model.OrderDetailinfo" >
+    update order_detailinfo
+    set MARITAL_STATUS = #{maritalStatus,jdbcType=CHAR},
+      EDUCATIONAL_STATUS = #{educationalStatus,jdbcType=CHAR},
+      VOCATION_STATUS = #{vocationStatus,jdbcType=CHAR},
+      COMM_ADDR_PROVINCE = #{commAddrProvince,jdbcType=INTEGER},
+      COMM_ADDR_CITY = #{commAddrCity,jdbcType=INTEGER},
+      COMM_ADDR_DISTRICT = #{commAddrDistrict,jdbcType=INTEGER},
+      COMM_ADDR = #{commAddr,jdbcType=VARCHAR},
+      CONTACT_NAME = #{contactName,jdbcType=VARCHAR},
+      CONTACT_PHONE = #{contactPhone,jdbcType=CHAR},
+      DEPOSIT_AMOUNT = #{depositAmount,jdbcType=DECIMAL},
+      COMPANY_CHANNEL_ID = #{companyChannelId,jdbcType=INTEGER},
+      COMPANY_CHANNEL_NAME = #{companyChannelName,jdbcType=VARCHAR},
+      COMPANY_CHANNEL_PHONE = #{companyChannelPhone,jdbcType=CHAR},
+      CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+    where ORDER_ID = #{orderId,jdbcType=VARCHAR}
+  </update>
+</mapper>
