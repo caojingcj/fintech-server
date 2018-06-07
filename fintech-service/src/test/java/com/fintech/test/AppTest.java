@@ -1,7 +1,8 @@
-package com.fintech.service;
+package com.fintech.test;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.fintech.service.ReturnPlanService;
 import com.fintech.xcpt.FintechException;
 
 import junit.framework.Test;

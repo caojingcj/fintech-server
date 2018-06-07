@@ -1,4 +1,4 @@
-package com.fintech.controller.filter;
+package com.fintech.filter;
 
 import com.alibaba.druid.support.http.StatViewServlet;
 

@@ -1,4 +1,4 @@
-package com.fintech.controller;
+package com.fintech;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;

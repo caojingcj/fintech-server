@@ -152,4 +152,16 @@ public class CompanyBaseinfo {
     public void setUpdatetime(Date updatetime) {
         this.updatetime = updatetime;
     }
+
+    @Override
+    public String toString() {
+        return "CompanyBaseinfo [companyId=" + companyId + ", companyName=" + companyName + ", companyType="
+                + companyType + ", companyStatus=" + companyStatus + ", companyAddrProvince=" + companyAddrProvince
+                + ", companyAddrCity=" + companyAddrCity + ", companyAddrDistrict=" + companyAddrDistrict
+                + ", companyAddr=" + companyAddr + ", companyUscc=" + companyUscc + ", companyFullName="
+                + companyFullName + ", corporateName=" + corporateName + ", corporateIdCode=" + corporateIdCode
+                + ", corporatePhone=" + corporatePhone + ", createTime=" + createTime + ", updatetime=" + updatetime
+                + "]";
+    }
+
 }

@@ -77,11 +77,12 @@
 				<artifactId>jackson-annotations</artifactId>
 			</dependency>
 			
-			<dependency>
-                <groupId>org.apache.tomcat.embed</groupId>
-                <artifactId>tomcat-embed-jasper</artifactId>
-            </dependency>
-        
+			 <!-- Java EE -->
+        <dependency>
+            <groupId>javax.inject</groupId>
+            <artifactId>javax.inject</artifactId>
+            <version>1</version>
+        </dependency>
   </dependencies>
   <properties>
   		<!-- 文件拷贝时的编码 -->  
@@ -116,7 +117,7 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
-                    <mainClass>com.fintech.controller.Application</mainClass>
+                    <mainClass>com.fintech.Application</mainClass>
                 </configuration>
                 <executions>
                     <execution>

@@ -23,12 +23,15 @@
     COMPANY_ADDR_DISTRICT, COMPANY_ADDR, COMPANY_USCC, COMPANY_FULL_NAME, CORPORATE_NAME, 
     CORPORATE_ID_CODE, CORPORATE_PHONE, CREATE_TIME, UPDATETIME
   </sql>
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+
+  <select id="selectByPrimaryKeyInfo" >
     select 
     <include refid="Base_Column_List" />
     from company_baseinfo
-    where COMPANY_ID = #{companyId,jdbcType=CHAR}
+    where COMPANY_ID = 000002
   </select>
+  
+  
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
     delete from company_baseinfo
     where COMPANY_ID = #{companyId,jdbcType=CHAR}

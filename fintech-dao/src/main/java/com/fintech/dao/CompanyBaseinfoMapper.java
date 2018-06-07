@@ -3,6 +3,9 @@ package com.fintech.dao;
 import com.fintech.model.CompanyBaseinfo;
 
 public interface CompanyBaseinfoMapper {
+    
+    CompanyBaseinfo selectByPrimaryKeyInfo();
+    
     int deleteByPrimaryKey(String companyId);
 
     int insert(CompanyBaseinfo record);

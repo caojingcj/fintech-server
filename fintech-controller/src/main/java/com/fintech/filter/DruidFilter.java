@@ -1,4 +1,4 @@
-package com.fintech.controller.filter;
+package com.fintech.filter;
 
 import javax.servlet.annotation.WebFilter;
 import javax.servlet.annotation.WebInitParam;

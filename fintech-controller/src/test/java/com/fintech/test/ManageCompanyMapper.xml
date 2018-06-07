@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fintech.test.ManageCompanyMapper">
+
+
+  <resultMap id="BaseResultMap" type="com.fintech.test.ManageCompany">
+	    <id column="natureType" jdbcType="INTEGER" property="natureType" />
+	    <id column="companyId" jdbcType="VARCHAR" property="companyId" />
+	    <id column="companyName" jdbcType="VARCHAR" property="companyName" />
+	    <id column="province" jdbcType="VARCHAR" property="province" />
+	    <id column="city" jdbcType="VARCHAR" property="city" />
+	    <id column="zipCode" jdbcType="VARCHAR" property="zipCode" />
+	    <id column="companyAddress" jdbcType="VARCHAR" property="companyAddress" />
+	    <id column="medicalBeauty" jdbcType="VARCHAR" property="medicalBeauty" />
+	    <id column="createTime" jdbcType="VARCHAR" property="createTime" />
+	    <id column="accountName" jdbcType="VARCHAR" property="accountName" />
+	    <id column="bankName" jdbcType="VARCHAR" property="bankName" />
+	    <id column="accountBankName" jdbcType="VARCHAR" property="accountBankName" />
+	    <id column="accountBankNo" jdbcType="VARCHAR" property="accountBankNo" />
+	    <id column="bankType" jdbcType="VARCHAR" property="bankType" />
+	    <id column="companyState" jdbcType="VARCHAR" property="companyState" />
+	    <id column="NATURE_ID" jdbcType="VARCHAR" property="natureId" />
+	    <id column="warningState" jdbcType="VARCHAR" property="warningState" />
+	    <id column="warningStateInside" jdbcType="VARCHAR" property="warningStateInside" />
+	    <id column="registeredMoney" jdbcType="VARCHAR" property="registeredMoney" />
+	    <id column="leaderMobile" jdbcType="VARCHAR" property="leaderMobile" />
+	    <id column="leaderName" jdbcType="VARCHAR" property="leaderName" />
+	    <id column="businessNumber" jdbcType="VARCHAR" property="businessNumber" />
+	    <id column="businessName" jdbcType="VARCHAR" property="businessName" />
+	    <id column="DEPARTMENT" jdbcType="VARCHAR" property="department" />
+	    <id column="ID_CARD" jdbcType="VARCHAR" property="idCard" />
+  </resultMap>
+  
+	<!-- 查询聚泛所需数据 -->
+	<select id="selectByPrimaryKeys" parameterType="java.util.Map"  resultMap="BaseResultMap">
+	SELECT
+	company.NATURE_TYPE as natureType,
+	company.COMPANY_ID AS companyId,
+	company.COMPANY_NAME AS companyName,
+	area.SHORT_NAME AS province,
+	city.SHORT_NAME AS city,
+	city.ZIP_CODE as zipCode,
+	company.COMPANY_ADDRESS AS companyAddress,
+	company.MEDICAL_BEAUTY,
+	company.WARNING_STATE AS warningState,
+	company.WARNING_STATE_INSIDE AS warningStateInside,
+	company.REGISTERED_MONEY AS registeredMoney,
+	CASE company.MEDICAL_BEAUTY
+WHEN 1 THEN
+	'月子会所'
+WHEN 2 THEN
+	'美容院'
+WHEN 3 THEN
+	'植发'
+WHEN 4 THEN
+	'眼科'
+WHEN 5 THEN
+	'口腔'
+WHEN 6 THEN
+	'整形'
+WHEN 7 THEN
+	'专科'
+WHEN 8 THEN
+	'祛痘'
+WHEN 9 THEN
+	'妇产'
+WHEN 10 THEN
+	'摄影'
+WHEN 11 THEN
+	'赴美孕育'
+WHEN 12 THEN
+	'妇产、整形'
+WHEN 13 THEN
+	'祛斑'
+WHEN 14 THEN
+	'祛疤'
+WHEN 15 THEN
+	'泌尿外科'
+WHEN 16 THEN
+	'试管婴儿'
+WHEN 17 THEN
+	'综合'
+WHEN 22 THEN
+	'皮肤科'
+WHEN 21 THEN
+	'皮肤病'
+WHEN 45 THEN
+	'整形、祛痘、植发'
+WHEN 36 THEN
+	'整形、口腔'
+END AS medicalBeauty,
+ company.CREATE_TIME AS createTime,
+ bank.ACCOUNT_NAME AS accountName,
+ dictB.BANK_NAME AS bankName,
+ bank.ACCOUNT_BANK_NAME accountBankName,
+ bank.ACCOUNT_BANK_NO AS accountBankNo,
+nature.ACNE_BUSINESS_LICENSE as businessNumber,
+company.BUSINESS_NAME as businessName,
+ CASE bank.BANK_TYPE
+WHEN 1 THEN
+	'对公'
+ELSE
+	'对私'
+END AS bankType,
+company.FINANCE_NAME leaderName,
+company.FINANCE_MOBILE  leaderMobile,
+company.ID_CARD as idCard,
+dep.DEPARTMENT
+FROM
+	manage_company company
+LEFT JOIN manage_company_bank bank ON company.company_id = bank.COMPANY_ID
+LEFT JOIN dict_area area ON area.id = company.province
+LEFT JOIN dict_area city ON city.id = company.city
+LEFT JOIN dict_bank dictB ON dictB.BANK_ID = bank.BANK_CODE
+left join manage_company_nature nature on nature.NATURE_ID=company.NATURE_ID
+left join manage_company_department dep on dep.company_id=company.company_id
+WHERE
+-- 		company.WARNING_STATE IN (1, 2, 3)
+-- 		AND 
+--  COMPANY_STATE = 1
+-- 		and 
+ company.company_id in (
+999999
+ )
+--  and company.COMPANY_STATE = 1
+-- AND company.vip = 0
+-- AND company.COMPANY_ID != '999999'
+-- AND company.COMPANY_ID = 102935
+-- AND province IS NOT NULL
+-- AND city IS NOT NULL
+GROUP BY
+	company.COMPANY_ID
+	</select>
+
+</mapper>
