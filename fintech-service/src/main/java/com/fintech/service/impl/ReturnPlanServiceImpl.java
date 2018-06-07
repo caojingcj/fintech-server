@@ -3,8 +3,10 @@ package com.fintech.service.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.fintech.dao.CompanyPeriodFeeMapper;
 import com.fintech.dao.OrderBaseinfoMapper;
 import com.fintech.dao.UserReturnplanMapper;
+import com.fintech.model.OrderBaseinfo;
 import com.fintech.service.ReturnPlanService;
 import com.fintech.xcpt.FintechException;
 
@@ -16,11 +18,21 @@ public class ReturnPlanServiceImpl implements ReturnPlanService {
 
     @Autowired
     private UserReturnplanMapper userReturnplanMapper;
+    
+    @Autowired
+    private CompanyPeriodFeeMapper companyPeriodFeeMapper;
 
     @Override
     public void generateReturnPlan(String orderId) throws FintechException {
         // 获取订单信息
+        OrderBaseinfo order = orderBaseinfoMapper.selectByPrimaryKey(orderId);
+        if (order == null) {
+            throw new FintechException("生成还款计划：没有获取到订单信息！");
+        }
         // 获取商户费率配置
+        String companyId = order.getCompanyId(); // 商户编号
+        Integer period = order.getTotalPeriod(); // 期数
+//        companyPeriodFeeMapper.sele
         // 计算每期金额
         // 保存还款计划至数据库
     }
