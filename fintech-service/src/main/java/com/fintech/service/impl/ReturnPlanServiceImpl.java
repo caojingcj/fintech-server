@@ -31,7 +31,7 @@ public class ReturnPlanServiceImpl implements ReturnPlanService {
         }
         // 获取商户费率配置
         String companyId = order.getCompanyId(); // 商户编号
-        Integer period = order.getTotalPeriod(); // 期数
+        Integer totalPeriod = order.getTotalPeriod(); // 期数
 //        companyPeriodFeeMapper.sele
         // 计算每期金额
         // 保存还款计划至数据库
