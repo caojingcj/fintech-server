@@ -11,6 +11,8 @@ public interface UserContractMapper {
 
     UserContract selectByPrimaryKey(String contractId);
 
+    UserContract selectByOrderId(String orderId);
+
     int updateByPrimaryKeySelective(UserContract record);
 
     int updateByPrimaryKey(UserContract record);

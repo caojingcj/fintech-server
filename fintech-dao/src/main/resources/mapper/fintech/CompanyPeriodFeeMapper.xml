@@ -19,6 +19,13 @@
     from company_period_fee
     where ID = #{id,jdbcType=INTEGER}
   </select>
+  <select id="selectByCompanyIdAndPeriod" resultMap="BaseResultMap" >
+    select 
+    <include refid="Base_Column_List" />
+    from company_period_fee
+    where COMPANY_ID = #{companyId,jdbcType=CHAR}
+      and PERIOD = #{totalPeriod,jdbcType=INTEGER}
+  </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from company_period_fee
     where ID = #{id,jdbcType=INTEGER}

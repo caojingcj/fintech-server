@@ -46,5 +46,12 @@ public interface ReturnPlanService {
      * @return
      */
     public String findFullPaymentAmount(String orderId);
+    
+    /**
+     * 获取还款总额
+     * @param orderId 订单号
+     * @return
+     */
+    public String findReturnAmount(String orderId);
 
 }

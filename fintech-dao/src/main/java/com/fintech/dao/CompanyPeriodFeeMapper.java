@@ -11,6 +11,8 @@ public interface CompanyPeriodFeeMapper {
 
     CompanyPeriodFee selectByPrimaryKey(Integer id);
 
+    CompanyPeriodFee selectByCompanyIdAndPeriod(String companyId, Integer totalPeriod);
+
     int updateByPrimaryKeySelective(CompanyPeriodFee record);
 
     int updateByPrimaryKey(CompanyPeriodFee record);
