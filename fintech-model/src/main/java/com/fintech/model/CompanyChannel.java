@@ -62,4 +62,10 @@ public class CompanyChannel {
     public void setUpdatetime(Date updatetime) {
         this.updatetime = updatetime;
     }
+
+    @Override
+    public String toString() {
+        return "CompanyChannel [id=" + id + ", companyId=" + companyId + ", channelName=" + channelName
+                + ", channelPhone=" + channelPhone + ", createTime=" + createTime + ", updatetime=" + updatetime + "]";
+    }
 }

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--默认不重新加载-->
 <configuration scan="false" >
-    <property name="LOG_BASE_PATH" value="/log/merchant_web" />
+    <property name="LOG_BASE_PATH" value="/log/fintech-web" />
     <!-- 负责写日志,控制台日志 -->
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <!-- 一是把日志信息转换成字节数组,二是把字节数组写入到输出流 -->
@@ -62,7 +62,7 @@
         </rollingPolicy>
     </appender>
 
-    <logger name="com.medcfc.controller" level="DEBUG">
+    <logger name="com.fintech" level="DEBUG">
     <!--<appender-ref ref="STDOUT" />-->
     </logger>
 

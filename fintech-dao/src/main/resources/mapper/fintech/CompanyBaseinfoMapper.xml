@@ -24,7 +24,7 @@
     CORPORATE_ID_CODE, CORPORATE_PHONE, CREATE_TIME, UPDATETIME
   </sql>
 
-  <select id="selectByPrimaryKeyInfo" >
+  <select id="selectByPrimaryKeyInfo" resultMap="BaseResultMap"  >
     select 
     <include refid="Base_Column_List" />
     from company_baseinfo

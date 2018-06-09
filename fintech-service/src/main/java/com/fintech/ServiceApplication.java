@@ -4,15 +4,11 @@ import java.io.File;
 
 import javax.servlet.MultipartConfigElement;
 
-import org.mybatis.spring.annotation.MapperScan;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.builder.SpringApplicationBuilder;
-import org.springframework.boot.context.embedded.ConfigurableEmbeddedServletContainer;
-import org.springframework.boot.context.embedded.EmbeddedServletContainerCustomizer;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.boot.web.servlet.MultipartConfigFactory;
 import org.springframework.boot.web.support.ErrorPageFilter;
@@ -21,21 +17,15 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
-import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.fintech.util.DateUtils;
 
 @Configuration
 @ComponentScan("com.fintech")
-//@MapperScan("com.fintech.dao.mapper")
-//@RequestMapping(value = {"/",""})
 @EnableAutoConfiguration
 @PropertySource(value = {"classpath:jdbc.properties","classpath:config.properties"}, ignoreResourceNotFound = true)
-public class Application extends SpringBootServletInitializer implements EmbeddedServletContainerCustomizer{
+public class ServiceApplication extends SpringBootServletInitializer{
     private static Logger logger = LoggerFactory.getLogger(ServiceApplication.class);
-    
-    @Value("${server.port}")
-    private Integer port;
     
     public static void main(String[] args) {
         SpringApplication.run(ServiceApplication.class ,args);
@@ -73,12 +63,4 @@ public class Application extends SpringBootServletInitializer implements Embedde
         protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
             return application.sources(ServiceApplication.class);
         }
-     
-     /**
-      * 自定义端口
-      */
-     @Override
-     public void customize(ConfigurableEmbeddedServletContainer container){
-         container.setPort(port);
-     }
 }

@@ -1,4 +1,4 @@
-package com.fintech.dao.datasource;
+package com.fintech.datasource.druid;
 
 import java.sql.SQLException;
 import java.util.Properties;

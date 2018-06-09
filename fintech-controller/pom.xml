@@ -156,6 +156,7 @@
                 <directory>src/main/resources</directory>
                 <includes>
                     <include>*.*</include>
+                     <include>**/*.*</include>
                     <include>templates/**</include>
                     <!--<include>config/dev/*.properties</include>-->
                     <!--<include>config/${env}/*.properties</include>-->
@@ -164,4 +165,5 @@
             </resource>
         </resources>
     </build>
+    
 </project>

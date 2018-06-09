@@ -3,7 +3,7 @@
 
 #test environment
 server:  
-  port: 8084  
+  port: 8083 
   session-timeout: 30  
   tomcat.max-threads: 0  
   tomcat.uri-encoding: UTF-8
@@ -14,9 +14,9 @@ pagehelper:
     reasonable: true
     supportMethodsArguments: true
     params: count=countSql
-    
-    fintech:
-    url: jdbc:mysql://rm-uf6pnuf480169p1dpwo.mysql.rds.aliyuncs.com:3306/fintech-test?characterEncoding=UTF-8@&autoReconnect=true&zeroDateTimeBehavior=convertToNull&useUnicode=true&characterEncoding=utf-8
-    username: root
-    password: 19840723cJ
-    driver: com.mysql.jdbc.Driver
+
+#打印sql
+logging:
+    config: target\classes\logback.xml
+    level:  # 日志级别
+        com.fintech.dao: DEBUG # 配置spring web日志级别
