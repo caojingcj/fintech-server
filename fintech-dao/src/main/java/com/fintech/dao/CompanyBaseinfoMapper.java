@@ -1,5 +1,8 @@
 package com.fintech.dao;
 
+import java.util.List;
+import java.util.Map;
+
 import com.fintech.model.CompanyBaseinfo;
 
 public interface CompanyBaseinfoMapper {
@@ -13,6 +16,8 @@ public interface CompanyBaseinfoMapper {
     int insertSelective(CompanyBaseinfo record);
 
     CompanyBaseinfo selectByPrimaryKey(String companyId);
+    
+    List<CompanyBaseinfo> selectByPrimaryKeys(Map<String, Object>params);
 
     int updateByPrimaryKeySelective(CompanyBaseinfo record);
 
