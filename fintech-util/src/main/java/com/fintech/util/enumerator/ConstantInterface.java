@@ -101,6 +101,7 @@ public interface ConstantInterface {
 	     * 精确到 mapper 和他数据源隔离
 	     */
 	   enum DRUIDDATA_CONFIG {
+	         PROCEDURE_MAPPER("classpath*:mapper/fintech/procedure/*.xml"),
 	        FINTECH_MAPPER("classpath*:mapper/fintech/*.xml");
 	        private String value;
             public String getValue() {

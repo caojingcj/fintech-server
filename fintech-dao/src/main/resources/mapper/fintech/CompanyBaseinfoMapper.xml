@@ -213,4 +213,5 @@
       UPDATETIME = #{updatetime,jdbcType=TIMESTAMP}
     where COMPANY_ID = #{companyId,jdbcType=CHAR}
   </update>
+  
 </mapper>
