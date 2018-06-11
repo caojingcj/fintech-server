@@ -74,7 +74,7 @@ public class CompanyBaseinfoController {
     * @date 2018年6月12日 上午1:52:45  
     * @param @param vo
     * @param @return    设定文件 
-    * @Description: TODO[ 商户主列表查询 ]
+    * @Description: TODO[ 查询商户列表 ]
     * @throws 
     */
     @RequestMapping(value ="selectCompanyBaseInfos")
@@ -108,6 +108,15 @@ public class CompanyBaseinfoController {
     		return ResultUtils.error(ResultUtils.ERROR_CODE,e.getMessage());
     	}
     }
+    /** 
+    * @Title: CompanyBaseinfoController.java 
+    * @author qierkang xyqierkang@163.com   
+    * @date 2018年6月12日 上午3:29:23  
+    * @param @param vo
+    * @param @return    设定文件 
+    * @Description: TODO[ 查询商户详细信息 ]
+    * @throws 
+    */
     @RequestMapping(value ="selectCompanyBaseInfo")
     public @ResponseBody BaseResult selectCompanyBaseInfo(CompanyBaseinfoVo vo) {
     	logger.info("EK 参数[商户编号{}]方法名[{}]操作时间[{}]操作人[{}]",vo.getCompanyId(),Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());

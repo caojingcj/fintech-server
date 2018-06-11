@@ -21,6 +21,13 @@ public class CompanyAccountinfoImpl implements CompanyAccountinfoService {
 	@Autowired
 	private CompanyAccountinfoMapper companyAccountinfoMapper;
 
+	/* (非 Javadoc) 
+	* <p>Title: selectByPrimaryKeyList</p> 
+	* <p>Description: </p> 
+	* @param parms
+	* @return 根据商户编号查询商户清算账户
+	* @see com.fintech.service.CompanyAccountinfoService#selectByPrimaryKeyList(java.util.Map) 
+	*/
 	@Override
 	public List<CompanyAccountinfo> selectByPrimaryKeyList(Map<String, Object>parms) {
 		return companyAccountinfoMapper.selectByPrimaryKeyList(parms);

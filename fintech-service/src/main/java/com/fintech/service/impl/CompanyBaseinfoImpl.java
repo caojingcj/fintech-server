@@ -31,6 +31,13 @@ public class CompanyBaseinfoImpl implements CompanyBaseinfoService {
     @Autowired
     private CompanyProcedureMapper companyProcedureMapper;
 
+    /* (非 Javadoc) 
+    * <p>Title: insertCompanyBaseInfo</p> 
+    * <p>Description: </p> 
+    * @param companyBaseinfo 
+    * @see com.fintech.service.CompanyBaseinfoService#insertCompanyBaseInfo(com.fintech.model.CompanyBaseinfo)
+    * 商户新增 
+    */
     @Override
     public void insertCompanyBaseInfo(CompanyBaseinfo companyBaseinfo) {
         ObjectEmptyUtil.CompanyEmpty(companyBaseinfo);
@@ -38,6 +45,14 @@ public class CompanyBaseinfoImpl implements CompanyBaseinfoService {
         companyBaseinfoMapper.insertSelective(companyBaseinfo);
     }
 
+    /* (非 Javadoc) 
+    * <p>Title: selectByPrimaryKeyList</p> 
+    * <p>Description: </p> 
+    * @param companyBaseinfo
+    * @return查询商户列表
+    * @throws Exception 
+    * @see com.fintech.service.CompanyBaseinfoService#selectByPrimaryKeyList(com.fintech.model.vo.CompanyBaseinfoVo) 
+    */
     @Override
     public PageInfo<CompanyBaseinfo> selectByPrimaryKeyList(CompanyBaseinfoVo companyBaseinfo) throws Exception {
         Map<String, Object> parms = CommonUtil.object2Map(companyBaseinfo);
@@ -47,6 +62,13 @@ public class CompanyBaseinfoImpl implements CompanyBaseinfoService {
         return pageLists;
     }
 
+	/* (非 Javadoc) 
+	* <p>Title: updateCompanyBaseInfoStatus</p> 
+	* <p>Description: </p> 
+	* @param companyBaseinfo 
+	* @see com.fintech.service.CompanyBaseinfoService#updateCompanyBaseInfoStatus(com.fintech.model.CompanyBaseinfo)
+	* 商户启用、禁用 
+	*/
 	@Override
 	public void updateCompanyBaseInfoStatus(CompanyBaseinfo companyBaseinfo) {
 		Object[] obj={"companyId","companyStatus"};//通用属性判断
@@ -61,7 +83,7 @@ public class CompanyBaseinfoImpl implements CompanyBaseinfoService {
 	* @return
 	* @throws Exception 
 	* @see com.fintech.service.CompanyBaseinfoService#selectCompanyBaseInfo(com.fintech.model.vo.CompanyBaseinfoVo)
-	* 根据商户编号查询 商户基本资料 
+	* 根据商户编号查询商户基本信息
 	*/
 	@Override
 	public List<CompanyBaseinfo> selectByPrimaryKey(Map<String, Object>parms) throws Exception {
