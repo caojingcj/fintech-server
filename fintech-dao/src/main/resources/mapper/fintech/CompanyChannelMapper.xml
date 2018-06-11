@@ -12,12 +12,20 @@
   <sql id="Base_Column_List" >
     ID, COMPANY_ID, CHANNEL_NAME, CHANNEL_PHONE, CREATE_TIME, UPDATETIME
   </sql>
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.util.Map">
     select 
     <include refid="Base_Column_List" />
     from company_channel
-    where ID = #{id,jdbcType=INTEGER}
+    where COMPANY_ID =#{companyId,jdbcType=CHAR}
   </select>
+  
+  <select id="selectByPrimaryKeyList" resultMap="BaseResultMap" parameterType="java.util.Map">
+    select 
+    <include refid="Base_Column_List" />
+    from company_channel
+    where COMPANY_ID =#{companyId,jdbcType=CHAR}
+  </select>
+  
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from company_channel
     where ID = #{id,jdbcType=INTEGER}

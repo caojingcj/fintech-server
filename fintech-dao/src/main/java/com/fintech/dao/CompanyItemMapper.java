@@ -1,5 +1,8 @@
 package com.fintech.dao;
 
+import java.util.List;
+import java.util.Map;
+
 import com.fintech.model.CompanyItem;
 
 public interface CompanyItemMapper {
@@ -9,7 +12,7 @@ public interface CompanyItemMapper {
 
     int insertSelective(CompanyItem record);
 
-    CompanyItem selectByPrimaryKey(Integer id);
+    List<CompanyItem> selectByPrimaryKeyList(Map<String, Object>parms);
 
     int updateByPrimaryKeySelective(CompanyItem record);
 

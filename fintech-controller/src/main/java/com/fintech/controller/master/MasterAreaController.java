@@ -16,6 +16,13 @@ import com.fintech.util.DateUtils;
 import com.fintech.util.result.BaseResult;
 import com.fintech.util.result.ResultUtils;
 
+/**   
+* @Title: MasterAreaController.java 
+* @Package com.fintech.controller.master 
+* @author qierkang xyqierkang@163.com   
+* @date 2018年6月12日 上午2:26:35  
+* @Description: TODO[ 省市区主体控制类 ]
+*/
 @Controller
 @RequestMapping(value = "/masterArea")
 public class MasterAreaController {
@@ -31,7 +38,7 @@ public class MasterAreaController {
             Map<String, Object>params=CommonUtil.object2Map(vo);
             return ResultUtils.success(ResultUtils.SUCCESS_CODE_MSG,masterAreaService.queryMasterAreaByKey(params));
         } catch (Exception e) {
-            logger.info("EK参数[{}] 报错[{}] 方法名[{}]报错时间[{}]",vo,e.getMessage(),Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
+            logger.info("ERROR EK参数[{}] 报错[{}] 方法名[{}]报错时间[{}]",vo,e.getMessage(),Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
             return ResultUtils.error(ResultUtils.ERROR_CODE,e.getMessage());
         }
     }

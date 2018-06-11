@@ -50,7 +50,7 @@ public class MybatisUtil {
     
     public static void main(String[] args) {
         SqlSession session=MybatisUtil.getSqlSession(true, CompanyBaseinfoMapper.class);
-        CompanyBaseinfo manageCompanies=session.getMapper(CompanyBaseinfoMapper.class).selectByPrimaryKeyInfo();
+        CompanyBaseinfo manageCompanies=session.getMapper(CompanyBaseinfoMapper.class).selectByPrimaryKeyInfo("000002");
         System.out.println(manageCompanies.toString());
     }
 }

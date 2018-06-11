@@ -4,7 +4,6 @@ import java.io.File;
 
 import javax.servlet.MultipartConfigElement;
 
-import org.mybatis.spring.annotation.MapperScan;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -21,10 +20,16 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
-import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.fintech.util.DateUtils;
 
+/**   
+* @Title: Application.java 
+* @Package com.fintech 
+* @author qierkang xyqierkang@163.com   
+* @date 2018年6月12日 上午1:53:22  
+* @Description: TODO[ boot入口启动类 ]
+*/
 @Configuration
 @ComponentScan("com.fintech")
 //@MapperScan("com.fintech.dao.mapper")
@@ -43,6 +48,7 @@ public class Application extends SpringBootServletInitializer implements Embedde
     
     /**
      * 文件上传临时路径
+     * 支持Linux路径（网络图片流需要临时文件夹地址）
      */
      @Bean
      MultipartConfigElement multipartConfigElement() {
@@ -71,7 +77,7 @@ public class Application extends SpringBootServletInitializer implements Embedde
     
      @Override
         protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
-            return application.sources(ServiceApplication.class);
+            return application.sources(Application.class);
         }
      
      /**

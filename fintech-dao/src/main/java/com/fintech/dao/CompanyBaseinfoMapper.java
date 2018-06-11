@@ -7,7 +7,7 @@ import com.fintech.model.CompanyBaseinfo;
 
 public interface CompanyBaseinfoMapper {
     
-    CompanyBaseinfo selectByPrimaryKeyInfo();
+    CompanyBaseinfo selectByPrimaryKeyInfo(String companyId);
     
     int deleteByPrimaryKey(String companyId);
 
@@ -15,9 +15,9 @@ public interface CompanyBaseinfoMapper {
 
     int insertSelective(CompanyBaseinfo record);
 
-    CompanyBaseinfo selectByPrimaryKey(String companyId);
+    List<CompanyBaseinfo> selectByPrimaryKey(Map<String, Object>params);
     
-    List<CompanyBaseinfo> selectByPrimaryKeys(Map<String, Object>params);
+    List<CompanyBaseinfo> selectByPrimaryKeyList(Map<String, Object>params);
 
     int updateByPrimaryKeySelective(CompanyBaseinfo record);
 

@@ -24,7 +24,7 @@
     CORPORATE_ID_CODE, CORPORATE_PHONE, CREATE_TIME, UPDATETIME
   </sql>
 
-  <select id="selectByPrimaryKeyInfo" resultMap="BaseResultMap"  >
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap"  parameterType="java.util.Map">
     select 
     <include refid="Base_Column_List" />
     from company_baseinfo
@@ -32,7 +32,7 @@
   </select>
   
   
-  <select id="selectByPrimaryKeys" resultMap="BaseResultMap"  parameterType="java.util.Map">
+  <select id="selectByPrimaryKeyList" resultMap="BaseResultMap"  parameterType="java.util.Map">
     select 
     <include refid="Base_Column_List" />
     from company_baseinfo

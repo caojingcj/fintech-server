@@ -1,5 +1,8 @@
 package com.fintech.dao;
 
+import java.util.List;
+import java.util.Map;
+
 import com.fintech.model.CompanyPeriodFee;
 
 public interface CompanyPeriodFeeMapper {
@@ -9,7 +12,7 @@ public interface CompanyPeriodFeeMapper {
 
     int insertSelective(CompanyPeriodFee record);
 
-    CompanyPeriodFee selectByPrimaryKey(Integer id);
+    List<CompanyPeriodFee> selectByPrimaryKeyList(Map<String, Object>parms);
 
     CompanyPeriodFee selectByCompanyIdAndPeriod(String companyId, Integer totalPeriod);
 

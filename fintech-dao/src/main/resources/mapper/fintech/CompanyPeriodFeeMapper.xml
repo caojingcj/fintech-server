@@ -13,12 +13,19 @@
   <sql id="Base_Column_List" >
     ID, COMPANY_ID, PERIOD, RATE_TOTAL, RATE_MANAGE, CREATE_TIME, UPDATETIME
   </sql>
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.util.Map">
     select 
     <include refid="Base_Column_List" />
     from company_period_fee
-    where ID = #{id,jdbcType=INTEGER}
+    where COMPANY_ID =#{companyId,jdbcType=CHAR}
   </select>
+  <select id="selectByPrimaryKeyList" resultMap="BaseResultMap" parameterType="java.util.Map">
+    select 
+    <include refid="Base_Column_List" />
+    from company_period_fee
+    where COMPANY_ID =#{companyId,jdbcType=CHAR}
+  </select>
+  
   <select id="selectByCompanyIdAndPeriod" resultMap="BaseResultMap" >
     select 
     <include refid="Base_Column_List" />

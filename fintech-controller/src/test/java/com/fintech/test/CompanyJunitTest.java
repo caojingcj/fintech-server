@@ -8,7 +8,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.fintech.ServiceApplication;
 import com.fintech.dao.CompanyBaseinfoMapper;
-import com.fintech.service.CompanyChannelService;
 
 /**   
 * @Title: CompanyTest.java 
@@ -21,17 +20,10 @@ import com.fintech.service.CompanyChannelService;
 @SpringBootTest(classes = ServiceApplication.class)
 public class CompanyJunitTest {
     @Autowired
-    private CompanyChannelService companyChannelService;
-    @Autowired
     private CompanyBaseinfoMapper baseinfoMapper;
 
     @Test
-    public void companyChannelInf() {
-        System.out.println(companyChannelService.companyChannelInfo());
-    }
-
-    @Test
     public void selectBaseInfo() {
-        System.out.println(baseinfoMapper.selectByPrimaryKeyInfo());
+        System.out.println(baseinfoMapper.selectByPrimaryKeyInfo("000002"));
     }
 }

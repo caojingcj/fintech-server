@@ -153,6 +153,54 @@ public interface ConstantInterface {
                 this.value = value;
             }
 	    }
+	    /**   
+	    * @Title: ConstantInterface.java 
+	    * @Package com.fintech.util.enumerator 
+	    * @author qierkang xyqierkang@163.com   
+	    * @date 2018年6月12日 上午1:26:50  
+	    * @Description: TODO[ 通用返回值 ]
+	    */
+	    enum ObjectNullValidate{
+	    	OBJECT_NAME_IS_NULL(00010,"该属性不能为空"),
+	    	OBJECT_MESSAGE_IS_NULL(00011,"属性传入错误，请检查属性是否正确");
+	    	private Integer key;
+	    	private String value;
+			/**
+			 * @return the key
+			 */
+			public Integer getKey() {
+				return key;
+			}
+			/** 
+			* @param key 要设置的 key 
+			*/
+			public void setKey(Integer key) {
+				this.key = key;
+			}
+			/**
+			 * @return the value
+			 */
+			public String getValue() {
+				return value;
+			}
+			/** 
+			* @param value 要设置的 value 
+			*/
+			public void setValue(String value) {
+				this.value = value;
+			}
+			/** 
+			* @Title: ConstantInterface.java 
+			* @param @param key
+			* @param @param value    设定文件 
+			* @Description: TODO[ 这里用一句话描述这个方法的作用 ]
+			* @throws 
+			*/
+			private ObjectNullValidate(Integer key, String value) {
+				this.key = key;
+				this.value = value;
+			}
+	    }
 	}
 
 }
