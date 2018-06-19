@@ -23,7 +23,14 @@
     COMPANY_ID, COMPANY_NAME, ITEM_CODE, ITEM_NAME, TOTAL_PERIOD, ORDER_AMOUNT, CONTRACT_ID, 
     CREATE_TIME, UPDATETIME
   </sql>
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.util.Map">
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String"  >
+    select 
+    <include refid="Base_Column_List" />
+    from order_baseinfo
+    where ORDER_ID = #{orderId,jdbcType=VARCHAR}
+   
+  </select>
+  <select id="selectByPrimaryKeySelective" resultMap="BaseResultMap" parameterType="java.util.Map">
     select 
     <include refid="Base_Column_List" />
     from order_baseinfo

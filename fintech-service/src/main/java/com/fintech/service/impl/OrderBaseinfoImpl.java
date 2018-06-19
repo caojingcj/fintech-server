@@ -43,6 +43,7 @@ public class OrderBaseinfoImpl implements OrderBaseinfoService {
         if(baseinfo.getCompanyStatus().equals(String.valueOf(ConstantInterface.Enum.ConstantNumber.ZERO.getKey()))) {
             throw new FinTechException(ConstantInterface.ValidateConfig.CompanyValidate.COMPANY_100006.getKey(),ConstantInterface.ValidateConfig.CompanyValidate.COMPANY_100006.getValue());
         }
+        orderBaseinfoMapper.updateByPrimaryKeySelective(record);
     }
     public static void main(String[] args) {
         String ss="1";
