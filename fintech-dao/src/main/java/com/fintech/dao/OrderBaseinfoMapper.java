@@ -1,5 +1,7 @@
 package com.fintech.dao;
 
+import java.util.Map;
+
 import com.fintech.model.OrderBaseinfo;
 
 public interface OrderBaseinfoMapper {
@@ -9,7 +11,7 @@ public interface OrderBaseinfoMapper {
 
     int insertSelective(OrderBaseinfo record);
 
-    OrderBaseinfo selectByPrimaryKey(String orderId);
+    OrderBaseinfo selectByPrimaryKey(Map<String, Object> parms);
 
     int updateByPrimaryKeySelective(OrderBaseinfo record);
 
