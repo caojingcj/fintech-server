@@ -126,14 +126,15 @@ public interface ConstantInterface {
 	    * @Package com.fintech.util.enumerator 
 	    * @author qierkang xyqierkang@163.com   
 	    * @date 2018年6月10日 下午11:37:22  
-	    * @Description: TODO[ 商户属性验证 ]
+	    * @Description: TODO[ 商户属性验证 100=商户code ]
 	    */
 	    enum CompanyValidate{
-	        COMPANY_NAME_IS_NULL(10001,"商户名称不能为空"),
-	        COMPANY_TYPE_IS_NULL(10002,"商户类型不能为空"),
-	        COMPANY_STATUS_IS_NULL(10003,"商户状态不能为空"),
-	        COMPANY_USCC_IS_NULL(10004,"商户统一社会信用代码不能为空"),
-	        COMPANY_FULL_NAME_IS_NULL(10005,"商户营业执照名称不能为空");
+	        COMPANY_NAME_IS_NULL(100001,"商户名称不能为空"),
+	        COMPANY_TYPE_IS_NULL(100002,"商户类型不能为空"),
+	        COMPANY_STATUS_IS_NULL(100003,"商户状态不能为空"),
+	        COMPANY_USCC_IS_NULL(100004,"商户统一社会信用代码不能为空"),
+	        COMPANY_FULL_NAME_IS_NULL(100005,"商户营业执照名称不能为空"),
+	        COMPANY_100006(100006,"该订单已被后台取消");
 	        private Integer key;
 	        private String value;
             public Integer getKey() {
@@ -153,6 +154,35 @@ public interface ConstantInterface {
                 this.value = value;
             }
 	    }
+	    /**   
+	    * @Title: ConstantInterface.java 
+	    * @Package com.fintech.util.enumerator 
+	    * @author qierkang xyqierkang@163.com   
+	    * @date 2018年6月19日 下午11:48:39  
+	    * @Description: TODO[ 200=订单code ]
+	    */
+	    enum OrderValidate{
+            ORDER_200001(200001,"总在还款额不超过50w或分期还款中的笔数不超过3笔"),
+            ORDER_200002(200002,"主code200002");
+            private Integer key;
+            private String value;
+            public Integer getKey() {
+                return key;
+            }
+            public void setKey(Integer key) {
+                this.key = key;
+            }
+            public String getValue() {
+                return value;
+            }
+            public void setValue(String value) {
+                this.value = value;
+            }
+            private OrderValidate(Integer key, String value) {
+                this.key = key;
+                this.value = value;
+            }
+        }
 	    /**   
 	    * @Title: ConstantInterface.java 
 	    * @Package com.fintech.util.enumerator 

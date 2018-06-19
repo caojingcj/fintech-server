@@ -1,6 +1,9 @@
 package com.fintech.dao;
 
+import java.util.List;
 import java.util.Map;
+
+import org.apache.ibatis.annotations.Param;
 
 import com.fintech.model.OrderBaseinfo;
 
@@ -12,8 +15,10 @@ public interface OrderBaseinfoMapper {
     int insertSelective(OrderBaseinfo record);
 
     OrderBaseinfo selectByPrimaryKey(Map<String, Object> parms);
-
+    
     int updateByPrimaryKeySelective(OrderBaseinfo record);
 
     int updateByPrimaryKey(OrderBaseinfo record);
+    
+    Map<String, Object> selectByOrderAmountJudge(@Param("custCellphone")String custCellphone);
 }

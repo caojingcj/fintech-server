@@ -32,6 +32,28 @@
     	and CUST_CELLPHONE=#{custCellphone}
     </if>
   </select>
+  
+  <select id="selectByOrderAmountJudge" resultType="java.util.HashMap" parameterType="java.lang.String">
+  SELECT
+CASE
+	a.amount 
+	WHEN a.amount > 0 THEN
+	1 ELSE 0 
+	END as amount,
+	a.statusCount 
+FROM
+	(
+SELECT
+	sum( ORDER_AMOUNT ) > 500000 AS amount,
+	count( ORDER_STATUS = 05 ) AS statusCount 
+FROM
+	order_baseinfo 
+WHERE
+	CUST_CELLPHONE = #{custCellphone} 
+	AND ORDER_STATUS = 05 
+	) a
+  </select>
+  
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
     delete from order_baseinfo
     where ORDER_ID = #{orderId,jdbcType=VARCHAR}

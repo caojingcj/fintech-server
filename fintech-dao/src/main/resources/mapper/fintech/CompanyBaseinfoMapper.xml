@@ -31,6 +31,13 @@
     where COMPANY_ID =#{companyId,jdbcType=CHAR}
   </select>
   
+  <select id="selectByPrimaryKeyInfo" resultMap="BaseResultMap"  parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from company_baseinfo
+    where COMPANY_ID =#{companyId,jdbcType=CHAR}
+  </select>
+  
   
   <select id="selectByPrimaryKeyList" resultMap="BaseResultMap"  parameterType="java.util.Map">
     select 
