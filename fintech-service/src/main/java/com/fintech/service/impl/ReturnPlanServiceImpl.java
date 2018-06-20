@@ -8,10 +8,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.fintech.dao.CompanyPeriodFeeMapper;
+import com.fintech.dao.LogOrderMapper;
 import com.fintech.dao.OrderBaseinfoMapper;
 import com.fintech.dao.UserContractMapper;
 import com.fintech.dao.UserReturnplanMapper;
+import com.fintech.enm.OrderOperationEnum;
+import com.fintech.enm.OrderStatusEnum;
 import com.fintech.model.CompanyPeriodFee;
+import com.fintech.model.LogOrder;
 import com.fintech.model.OrderBaseinfo;
 import com.fintech.model.UserContract;
 import com.fintech.model.UserReturnplan;
@@ -32,6 +36,9 @@ public class ReturnPlanServiceImpl implements ReturnPlanService {
 
     @Autowired
     private CompanyPeriodFeeMapper companyPeriodFeeMapper;
+
+    @Autowired
+    private LogOrderMapper logOrderMapper;
 
     @Override
     public void generateReturnPlan(String orderId) throws FintechException {
@@ -101,8 +108,19 @@ public class ReturnPlanServiceImpl implements ReturnPlanService {
 
     @Override
     public void updateCancel(String orderId) throws FintechException {
-        // TODO Auto-generated method stub
-
+        // 更新所有的还款计划为8-已取消
+        userReturnplanMapper.updateCancelByOrderId(orderId);
+        // 更新订单状态为11-已取消
+        OrderBaseinfo order = new OrderBaseinfo();
+        order.setOrderId(orderId);
+        order.setOrderStatus(OrderStatusEnum.已取消.getValue());
+        orderBaseinfoMapper.updateByPrimaryKeySelective(order);
+        // 新增订单操作日志
+        LogOrder log = new LogOrder();
+        log.setOrderId(orderId);
+        log.setOrderOperation(OrderOperationEnum.取消.getValue());
+        log.setOrderStatus(OrderStatusEnum.已取消.getValue());
+        logOrderMapper.insert(log);
     }
 
     @Override

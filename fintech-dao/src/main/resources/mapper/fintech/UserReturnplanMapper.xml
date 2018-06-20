@@ -256,4 +256,9 @@
       UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
     where ID = #{id,jdbcType=INTEGER}
   </update>
+  <update id="updateCancelByOrderId" parameterType="java.lang.String" >
+    update user_returnplan
+    set RETURN_STATUS = '8'
+    where ORDER_ID = #{orderId,jdbcType=VARCHAR}
+  </update>
 </mapper>
