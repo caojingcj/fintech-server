@@ -124,9 +124,9 @@ public class ReturnPlanServiceImpl implements ReturnPlanService {
     }
 
     @Override
-    public void updateOverDueInfo(String orderId) throws FintechException {
-        // TODO Auto-generated method stub
-
+    public void updateOverDueInfo() throws FintechException {
+        // 获取所有应还款，但还未还款的还款计划
+        // 循环还款计划，并更新逾期信息
     }
 
     @Override
@@ -142,9 +142,17 @@ public class ReturnPlanServiceImpl implements ReturnPlanService {
     }
 
     @Override
-    public String findReturnAmount(String orderId) {
-        // TODO Auto-generated method stub
-        return null;
+    public BigDecimal findReturnAmount(double orderAmount, double rateTotal, int totalPeriod) {
+        BigDecimal TotalAmountP = new BigDecimal(orderAmount); // 客户还款总额（本金）
+        // BigDecimal avgAmountP = TotalAmountP.divide(new
+        // BigDecimal(totalPeriod)).setScale(2, BigDecimal.ROUND_UP); // 每期还款金额（本金）
+        BigDecimal TotalAmountI = TotalAmountP.multiply(new BigDecimal(rateTotal)).divide(new BigDecimal(100))
+                .multiply(new BigDecimal(totalPeriod)).divide(new BigDecimal(12)); // 客户还款总额（利息）
+        // BigDecimal avgAmountI = TotalAmountI.divide(new
+        // BigDecimal(totalPeriod)).setScale(2, BigDecimal.ROUND_UP); // 每期还款金额（利息）
+        // BigDecimal lastAmountI = TotalAmountI.subtract(avgAmountI.multiply(new
+        // BigDecimal(totalPeriod - 1))); // 末期补偿金额（利息）
+        return TotalAmountP.add(TotalAmountI);
     }
 
 }
