@@ -157,6 +157,9 @@ public class ReturnPlanServiceImpl implements ReturnPlanService {
             overDuePlan.setIsOverdue(true); // 是否逾期
             long days = DateUtils.getBetweenDays(DateUtils.format(plan.getReturnDate(), "yyyy-MM-dd"), DateUtils.format(new Date(), "yyyy-MM-dd"));
             overDuePlan.setOverdueDays(Integer.valueOf(String.valueOf(days))); // 逾期天数
+            // T≦7天：当期本金*0.5%*天数
+            // 7天<T≦60天：当期本金*1%*天数
+            // T>60天：当期本金*1%*60
 //            overDuePlan.setOverdueAmount(); // 逾期金额
             userReturnplanMapper.updateByPrimaryKeySelective(overDuePlan);
         }
