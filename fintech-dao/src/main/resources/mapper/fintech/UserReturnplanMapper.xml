@@ -33,6 +33,20 @@
     from user_returnplan
     where ID = #{id,jdbcType=INTEGER}
   </select>
+  <select id="selectByOrderPeriod" resultMap="BaseResultMap" >
+    select 
+    <include refid="Base_Column_List" />
+    from user_returnplan
+    where ORDER_ID = #{orderId,jdbcType=VARCHAR}
+      and CURRENT_PERIOD = #{currentPeriod,jdbcType=INTEGER}
+  </select>
+  <select id="selectOverDueList" resultMap="BaseResultMap" >
+    select 
+    <include refid="Base_Column_List" />
+    from user_returnplan
+    where RETURN_STATUS = '0'
+      and DATE_FORMAT(RETURN_DATE, 'yyyy-MM-dd') < CURDATE()
+  </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from user_returnplan
     where ID = #{id,jdbcType=INTEGER}

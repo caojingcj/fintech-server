@@ -3,6 +3,7 @@ package com.fintech.service.impl;
 import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,12 +15,14 @@ import com.fintech.dao.UserContractMapper;
 import com.fintech.dao.UserReturnplanMapper;
 import com.fintech.enm.OrderOperationEnum;
 import com.fintech.enm.OrderStatusEnum;
+import com.fintech.enm.ReturnStatusEnum;
 import com.fintech.model.CompanyPeriodFee;
 import com.fintech.model.LogOrder;
 import com.fintech.model.OrderBaseinfo;
 import com.fintech.model.UserContract;
 import com.fintech.model.UserReturnplan;
 import com.fintech.service.ReturnPlanService;
+import com.fintech.util.DateUtils;
 import com.fintech.xcpt.FintechException;
 
 @Service
@@ -102,8 +105,29 @@ public class ReturnPlanServiceImpl implements ReturnPlanService {
 
     @Override
     public void updateReturn(String id, String returnChannel) throws FintechException {
-        // TODO Auto-generated method stub
-
+        // 获取本期还款计划
+        UserReturnplan plan = userReturnplanMapper.selectByPrimaryKey(Integer.valueOf(id));
+        // 不能跨期还款
+        if (plan.getCurrentPeriod() > 1) { // 不是第一期的情况下
+            UserReturnplan lastPlan = userReturnplanMapper.selectByOrderPeriod(plan.getOrderId(), plan.getCurrentPeriod() - 1);
+            if (lastPlan.getReturnStatus().equals(ReturnStatusEnum.未还款.getValue())) {
+                throw new FintechException("还款：暂不支持跨期还款！");
+            }
+        }
+        // 更新还款计划
+        UserReturnplan updatePlan = new UserReturnplan();
+        updatePlan.setReturnStatus(ReturnStatusEnum.已还款.getValue());
+        updatePlan.setReturnChannel(returnChannel);
+        updatePlan.setReturnDateAc(new Date());
+        updatePlan.setId(Integer.valueOf(id));
+        userReturnplanMapper.updateByPrimaryKeySelective(updatePlan);
+        // 如果是最后一期，且所有期次都已还款，则更新订单状态
+        if (plan.getCurrentPeriod() == plan.getTotalPeriod()) {
+            OrderBaseinfo order = new OrderBaseinfo();
+            order.setOrderStatus(OrderStatusEnum.已结清.getValue());
+            order.setOrderId(plan.getOrderId());
+            orderBaseinfoMapper.updateByPrimaryKeySelective(order);
+        }
     }
 
     @Override
@@ -125,8 +149,17 @@ public class ReturnPlanServiceImpl implements ReturnPlanService {
 
     @Override
     public void updateOverDueInfo() throws FintechException {
-        // 获取所有应还款，但还未还款的还款计划
+        // 获取所有应还款，但还未还款的还款计划（还款日期小于本日，且未还款的记录）
+        List<UserReturnplan> planList = userReturnplanMapper.selectOverDueList();
         // 循环还款计划，并更新逾期信息
+        for (UserReturnplan plan : planList) {
+            UserReturnplan overDuePlan = new UserReturnplan();
+            overDuePlan.setIsOverdue(true); // 是否逾期
+            long days = DateUtils.getBetweenDays(DateUtils.format(plan.getReturnDate(), "yyyy-MM-dd"), DateUtils.format(new Date(), "yyyy-MM-dd"));
+            overDuePlan.setOverdueDays(Integer.valueOf(String.valueOf(days))); // 逾期天数
+//            overDuePlan.setOverdueAmount(); // 逾期金额
+            userReturnplanMapper.updateByPrimaryKeySelective(overDuePlan);
+        }
     }
 
     @Override

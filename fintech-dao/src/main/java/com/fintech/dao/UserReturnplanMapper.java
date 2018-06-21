@@ -1,5 +1,7 @@
 package com.fintech.dao;
 
+import java.util.List;
+
 import com.fintech.model.UserReturnplan;
 
 public interface UserReturnplanMapper {
@@ -10,6 +12,10 @@ public interface UserReturnplanMapper {
     int insertSelective(UserReturnplan record);
 
     UserReturnplan selectByPrimaryKey(Integer id);
+
+    UserReturnplan selectByOrderPeriod(String orderId, Integer currentPeriod);
+    
+    List<UserReturnplan> selectOverDueList();
 
     int updateByPrimaryKeySelective(UserReturnplan record);
 
