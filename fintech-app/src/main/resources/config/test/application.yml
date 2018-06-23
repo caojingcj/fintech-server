@@ -1,0 +1,21 @@
+#是否开始权限过滤器(0：不开启，1：开启)
+#permOpen: 0
+
+#test environment
+server:
+  port: 8084  
+  session-timeout: 30  
+  tomcat.max-threads: 0  
+  tomcat.uri-encoding: UTF-8
+
+#配置分页插件pagehelper
+pagehelper:
+    helperDialect: mysql
+    reasonable: true
+    supportMethodsArguments: true
+    params: count=countSql
+    
+#打印sql
+logging:
+    level:  # 日志级别
+        com.fintech.dao: DEBUG # 配置spring web日志级别

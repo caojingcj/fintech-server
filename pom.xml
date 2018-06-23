@@ -29,6 +29,11 @@
 		<dependencies>
 			<dependency>
 				<groupId>com.fintech</groupId>
+				<artifactId>fintech-app</artifactId>
+				<version>${fintech.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.fintech</groupId>
 				<artifactId>fintech-dao</artifactId>
 				<version>${fintech.version}</version>
 			</dependency>
@@ -247,19 +252,29 @@
     <module>fintech-util</module>
     <module>fintech-service</module>
     <module>fintech-controller</module>
+    <module>fintech-app</module>
   </modules>
   
   <build>
         <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.3</version>
-                <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
-                </configuration>
-            </plugin>
+           <plugin>  
+			    <groupId>org.apache.maven.plugins</groupId>  
+			    <artifactId>maven-surefire-plugin</artifactId>  
+			    <configuration>  
+			        <skipTests>true</skipTests>  
+			    </configuration>  
+			</plugin>  
+			
+			 <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-compiler-plugin</artifactId>
+            <version>3.5.1</version>
+            <configuration>
+                <source>1.8</source>
+                <target>1.8</target>
+            </configuration>
+        </plugin>
+        
         </plugins>
     </build>
 </project>
