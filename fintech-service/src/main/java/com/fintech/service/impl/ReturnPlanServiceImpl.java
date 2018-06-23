@@ -104,9 +104,12 @@ public class ReturnPlanServiceImpl implements ReturnPlanService {
     }
 
     @Override
-    public void updateReturn(String id, String returnChannel) throws FintechException {
+    public void updateReturn(Integer id, String returnChannel) throws FintechException {
         // 获取本期还款计划
-        UserReturnplan plan = userReturnplanMapper.selectByPrimaryKey(Integer.valueOf(id));
+        UserReturnplan plan = userReturnplanMapper.selectByPrimaryKey(id);
+        if (plan == null) {
+            throw new FintechException("还款：未获取到该还款期次信息！");
+        }
         // 不能跨期还款
         if (plan.getCurrentPeriod() > 1) { // 不是第一期的情况下
             UserReturnplan lastPlan = userReturnplanMapper.selectByOrderPeriod(plan.getOrderId(), plan.getCurrentPeriod() - 1);
@@ -119,7 +122,7 @@ public class ReturnPlanServiceImpl implements ReturnPlanService {
         updatePlan.setReturnStatus(ReturnStatusEnum.已还款.getValue());
         updatePlan.setReturnChannel(returnChannel);
         updatePlan.setReturnDateAc(new Date());
-        updatePlan.setId(Integer.valueOf(id));
+        updatePlan.setId(id);
         userReturnplanMapper.updateByPrimaryKeySelective(updatePlan);
         // 如果是最后一期，且所有期次都已还款，则更新订单状态
         if (plan.getCurrentPeriod() == plan.getTotalPeriod()) {

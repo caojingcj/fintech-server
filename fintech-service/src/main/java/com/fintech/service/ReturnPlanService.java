@@ -19,7 +19,7 @@ public interface ReturnPlanService {
      * @param returnChannel 还款渠道
      * @throws FintechException
      */
-    public void updateReturn(String id, String returnChannel) throws FintechException;
+    public void updateReturn(Integer id, String returnChannel) throws FintechException;
 
     /**
      * 取消订单

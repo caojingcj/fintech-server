@@ -37,8 +37,8 @@
     select 
     <include refid="Base_Column_List" />
     from user_returnplan
-    where ORDER_ID = #{orderId,jdbcType=VARCHAR}
-      and CURRENT_PERIOD = #{currentPeriod,jdbcType=INTEGER}
+    where ORDER_ID = #{arg0}
+      and CURRENT_PERIOD = #{arg1}
   </select>
   <select id="selectOverDueList" resultMap="BaseResultMap" >
     select 
