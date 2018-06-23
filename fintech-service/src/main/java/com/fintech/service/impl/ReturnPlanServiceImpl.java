@@ -175,6 +175,7 @@ public class ReturnPlanServiceImpl implements ReturnPlanService {
                 overdueAmount = plan.getPrincipalAmount().multiply(new BigDecimal(0.01)).multiply(new BigDecimal(60)).setScale(2, BigDecimal.ROUND_UP);
             }
             overDuePlan.setOverdueAmount(overdueAmount); // 逾期金额
+            overDuePlan.setId(plan.getId()); // id
             userReturnplanMapper.updateByPrimaryKeySelective(overDuePlan);
         }
     }
