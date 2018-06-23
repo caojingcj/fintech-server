@@ -17,6 +17,5 @@ pagehelper:
     
 #打印sql
 logging:
-    config: target\classes\logback.xml
     level:  # 日志级别
         com.fintech.dao: DEBUG # 配置spring web日志级别

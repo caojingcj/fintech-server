@@ -42,15 +42,15 @@ public class FinTechDataSourceConfig {
     public SqlSessionFactory csSqlSessionFactory(@Qualifier("fintechDataSource") DataSource masterDataSource)
             throws Exception {
         final SqlSessionFactoryBean bean = new SqlSessionFactoryBean();
-      bean.setDataSource(masterDataSource);
-      Resource[] r1=new PathMatchingResourcePatternResolver().getResources(ConstantInterface.DruidDataConfig.DRUIDDATA_CONFIG.PROCEDURE_MAPPER.getValue());
-      Resource[] r2=new PathMatchingResourcePatternResolver().getResources(ConstantInterface.DruidDataConfig.DRUIDDATA_CONFIG.FINTECH_MAPPER.getValue());
-      Resource[] r3=ArrayUtils.addAll(r1, r2);
-      bean.setMapperLocations(r3);
-      return bean.getObject();
-//        bean.setDataSource(masterDataSource);
-//        bean.setMapperLocations(new PathMatchingResourcePatternResolver().getResources(ConstantInterface.DruidDataConfig.DRUIDDATA_CONFIG.FINTECH_MAPPER.getValue()));
-//        return bean.getObject();
+//      bean.setDataSource(masterDataSource);
+//      Resource[] r1=new PathMatchingResourcePatternResolver().getResources(ConstantInterface.DruidDataConfig.DRUIDDATA_CONFIG.PROCEDURE_MAPPER.getValue());
+//      Resource[] r2=new PathMatchingResourcePatternResolver().getResources(ConstantInterface.DruidDataConfig.DRUIDDATA_CONFIG.FINTECH_MAPPER.getValue());
+//      Resource[] r3=ArrayUtils.addAll(r1, r2);
+//      bean.setMapperLocations(r3);
+//      return bean.getObject();
+        bean.setDataSource(masterDataSource);
+        bean.setMapperLocations(new PathMatchingResourcePatternResolver().getResources(ConstantInterface.DruidDataConfig.DRUIDDATA_CONFIG.FINTECH_MAPPER.getValue()));
+        return bean.getObject();
     }
 
 }
