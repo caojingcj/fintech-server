@@ -26,12 +26,12 @@
     where COMPANY_ID =#{companyId,jdbcType=CHAR}
   </select>
   
-  <select id="selectByCompanyIdAndPeriod" resultMap="BaseResultMap" >
+  <select id="selectByCompanyIdAndPeriod" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
     from company_period_fee
-    where COMPANY_ID = #{companyId,jdbcType=CHAR}
-      and PERIOD = #{totalPeriod,jdbcType=INTEGER}
+    where COMPANY_ID =#{arg0}
+      and PERIOD =#{arg1}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from company_period_fee

@@ -33,6 +33,20 @@
     from user_returnplan
     where ID = #{id,jdbcType=INTEGER}
   </select>
+  <select id="selectByOrderPeriod" resultMap="BaseResultMap" >
+    select 
+    <include refid="Base_Column_List" />
+    from user_returnplan
+    where ORDER_ID = #{arg0}
+      and CURRENT_PERIOD = #{arg1}
+  </select>
+  <select id="selectOverDueList" resultMap="BaseResultMap" >
+    select 
+    <include refid="Base_Column_List" />
+    from user_returnplan
+    where RETURN_STATUS = '0'
+      and DATE_FORMAT(RETURN_DATE, 'yyyy-MM-dd') &lt; CURDATE()
+  </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from user_returnplan
     where ID = #{id,jdbcType=INTEGER}
@@ -255,5 +269,10 @@
       CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
       UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
     where ID = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateCancelByOrderId" parameterType="java.lang.String" >
+    update user_returnplan
+    set RETURN_STATUS = '8'
+    where ORDER_ID = #{orderId,jdbcType=VARCHAR}
   </update>
 </mapper>

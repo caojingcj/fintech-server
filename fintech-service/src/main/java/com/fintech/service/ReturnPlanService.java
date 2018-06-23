@@ -1,5 +1,7 @@
 package com.fintech.service;
 
+import java.math.BigDecimal;
+
 import com.fintech.xcpt.FintechException;
 
 public interface ReturnPlanService {
@@ -17,7 +19,7 @@ public interface ReturnPlanService {
      * @param returnChannel 还款渠道
      * @throws FintechException
      */
-    public void updateReturn(String id, String returnChannel) throws FintechException;
+    public void updateReturn(Integer id, String returnChannel) throws FintechException;
 
     /**
      * 取消订单
@@ -28,10 +30,9 @@ public interface ReturnPlanService {
 
     /**
      * 更新逾期信息
-     * @param orderId 订单号
      * @throws FintechException
      */
-    public void updateOverDueInfo(String orderId) throws FintechException;
+    public void updateOverDueInfo() throws FintechException;
 
     /**
      * 一次性结清
@@ -49,9 +50,11 @@ public interface ReturnPlanService {
     
     /**
      * 获取还款总额
-     * @param orderId 订单号
+     * @param orderAmount 订单金额
+     * @param rateTotal 总费率
+     * @param totalPeriod 期数
      * @return
      */
-    public String findReturnAmount(String orderId);
+    public BigDecimal findReturnAmount(double orderAmount, double rateTotal, int totalPeriod);
 
 }
