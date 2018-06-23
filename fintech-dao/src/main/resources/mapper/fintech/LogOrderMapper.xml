@@ -6,10 +6,11 @@
     <result column="ORDER_ID" property="orderId" jdbcType="VARCHAR" />
     <result column="ORDER_OPERATION" property="orderOperation" jdbcType="CHAR" />
     <result column="ORDER_STATUS" property="orderStatus" jdbcType="CHAR" />
+    <result column="ORDER_NOTE" property="orderNote" jdbcType="VARCHAR" />
     <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
   </resultMap>
   <sql id="Base_Column_List" >
-    ID, ORDER_ID, ORDER_OPERATION, ORDER_STATUS, CREATE_TIME
+    ID, ORDER_ID, ORDER_OPERATION, ORDER_STATUS, ORDER_NOTE, CREATE_TIME
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
@@ -23,9 +24,9 @@
   </delete>
   <insert id="insert" parameterType="com.fintech.model.LogOrder" >
     insert into log_order (ID, ORDER_ID, ORDER_OPERATION, 
-      ORDER_STATUS, CREATE_TIME)
+      ORDER_STATUS, ORDER_NOTE, CREATE_TIME)
     values (#{id,jdbcType=INTEGER}, #{orderId,jdbcType=VARCHAR}, #{orderOperation,jdbcType=CHAR}, 
-      #{orderStatus,jdbcType=CHAR}, #{createTime,jdbcType=TIMESTAMP})
+      #{orderStatus,jdbcType=CHAR}, #{orderNote,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.fintech.model.LogOrder" >
     insert into log_order
@@ -41,6 +42,9 @@
       </if>
       <if test="orderStatus != null" >
         ORDER_STATUS,
+      </if>
+      <if test="orderNote != null" >
+        ORDER_NOTE,
       </if>
       <if test="createTime != null" >
         CREATE_TIME,
@@ -59,6 +63,9 @@
       <if test="orderStatus != null" >
         #{orderStatus,jdbcType=CHAR},
       </if>
+      <if test="orderNote != null" >
+        #{orderNote,jdbcType=VARCHAR},
+      </if>
       <if test="createTime != null" >
         #{createTime,jdbcType=TIMESTAMP},
       </if>
@@ -76,6 +83,9 @@
       <if test="orderStatus != null" >
         ORDER_STATUS = #{orderStatus,jdbcType=CHAR},
       </if>
+      <if test="orderNote != null" >
+        ORDER_NOTE = #{orderNote,jdbcType=VARCHAR},
+      </if>
       <if test="createTime != null" >
         CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
       </if>
@@ -87,6 +97,7 @@
     set ORDER_ID = #{orderId,jdbcType=VARCHAR},
       ORDER_OPERATION = #{orderOperation,jdbcType=CHAR},
       ORDER_STATUS = #{orderStatus,jdbcType=CHAR},
+      ORDER_NOTE = #{orderNote,jdbcType=VARCHAR},
       CREATE_TIME = #{createTime,jdbcType=TIMESTAMP}
     where ID = #{id,jdbcType=INTEGER}
   </update>
