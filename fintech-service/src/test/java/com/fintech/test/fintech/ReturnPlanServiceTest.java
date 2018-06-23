@@ -30,11 +30,31 @@ public class ReturnPlanServiceTest {
     
     @Test
     public void testUpdateReturn() {
-        Integer id = 37;
-        String returnChannel = ReturnChannelEnum.线下.getValue();
+//        Integer id = 48;
+//        String returnChannel = ReturnChannelEnum.线下.getValue();
+//        try {
+//            returnPlanService.updateReturn(id, returnChannel);
+//        } catch (FintechException e) {
+//            e.printStackTrace();
+//        }
+    }
+    
+    @Test
+    public void testUpdateCancel() {
+//        String orderId = "ODR000000019";
+//        try {
+//            returnPlanService.updateCancel(orderId);
+//        } catch (FintechException e) {
+//            e.printStackTrace();
+//        }
+    }
+    
+    @Test
+    public void testUpdateOverDueInfo() {
         try {
-            returnPlanService.updateReturn(id, returnChannel);
+            returnPlanService.updateOverDueInfo();
         } catch (FintechException e) {
+            // TODO Auto-generated catch block
             e.printStackTrace();
         }
     }

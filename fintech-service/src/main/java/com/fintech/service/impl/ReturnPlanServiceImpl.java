@@ -147,6 +147,7 @@ public class ReturnPlanServiceImpl implements ReturnPlanService {
         log.setOrderId(orderId);
         log.setOrderOperation(OrderOperationEnum.取消.getValue());
         log.setOrderStatus(OrderStatusEnum.已取消.getValue());
+        log.setCreateTime(new Date());
         logOrderMapper.insert(log);
     }
 
@@ -163,15 +164,15 @@ public class ReturnPlanServiceImpl implements ReturnPlanService {
             BigDecimal overdueAmount = new BigDecimal(0);
             // T≦7天：当期本金*0.5%*天数
             if (days <= 7) {
-                overdueAmount = plan.getPrincipalAmount().multiply(new BigDecimal(0.005)).multiply(new BigDecimal(days));
+                overdueAmount = plan.getPrincipalAmount().multiply(new BigDecimal(0.005)).multiply(new BigDecimal(days)).setScale(2, BigDecimal.ROUND_UP);
             }
             // 7天<T≦60天：当期本金*1%*天数
             if (days <= 60 && days > 7) {
-                overdueAmount = plan.getPrincipalAmount().multiply(new BigDecimal(0.01)).multiply(new BigDecimal(days));
+                overdueAmount = plan.getPrincipalAmount().multiply(new BigDecimal(0.01)).multiply(new BigDecimal(days)).setScale(2, BigDecimal.ROUND_UP);
             }
             // T>60天：当期本金*1%*60
             if (days > 60) {
-                overdueAmount = plan.getPrincipalAmount().multiply(new BigDecimal(0.01)).multiply(new BigDecimal(60));
+                overdueAmount = plan.getPrincipalAmount().multiply(new BigDecimal(0.01)).multiply(new BigDecimal(60)).setScale(2, BigDecimal.ROUND_UP);
             }
             overDuePlan.setOverdueAmount(overdueAmount); // 逾期金额
             userReturnplanMapper.updateByPrimaryKeySelective(overDuePlan);
