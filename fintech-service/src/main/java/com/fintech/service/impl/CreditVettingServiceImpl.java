@@ -8,6 +8,7 @@ public class CreditVettingServiceImpl implements CreditVettingService {
     @Override
     public CreditVettingResultEnum creditVetting(String orderId) {
         // 拒绝 - 年龄18岁以下
+        
         // 拒绝 - 年龄60岁以上
         // 拒绝 - 身份证有效期失效
         // 拒绝 - 学生（年龄18-21岁；学历 专科/本科/硕士及以上）
