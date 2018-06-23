@@ -45,7 +45,7 @@
     <include refid="Base_Column_List" />
     from user_returnplan
     where RETURN_STATUS = '0'
-      and DATE_FORMAT(RETURN_DATE, 'yyyy-MM-dd') < CURDATE()
+      and DATE_FORMAT(RETURN_DATE, 'yyyy-MM-dd') &lt; CURDATE()
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from user_returnplan
