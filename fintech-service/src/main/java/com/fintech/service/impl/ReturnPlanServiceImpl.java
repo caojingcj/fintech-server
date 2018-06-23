@@ -70,11 +70,11 @@ public class ReturnPlanServiceImpl implements ReturnPlanService {
         // 计算金额
         BigDecimal manageAmount = orderAmount.multiply(rateManage).divide(new BigDecimal(100)); // 管理费总额
         BigDecimal TotalAmountP = orderAmount; // 客户还款总额（本金）
-        BigDecimal avgAmountP = TotalAmountP.divide(new BigDecimal(totalPeriod)).setScale(2, BigDecimal.ROUND_UP); // 每期还款金额（本金）
+        BigDecimal avgAmountP = TotalAmountP.divide(new BigDecimal(totalPeriod), 2, BigDecimal.ROUND_UP); // 每期还款金额（本金）
         BigDecimal lastAmountP = TotalAmountP.subtract(avgAmountP.multiply(new BigDecimal(totalPeriod - 1))); // 末期补偿金额（本金）
         BigDecimal TotalAmountI = orderAmount.multiply(rateTotal).divide(new BigDecimal(100))
                 .multiply(new BigDecimal(totalPeriod)).divide(new BigDecimal(12)); // 客户还款总额（利息）
-        BigDecimal avgAmountI = TotalAmountI.divide(new BigDecimal(totalPeriod)).setScale(2, BigDecimal.ROUND_UP); // 每期还款金额（利息）
+        BigDecimal avgAmountI = TotalAmountI.divide(new BigDecimal(totalPeriod), 2, BigDecimal.ROUND_UP); // 每期还款金额（利息）
         BigDecimal lastAmountI = TotalAmountI.subtract(avgAmountI.multiply(new BigDecimal(totalPeriod - 1))); // 末期补偿金额（利息）
         // 保存还款计划至数据库
         for (int i = 1; i <= totalPeriod; i++) {
