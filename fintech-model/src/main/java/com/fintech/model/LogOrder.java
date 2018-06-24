@@ -10,6 +10,8 @@ public class LogOrder {
     private String orderOperation;
 
     private String orderStatus;
+    
+    private String orderNote;
 
     private Date createTime;
 
@@ -43,6 +45,14 @@ public class LogOrder {
 
     public void setOrderStatus(String orderStatus) {
         this.orderStatus = orderStatus;
+    }
+
+    public String getOrderNote() {
+        return orderNote;
+    }
+
+    public void setOrderNote(String orderNote) {
+        this.orderNote = orderNote;
     }
 
     public Date getCreateTime() {
