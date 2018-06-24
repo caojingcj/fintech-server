@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.fintech.dao.LogMoxieinfoMapper" >
+  <resultMap id="BaseResultMap" type="com.fintech.model.LogMoxieinfo" >
+    <id column="ID" property="id" jdbcType="BIGINT" />
+    <result column="MOXIE_MOBILE" property="moxieMobile" jdbcType="VARCHAR" />
+    <result column="MOXIE_IDCARD" property="moxieIdcard" jdbcType="VARCHAR" />
+    <result column="MOXIE_NAME" property="moxieName" jdbcType="VARCHAR" />
+    <result column="MOXIE_CONTENT" property="moxieContent" jdbcType="CHAR" />
+    <result column="MOXIE_TYPE" property="moxieType" jdbcType="VARCHAR" />
+    <result column="ORDER_ID" property="orderId" jdbcType="VARCHAR" />
+    <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="MOXIE_TASK_ID" property="moxieTaskId" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, MOXIE_MOBILE, MOXIE_IDCARD, MOXIE_NAME, MOXIE_CONTENT, MOXIE_TYPE, ORDER_ID, 
+    CREATE_TIME, MOXIE_TASK_ID
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from log_moxieinfo
+    where ID = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from log_moxieinfo
+    where ID = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.fintech.model.LogMoxieinfo" >
+    insert into log_moxieinfo (ID, MOXIE_MOBILE, MOXIE_IDCARD, 
+      MOXIE_NAME, MOXIE_CONTENT, MOXIE_TYPE, 
+      ORDER_ID, CREATE_TIME, MOXIE_TASK_ID
+      )
+    values (#{id,jdbcType=BIGINT}, #{moxieMobile,jdbcType=VARCHAR}, #{moxieIdcard,jdbcType=VARCHAR}, 
+      #{moxieName,jdbcType=VARCHAR}, #{moxieContent,jdbcType=CHAR}, #{moxieType,jdbcType=VARCHAR}, 
+      #{orderId,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{moxieTaskId,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.fintech.model.LogMoxieinfo" >
+    insert into log_moxieinfo
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="moxieMobile != null" >
+        MOXIE_MOBILE,
+      </if>
+      <if test="moxieIdcard != null" >
+        MOXIE_IDCARD,
+      </if>
+      <if test="moxieName != null" >
+        MOXIE_NAME,
+      </if>
+      <if test="moxieContent != null" >
+        MOXIE_CONTENT,
+      </if>
+      <if test="moxieType != null" >
+        MOXIE_TYPE,
+      </if>
+      <if test="orderId != null" >
+        ORDER_ID,
+      </if>
+      <if test="createTime != null" >
+        CREATE_TIME,
+      </if>
+      <if test="moxieTaskId != null" >
+        MOXIE_TASK_ID,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="moxieMobile != null" >
+        #{moxieMobile,jdbcType=VARCHAR},
+      </if>
+      <if test="moxieIdcard != null" >
+        #{moxieIdcard,jdbcType=VARCHAR},
+      </if>
+      <if test="moxieName != null" >
+        #{moxieName,jdbcType=VARCHAR},
+      </if>
+      <if test="moxieContent != null" >
+        #{moxieContent,jdbcType=CHAR},
+      </if>
+      <if test="moxieType != null" >
+        #{moxieType,jdbcType=VARCHAR},
+      </if>
+      <if test="orderId != null" >
+        #{orderId,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="moxieTaskId != null" >
+        #{moxieTaskId,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.fintech.model.LogMoxieinfo" >
+    update log_moxieinfo
+    <set >
+      <if test="moxieMobile != null" >
+        MOXIE_MOBILE = #{moxieMobile,jdbcType=VARCHAR},
+      </if>
+      <if test="moxieIdcard != null" >
+        MOXIE_IDCARD = #{moxieIdcard,jdbcType=VARCHAR},
+      </if>
+      <if test="moxieName != null" >
+        MOXIE_NAME = #{moxieName,jdbcType=VARCHAR},
+      </if>
+      <if test="moxieContent != null" >
+        MOXIE_CONTENT = #{moxieContent,jdbcType=CHAR},
+      </if>
+      <if test="moxieType != null" >
+        MOXIE_TYPE = #{moxieType,jdbcType=VARCHAR},
+      </if>
+      <if test="orderId != null" >
+        ORDER_ID = #{orderId,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="moxieTaskId != null" >
+        MOXIE_TASK_ID = #{moxieTaskId,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.fintech.model.LogMoxieinfo" >
+    update log_moxieinfo
+    set MOXIE_MOBILE = #{moxieMobile,jdbcType=VARCHAR},
+      MOXIE_IDCARD = #{moxieIdcard,jdbcType=VARCHAR},
+      MOXIE_NAME = #{moxieName,jdbcType=VARCHAR},
+      MOXIE_CONTENT = #{moxieContent,jdbcType=CHAR},
+      MOXIE_TYPE = #{moxieType,jdbcType=VARCHAR},
+      ORDER_ID = #{orderId,jdbcType=VARCHAR},
+      CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      MOXIE_TASK_ID = #{moxieTaskId,jdbcType=VARCHAR}
+    where ID = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

@@ -63,7 +63,7 @@ public class CompanyBaseinfoController {
             companyBaseinfoService.insertCompanyBaseInfo(companyBaseinfo);
             return ResultUtils.success(ResultUtils.SUCCESS_CODE_MSG);
         } catch (Exception e) {
-            logger.info("ERROR EK参数[{}] 报错[{}] 方法名[{}]报错时间[{}]",companyBaseinfo,e.getMessage(),Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
+            logger.error("ERROR EK参数[{}] 报错[{}] 方法名[{}]报错时间[{}]",companyBaseinfo,e.getMessage(),Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
             return ResultUtils.error(ResultUtils.ERROR_CODE,e.getMessage());
         }
     }
@@ -83,7 +83,7 @@ public class CompanyBaseinfoController {
         try {
             return ResultUtils.success(ResultUtils.SUCCESS_CODE_MSG,companyBaseinfoService.selectByPrimaryKeyList(vo));
         } catch (Exception e) {
-            logger.info("ERROR EK 参数[{}] 报错[{}] 方法名[{}]报错时间[{}]",vo,e.getMessage(),Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
+            logger.error("ERROR EK 参数[{}] 报错[{}] 方法名[{}]报错时间[{}]",vo,e.getMessage(),Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
             return ResultUtils.error(ResultUtils.ERROR_CODE,e.getMessage());
         }
     }
@@ -104,7 +104,7 @@ public class CompanyBaseinfoController {
     		companyBaseinfoService.updateCompanyBaseInfoStatus(companyBaseinfo);
     		return ResultUtils.success(ResultUtils.SUCCESS_CODE_MSG);
     	} catch (Exception e) {
-    		logger.info("ERROR EK参数[商户编号{}][变更状态{}] 报错[{}] 方法名[{}]报错时间[{}]",companyBaseinfo.getCompanyId(),companyBaseinfo.getCompanyStatus(),e.getMessage(),Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
+    		logger.error("ERROR EK参数[商户编号{}][变更状态{}] 报错[{}] 方法名[{}]报错时间[{}]",companyBaseinfo.getCompanyId(),companyBaseinfo.getCompanyStatus(),e.getMessage(),Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
     		return ResultUtils.error(ResultUtils.ERROR_CODE,e.getMessage());
     	}
     }
@@ -131,7 +131,7 @@ public class CompanyBaseinfoController {
     		companyInfo.put("channelInfo", companyChannelService.selectByPrimaryKeyList(parms));
     		return ResultUtils.success(ResultUtils.SUCCESS_CODE_MSG,companyInfo);
     	} catch (Exception e) {
-    		logger.info("ERROR EK参数[商户编号{}] 报错[{}] 方法名[{}]报错时间[{}]",vo,e.getMessage(),Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
+    		logger.error("ERROR EK参数[商户编号{}] 报错[{}] 方法名[{}]报错时间[{}]",vo,e.getMessage(),Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
     		return ResultUtils.error(ResultUtils.ERROR_CODE,e.getMessage());
     	}
     }

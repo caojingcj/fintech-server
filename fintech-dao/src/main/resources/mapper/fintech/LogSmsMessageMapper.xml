@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.fintech.dao.LogSmsMessageMapper" >
+  <resultMap id="BaseResultMap" type="com.fintech.model.LogSmsMessage" >
+    <id column="ID" property="id" jdbcType="BIGINT" />
+    <result column="SEND_MOBILE" property="sendMobile" jdbcType="VARCHAR" />
+    <result column="SEND_CONTENT" property="sendContent" jdbcType="VARCHAR" />
+    <result column="RESULT_STATE" property="resultState" jdbcType="INTEGER" />
+    <result column="RESULT_MSG" property="resultMsg" jdbcType="VARCHAR" />
+    <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, SEND_MOBILE, SEND_CONTENT, RESULT_STATE, RESULT_MSG, CREATE_TIME
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from log_sms_message
+    where ID = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from log_sms_message
+    where ID = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.fintech.model.LogSmsMessage" >
+    insert into log_sms_message (ID, SEND_MOBILE, SEND_CONTENT, 
+      RESULT_STATE, RESULT_MSG, CREATE_TIME
+      )
+    values (#{id,jdbcType=BIGINT}, #{sendMobile,jdbcType=VARCHAR}, #{sendContent,jdbcType=VARCHAR}, 
+      #{resultState,jdbcType=INTEGER}, #{resultMsg,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.fintech.model.LogSmsMessage" >
+    insert into log_sms_message
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="sendMobile != null" >
+        SEND_MOBILE,
+      </if>
+      <if test="sendContent != null" >
+        SEND_CONTENT,
+      </if>
+      <if test="resultState != null" >
+        RESULT_STATE,
+      </if>
+      <if test="resultMsg != null" >
+        RESULT_MSG,
+      </if>
+      <if test="createTime != null" >
+        CREATE_TIME,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="sendMobile != null" >
+        #{sendMobile,jdbcType=VARCHAR},
+      </if>
+      <if test="sendContent != null" >
+        #{sendContent,jdbcType=VARCHAR},
+      </if>
+      <if test="resultState != null" >
+        #{resultState,jdbcType=INTEGER},
+      </if>
+      <if test="resultMsg != null" >
+        #{resultMsg,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.fintech.model.LogSmsMessage" >
+    update log_sms_message
+    <set >
+      <if test="sendMobile != null" >
+        SEND_MOBILE = #{sendMobile,jdbcType=VARCHAR},
+      </if>
+      <if test="sendContent != null" >
+        SEND_CONTENT = #{sendContent,jdbcType=VARCHAR},
+      </if>
+      <if test="resultState != null" >
+        RESULT_STATE = #{resultState,jdbcType=INTEGER},
+      </if>
+      <if test="resultMsg != null" >
+        RESULT_MSG = #{resultMsg,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.fintech.model.LogSmsMessage" >
+    update log_sms_message
+    set SEND_MOBILE = #{sendMobile,jdbcType=VARCHAR},
+      SEND_CONTENT = #{sendContent,jdbcType=VARCHAR},
+      RESULT_STATE = #{resultState,jdbcType=INTEGER},
+      RESULT_MSG = #{resultMsg,jdbcType=VARCHAR},
+      CREATE_TIME = #{createTime,jdbcType=TIMESTAMP}
+    where ID = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

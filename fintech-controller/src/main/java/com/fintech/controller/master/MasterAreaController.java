@@ -47,7 +47,7 @@ public class MasterAreaController {
             Map<String, Object>params=CommonUtil.object2Map(vo);
             return ResultUtils.success(ResultUtils.SUCCESS_CODE_MSG,masterAreaService.queryMasterAreaByKey(params));
         } catch (Exception e) {
-            logger.info("ERROR EK参数[{}] 报错[{}] 方法名[{}]报错时间[{}]",vo,e.getMessage(),Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
+            logger.error("ERROR EK参数[{}] 报错[{}] 方法名[{}]报错时间[{}]",vo,e.getMessage(),Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
             return ResultUtils.error(ResultUtils.ERROR_CODE,e.getMessage());
         }
     }

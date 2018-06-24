@@ -35,15 +35,15 @@ import com.fintech.util.DateUtils;
 //@MapperScan("com.fintech.dao.mapper")
 //@RequestMapping(value = {"/",""})
 @EnableAutoConfiguration
-@PropertySource(value = {"classpath:jdbc.properties","classpath:config.properties"}, ignoreResourceNotFound = true)
-public class Application extends SpringBootServletInitializer implements EmbeddedServletContainerCustomizer{
-    private static Logger logger = LoggerFactory.getLogger(Application.class);
+@PropertySource(value = {"classpath:jdbc.properties","classpath:webconfig.properties"}, ignoreResourceNotFound = true)
+public class WebApplication extends SpringBootServletInitializer implements EmbeddedServletContainerCustomizer{
+    private static Logger logger = LoggerFactory.getLogger(WebApplication.class);
     
     @Value("${server.port}")
     private Integer port;
     
     public static void main(String[] args) {
-        SpringApplication.run(Application.class ,args);
+        SpringApplication.run(WebApplication.class ,args);
     }
     
     /**
@@ -77,7 +77,7 @@ public class Application extends SpringBootServletInitializer implements Embedde
     
      @Override
         protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
-            return application.sources(Application.class);
+            return application.sources(WebApplication.class);
         }
      
      /**

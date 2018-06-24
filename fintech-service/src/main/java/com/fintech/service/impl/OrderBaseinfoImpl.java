@@ -25,6 +25,13 @@ public class OrderBaseinfoImpl implements OrderBaseinfoService {
     @Autowired
     private CompanyBaseinfoMapper companyBaseinfoMapper;
 
+    /* (非 Javadoc) 
+    * <p>Title: insertSelective</p> 
+    * <p>Description: </p> 
+    * @param record
+    * @throws FintechException 
+    * @see com.fintech.service.OrderBaseinfoService#insertSelective(com.fintech.model.OrderBaseinfo) 
+    */
     @Override
     public void insertSelective(OrderBaseinfo record) throws FintechException {
         //总在还款额不超过50w，分期还款中的笔数不超过3笔；

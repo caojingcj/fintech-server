@@ -1,0 +1,16 @@
+<LINK rel="stylesheet" href="../../css/errorInfoPage.css" />
+<DIV ng-controller="contrErrorInfo">
+
+    <DIV class="page-view">
+        <DIV layout="column">
+            <I class="material-icons error-logo">nature_people</I>
+            <H3>{{title}}</H3>
+            <P>{{details}}</P>
+            <DIV flex="100" class="btn-group" layout layout-align="end">
+                <!--<md-button>我该怎么办</md-button>-->
+                <md-button class="md-raised md-primary" ng-click="close()">关闭</md-button>
+            </DIV>
+        </DIV>
+    </DIV>
+
+</DIV>
