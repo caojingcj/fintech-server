@@ -27,7 +27,8 @@ import com.fintech.util.result.ResultUtils;
 @RequestMapping(value = "/masterArea")
 public class MasterAreaController {
     public static Logger logger = LoggerFactory.getLogger(MasterAreaController.class);
-
+//    @Autowired
+//    private RedisService redisService;
     @Autowired
     private MasterAreaService masterAreaService;
     

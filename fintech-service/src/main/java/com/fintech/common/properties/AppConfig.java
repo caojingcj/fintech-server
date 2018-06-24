@@ -16,18 +16,18 @@ public class AppConfig {
     /**
      * @Fields QYS_SERVER_URL : TODO[ 契约锁API地址 ]
      */
-    // @Value("${QYS_SERVER_URL}")
-    // private String QYS_SERVER_URL;
-    // /**
-    // * @Fields QYS_ACCESS_KEY : TODO[ 访问密钥 ]
-    // */
-    // @Value("${QYS_ACCESS_KEY}")
-    // private String QYS_ACCESS_KEY;
-    // /**
-    // * @Fields QYES_ACCESS_SECRET : TODO[ 访问密钥 ]
-    // */
-    // @Value("${QYES_ACCESS_SECRET}")
-    // private String QYES_ACCESS_SECRET;
+    @Value("${QYS_SERVER_URL}")
+    private String QYS_SERVER_URL;
+    /**
+    * @Fields QYS_ACCESS_KEY : TODO[ 访问密钥 ]
+    */
+    @Value("${QYS_ACCESS_KEY}")
+    private String QYS_ACCESS_KEY;
+    /**
+    * @Fields QYES_ACCESS_SECRET : TODO[ 访问密钥 ]
+    */
+    @Value("${QYES_ACCESS_SECRET}")
+    private String QYES_ACCESS_SECRET;
     /** 
     * @Fields MOXIE_APIKEY : TODO[ 魔蝎APIKEY ] 
     */
@@ -184,6 +184,30 @@ public class AppConfig {
 
     public void setALI_SMS_TEMPCODE(String aLI_SMS_TEMPCODE) {
         ALI_SMS_TEMPCODE = aLI_SMS_TEMPCODE;
+    }
+
+    public String getQYS_SERVER_URL() {
+        return QYS_SERVER_URL;
+    }
+
+    public void setQYS_SERVER_URL(String qYS_SERVER_URL) {
+        QYS_SERVER_URL = qYS_SERVER_URL;
+    }
+
+    public String getQYS_ACCESS_KEY() {
+        return QYS_ACCESS_KEY;
+    }
+
+    public void setQYS_ACCESS_KEY(String qYS_ACCESS_KEY) {
+        QYS_ACCESS_KEY = qYS_ACCESS_KEY;
+    }
+
+    public String getQYES_ACCESS_SECRET() {
+        return QYES_ACCESS_SECRET;
+    }
+
+    public void setQYES_ACCESS_SECRET(String qYES_ACCESS_SECRET) {
+        QYES_ACCESS_SECRET = qYES_ACCESS_SECRET;
     }
 
 }

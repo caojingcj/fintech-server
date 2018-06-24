@@ -90,4 +90,9 @@ public class CompanyBaseinfoImpl implements CompanyBaseinfoService {
 		return companyBaseinfoMapper.selectByPrimaryKey(parms);
 	}
 
+    @Override
+    public CompanyBaseinfo selectByPrimaryKeyInfo(String companyId) {
+        return companyBaseinfoMapper.selectByPrimaryKeyInfo(companyId);
+    }
+
 }

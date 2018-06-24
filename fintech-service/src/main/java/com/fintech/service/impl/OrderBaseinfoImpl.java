@@ -7,9 +7,11 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.fintech.dao.CompanyBaseinfoMapper;
+import com.fintech.dao.LogOrderMapper;
 import com.fintech.dao.OrderBaseinfoMapper;
 import com.fintech.dao.OrderDetailinfoMapper;
 import com.fintech.model.CompanyBaseinfo;
+import com.fintech.model.LogOrder;
 import com.fintech.model.OrderBaseinfo;
 import com.fintech.model.OrderDetailinfo;
 import com.fintech.service.OrderBaseinfoService;
@@ -24,6 +26,8 @@ public class OrderBaseinfoImpl implements OrderBaseinfoService {
     private OrderDetailinfoMapper orderDetailinfoMapper;
     @Autowired
     private CompanyBaseinfoMapper companyBaseinfoMapper;
+    @Autowired
+    private LogOrderMapper logOrderMapper;
 
     /* (非 Javadoc) 
     * <p>Title: insertSelective</p> 
@@ -40,10 +44,17 @@ public class OrderBaseinfoImpl implements OrderBaseinfoService {
             throw new FinTechException(ConstantInterface.ValidateConfig.OrderValidate.ORDER_200001.getKey(),ConstantInterface.ValidateConfig.OrderValidate.ORDER_200001.getValue());
         }
         orderBaseinfoMapper.insertSelective(record);
-        OrderDetailinfo orderDetailinfo=new OrderDetailinfo();
-        orderDetailinfoMapper.insertSelective(orderDetailinfo);
+//        OrderDetailinfo orderDetailinfo=new OrderDetailinfo();
+//        orderDetailinfoMapper.insertSelective(orderDetailinfo);
     }
 
+    /* (非 Javadoc) 
+    * <p>Title: updateByPrimaryKeySelective</p> 
+    * <p>Description: </p> 
+    * @param record 
+    * @see com.fintech.service.OrderBaseinfoService#updateByPrimaryKeySelective(com.fintech.model.OrderBaseinfo) 
+    * 项目信息填写
+    */
     @Override
     public void updateByPrimaryKeySelective(OrderBaseinfo record) {
         CompanyBaseinfo baseinfo=companyBaseinfoMapper.selectByPrimaryKeyInfo(record.getCompanyId());
@@ -51,6 +62,7 @@ public class OrderBaseinfoImpl implements OrderBaseinfoService {
             throw new FinTechException(ConstantInterface.ValidateConfig.CompanyValidate.COMPANY_100006.getKey(),ConstantInterface.ValidateConfig.CompanyValidate.COMPANY_100006.getValue());
         }
         orderBaseinfoMapper.updateByPrimaryKeySelective(record);
+        logOrderMapper.insertSelective(new LogOrder(record.getOrderId(),ConstantInterface.Enum.ConstantNumber.ONE.getKey().toString(),"00", null));
     }
     public static void main(String[] args) {
         String ss="1";

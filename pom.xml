@@ -107,12 +107,6 @@
             </dependency>
                 <!-- Spring Boot Mybatis 依赖 -->
             <dependency>
-                <groupId>org.mybatis.spring.boot</groupId>
-                <artifactId>mybatis-spring-boot-starter</artifactId>
-                <version>1.2.0</version>
-            </dependency>
-            
-            <dependency>
         <groupId>org.springframework.security</groupId>
         <artifactId>spring-security-test</artifactId>
         <version>4.2.1.RELEASE</version>
@@ -262,6 +256,35 @@
 				<artifactId>aliyun-java-sdk-dysmsapi</artifactId>
 				<version>1.0.0</version>
 				</dependency>
+				 <!-- 契约锁 start -->
+            <dependency>
+                <groupId>com.qiyuesuo.sdk</groupId>
+                <artifactId>sdk-java</artifactId>
+                <version>2.3.0</version>
+            </dependency>
+            <dependency>
+                <groupId>org.bouncycastle</groupId>
+                <artifactId>bcprov-jdk15on</artifactId>
+                <version>1.49</version>
+            </dependency>
+            <dependency>
+                <groupId>org.bouncycastle</groupId>
+                <artifactId>bcpkix-jdk15on</artifactId>
+                <version>1.49</version>
+            </dependency>
+            <!-- 契约锁 end -->
+            <!-- https://mvnrepository.com/artifact/com.aliyun.oss/aliyun-sdk-oss -->
+		<dependency>
+                <groupId>com.aliyun.oss</groupId>
+                <artifactId>aliyun-sdk-oss</artifactId>
+                <version>2.7.0</version>
+            </dependency>
+		
+		<dependency>
+			<groupId>commons-fileupload</groupId>
+			<artifactId>commons-fileupload</artifactId>
+			<version>${commons-fileupload.version}</version>
+		</dependency>
 			</dependencies>
 	</dependencyManagement>
   

@@ -5,6 +5,7 @@ import java.io.File;
 
 import javax.servlet.MultipartConfigElement;
 
+import org.mybatis.spring.annotation.MapperScan;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -21,6 +22,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.fintech.util.DateUtils;
 
@@ -31,12 +33,17 @@ import com.fintech.util.DateUtils;
 * @date 2018年6月12日 上午1:53:22  
 * @Description: TODO[ boot入口启动类 ]
 */
-@Configuration
-@ComponentScan("com.fintech")
+//@Configuration
+//@ComponentScan("com.fintech")
 //@MapperScan("com.fintech.dao.mapper")
 //@RequestMapping(value = {"/",""})
+//@EnableAutoConfiguration
+//@PropertySource(value = {"classpath:jdbc.properties","classpath:appconfig.properties"}, ignoreResourceNotFound = true)
+@Configuration
+@ComponentScan("com.fintech")
+@MapperScan("com.fintech.dao.mapper")
+@RequestMapping(value = {"/",""})
 @EnableAutoConfiguration
-@PropertySource(value = {"classpath:jdbc.properties","classpath:appconfig.properties"}, ignoreResourceNotFound = true)
 public class Application extends SpringBootServletInitializer implements EmbeddedServletContainerCustomizer{
     private static Logger logger = LoggerFactory.getLogger(Application.class);
     

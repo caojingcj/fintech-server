@@ -12,7 +12,9 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.fintech.common.properties.AppConfig;
 import com.fintech.model.LogMoxieinfo;
+import com.fintech.model.LogOrder;
 import com.fintech.service.LogMoxieinfoService;
+import com.fintech.service.LogOrderService;
 import com.fintech.util.DateUtils;
 import com.fintech.util.result.BaseResult;
 import com.fintech.util.result.ResultUtils;
@@ -34,7 +36,8 @@ public class MoxieController {
     private AppConfig appConfig;
     @Autowired
     private LogMoxieinfoService logMoxieinfoService;
-
+@Autowired
+private LogOrderService logOrderService;
 
     /** 
     * @Title: MoxieController.java 
@@ -48,14 +51,15 @@ public class MoxieController {
     * @throws 
     */
     @RequestMapping("toMoxieCarrierH5")
-    public ModelAndView toMoxieCarrierH5(String mobile,String idCard,String name) {
+    public ModelAndView toMoxieCarrierH5(String orderId,String mobile,String idCard,String name) {
         ModelAndView mav = new ModelAndView();
         mav.addObject("mobile", mobile);
         mav.addObject("name", name);
         mav.addObject("idCard", idCard);
         try {
             logger.info("EK魔蝎日志 H5参数【姓名[{}手机号[{}]身份证[{}]]】>方法名[{}]操作时间[{}]",name,mobile,idCard,Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
-                    String loginParams = URLEncoder.encode("{\"phone\":\"" + mobile + "\",\"name\":\"" +
+            logOrderService.insertSelective(new LogOrder(orderId, String.valueOf(03), String.valueOf(00), null));        
+            String loginParams = URLEncoder.encode("{\"phone\":\"" + mobile + "\",\"name\":\"" +
                             name + "\",\"idcard\":\"" + idCard + "\"}", "UTF-8");
                     mav.setViewName("redirect:https://api.51datakey.com/h5/importV3/index.html#/carrier" +
                             "?apiKey=" + appConfig.getMOXIE_APIKEY() +//魔蝎分配给合作机构的Key

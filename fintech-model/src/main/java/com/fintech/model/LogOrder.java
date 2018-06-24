@@ -62,4 +62,15 @@ public class LogOrder {
     public void setCreateTime(Date createTime) {
         this.createTime = createTime;
     }
+    
+    public LogOrder() {
+    }
+
+    public LogOrder(String orderId, String orderOperation, String orderStatus, String orderNote) {
+        super();
+        this.orderId = orderId;
+        this.orderOperation = orderOperation;
+        this.orderStatus = orderStatus;
+        this.orderNote = orderNote;
+    }
 }

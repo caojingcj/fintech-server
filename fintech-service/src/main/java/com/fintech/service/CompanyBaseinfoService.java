@@ -15,6 +15,8 @@ public interface CompanyBaseinfoService {
     
     List<CompanyBaseinfo> selectByPrimaryKey(Map<String, Object>parms)throws Exception;
     
+    CompanyBaseinfo selectByPrimaryKeyInfo(String companyId);
+    
     void updateCompanyBaseInfoStatus(CompanyBaseinfo companyBaseinfo);
     
     

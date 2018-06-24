@@ -16,4 +16,6 @@ public class OrderBaseInfoController {
     @Autowired
     private AppConfig appConfig;
     
+    
+    
 }
