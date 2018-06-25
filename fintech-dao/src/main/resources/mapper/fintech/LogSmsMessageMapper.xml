@@ -6,11 +6,12 @@
     <result column="SEND_MOBILE" property="sendMobile" jdbcType="VARCHAR" />
     <result column="SEND_CONTENT" property="sendContent" jdbcType="VARCHAR" />
     <result column="RESULT_STATE" property="resultState" jdbcType="INTEGER" />
-    <result column="RESULT_MSG" property="resultMsg" jdbcType="VARCHAR" />
+    <result column="RESULT_MSG" property="resultMsg" jdbcType="CHAR" />
     <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="SEND_TYPE" property="sendType" jdbcType="INTEGER" />
   </resultMap>
   <sql id="Base_Column_List" >
-    ID, SEND_MOBILE, SEND_CONTENT, RESULT_STATE, RESULT_MSG, CREATE_TIME
+    ID, SEND_MOBILE, SEND_CONTENT, RESULT_STATE, RESULT_MSG, CREATE_TIME, SEND_TYPE
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
@@ -24,11 +25,11 @@
   </delete>
   <insert id="insert" parameterType="com.fintech.model.LogSmsMessage" >
     insert into log_sms_message (ID, SEND_MOBILE, SEND_CONTENT, 
-      RESULT_STATE, RESULT_MSG, CREATE_TIME
-      )
+      RESULT_STATE, RESULT_MSG, CREATE_TIME, 
+      SEND_TYPE)
     values (#{id,jdbcType=BIGINT}, #{sendMobile,jdbcType=VARCHAR}, #{sendContent,jdbcType=VARCHAR}, 
-      #{resultState,jdbcType=INTEGER}, #{resultMsg,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}
-      )
+      #{resultState,jdbcType=INTEGER}, #{resultMsg,jdbcType=CHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{sendType,jdbcType=INTEGER})
   </insert>
   <insert id="insertSelective" parameterType="com.fintech.model.LogSmsMessage" >
     insert into log_sms_message
@@ -51,6 +52,9 @@
       <if test="createTime != null" >
         CREATE_TIME,
       </if>
+      <if test="sendType != null" >
+        SEND_TYPE,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -66,10 +70,13 @@
         #{resultState,jdbcType=INTEGER},
       </if>
       <if test="resultMsg != null" >
-        #{resultMsg,jdbcType=VARCHAR},
+        #{resultMsg,jdbcType=CHAR},
       </if>
       <if test="createTime != null" >
         #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="sendType != null" >
+        #{sendType,jdbcType=INTEGER},
       </if>
     </trim>
   </insert>
@@ -86,10 +93,13 @@
         RESULT_STATE = #{resultState,jdbcType=INTEGER},
       </if>
       <if test="resultMsg != null" >
-        RESULT_MSG = #{resultMsg,jdbcType=VARCHAR},
+        RESULT_MSG = #{resultMsg,jdbcType=CHAR},
       </if>
       <if test="createTime != null" >
         CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="sendType != null" >
+        SEND_TYPE = #{sendType,jdbcType=INTEGER},
       </if>
     </set>
     where ID = #{id,jdbcType=BIGINT}
@@ -99,8 +109,9 @@
     set SEND_MOBILE = #{sendMobile,jdbcType=VARCHAR},
       SEND_CONTENT = #{sendContent,jdbcType=VARCHAR},
       RESULT_STATE = #{resultState,jdbcType=INTEGER},
-      RESULT_MSG = #{resultMsg,jdbcType=VARCHAR},
-      CREATE_TIME = #{createTime,jdbcType=TIMESTAMP}
+      RESULT_MSG = #{resultMsg,jdbcType=CHAR},
+      CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      SEND_TYPE = #{sendType,jdbcType=INTEGER}
     where ID = #{id,jdbcType=BIGINT}
   </update>
 </mapper>

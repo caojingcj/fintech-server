@@ -18,6 +18,16 @@ public class CompanyPeriodFee {
 
     private Date updatetime;
 
+    public CompanyPeriodFee() {
+    }
+    public CompanyPeriodFee(String companyId, Integer period, BigDecimal rateTotal, BigDecimal rateManage) {
+        super();
+        this.companyId = companyId;
+        this.period = period;
+        this.rateTotal = rateTotal;
+        this.rateManage = rateManage;
+    }
+
     public Integer getId() {
         return id;
     }

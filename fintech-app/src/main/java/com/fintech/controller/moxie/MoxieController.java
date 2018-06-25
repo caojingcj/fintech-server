@@ -16,6 +16,7 @@ import com.fintech.model.LogOrder;
 import com.fintech.service.LogMoxieinfoService;
 import com.fintech.service.LogOrderService;
 import com.fintech.util.DateUtils;
+import com.fintech.util.enumerator.ConstantInterface;
 import com.fintech.util.result.BaseResult;
 import com.fintech.util.result.ResultUtils;
 
@@ -69,6 +70,7 @@ private LogOrderService logOrderService;
                             "&themeColor=2196F3" +//主题颜色
                             "&cacheDisable=YES" +//传递该参数为'YES'时，禁止缓存读取和写入。默认不传则会使用缓存
                             "&loginParams=" + loginParams);
+                    logOrderService.insertSelective(new LogOrder(orderId,ConstantInterface.Enum.OrderLogStatus.ORDER_STATUS03.getKey(), ConstantInterface.Enum.OrderStatus.ORDER_STATUS00.getKey(), null));
         } catch (Exception e) {
             logger.error("EK ERROR [{}]魔蝎日志 H5参数【姓名[{}手机号[{}]身份证[{}]]】>方法名[{}]操作时间[{}]",e.getMessage(),name,mobile,idCard,Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
         }

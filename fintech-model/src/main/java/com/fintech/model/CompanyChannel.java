@@ -15,6 +15,16 @@ public class CompanyChannel {
 
     private Date updatetime;
 
+    public CompanyChannel() {
+    }
+
+    public CompanyChannel(String companyId, String channelName, String channelPhone) {
+        super();
+        this.companyId = companyId;
+        this.channelName = channelName;
+        this.channelPhone = channelPhone;
+    }
+
     public Integer getId() {
         return id;
     }

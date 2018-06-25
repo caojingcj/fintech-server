@@ -3,8 +3,10 @@ package com.fintech.common.alipay;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import javax.annotation.PostConstruct;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import com.aliyuncs.DefaultAcsClient;
 import com.aliyuncs.IAcsClient;
@@ -16,14 +18,22 @@ import com.aliyuncs.exceptions.ClientException;
 import com.aliyuncs.profile.DefaultProfile;
 import com.aliyuncs.profile.IClientProfile;
 import com.fintech.common.properties.AppConfig;
-@Component
+@Service
 public class AlipaySmsDaYu {
     @Autowired
-    private static AppConfig appConfig;
+    private AppConfig appConfig;
     //产品名称:云通信短信API产品,开发者无需替换
     static final String product = "Dysmsapi";
     //产品域名,开发者无需替换
     static final String domain = "dysmsapi.aliyuncs.com";
+     static String ALI_SMS_ACCESSKEYID;
+     static String ALI_SMS_ACCESSKEYSECRET;
+    
+    @PostConstruct
+    public void init() {
+        ALI_SMS_ACCESSKEYID=appConfig.getALI_SMS_ACCESSKEYID();
+        ALI_SMS_ACCESSKEYSECRET=appConfig.getALI_SMS_ACCESSKEYSECRET();
+    }
     
     /** 
     * @Title: AlipaySmsDaYu.java 
@@ -36,12 +46,12 @@ public class AlipaySmsDaYu {
     * @Description: TODO[ 这里用一句话描述这个方法的作用 ]
     * @throws 
     */
-    public static SendSmsResponse sendSms(String mobile,String tempCode,String code,String tempContent) throws ClientException {
-        //可自助调整超时时间
+    public  static SendSmsResponse sendSms(String mobile,String tempCode,String code,String tempContent) throws ClientException {
+      //可自助调整超时时间
         System.setProperty("sun.net.client.defaultConnectTimeout", "10000");
         System.setProperty("sun.net.client.defaultReadTimeout", "10000");
         //初始化acsClient,暂不支持region化
-        IClientProfile profile = DefaultProfile.getProfile("cn-hangzhou", appConfig.getALI_SMS_ACCESSKEYID(), appConfig.getALI_SMS_ACCESSKEYSECRET());
+        IClientProfile profile = DefaultProfile.getProfile("cn-hangzhou", ALI_SMS_ACCESSKEYID, ALI_SMS_ACCESSKEYSECRET);
         DefaultProfile.addEndpoint("cn-hangzhou", "cn-hangzhou", product, domain);
         IAcsClient acsClient = new DefaultAcsClient(profile);
         //组装请求对象-具体描述见控制台-文档部分内容
@@ -69,7 +79,7 @@ public class AlipaySmsDaYu {
         System.setProperty("sun.net.client.defaultReadTimeout", "10000");
 
         //初始化acsClient,暂不支持region化
-        IClientProfile profile = DefaultProfile.getProfile("cn-hangzhou", appConfig.getALI_SMS_ACCESSKEYID(), appConfig.getALI_SMS_ACCESSKEYSECRET());
+        IClientProfile profile = DefaultProfile.getProfile("cn-hangzhou", ALI_SMS_ACCESSKEYID, ALI_SMS_ACCESSKEYSECRET);
         DefaultProfile.addEndpoint("cn-hangzhou", "cn-hangzhou", product, domain);
         IAcsClient acsClient = new DefaultAcsClient(profile);
 
@@ -93,7 +103,7 @@ public class AlipaySmsDaYu {
 
     public static void main(String[] args) throws ClientException, InterruptedException {
         //发短信
-        SendSmsResponse response = sendSms("13813948485","1234",appConfig.getALI_SMS_TEMPCODE(),appConfig.getALI_SMS_TEMPCONTENT().replace("smsCode", "2343"));
+        SendSmsResponse response = sendSms("13813948485","1234",ALI_SMS_ACCESSKEYID, ALI_SMS_ACCESSKEYSECRET.replace("smsCode", "2343"));
         System.out.println("短信接口返回的数据----------------");
         System.out.println("Code=" + response.getCode());
         System.out.println("Message=" + response.getMessage());

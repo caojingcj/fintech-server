@@ -96,6 +96,15 @@ public class ResultUtils {
     public static BaseResult error(String code,String message){
         return  new BaseResult(code,message);
     }
+    
+    /***
+     * 失败返回
+     * @param message
+     * @return
+     */
+    public static BaseResult error(Object code,Object message){
+        return  new BaseResult(code,message);
+    }
     /***
      * 失败返回
      * @param message

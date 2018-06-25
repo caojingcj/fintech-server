@@ -11,20 +11,15 @@ import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 */
 public class BaseResult {
 
-    private String code;
+    private Object code;
 
-    private String message;
-
+    private Object message;
+    
     private Object data;
 
-    public BaseResult(String code, String message) {
+    public BaseResult(Object code, Object message) {
         this.code = code;
         this.message = message;
-    }
-
-    public BaseResult(String message, Object data) {
-        this.message = message;
-        this.data = data;
     }
 
     public BaseResult(String code, String message, Object data) {
@@ -37,21 +32,6 @@ public class BaseResult {
         this.message = message;
     }
 
-    public String getCode() {
-        return code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
 
     public Object getData() {
         return data;
@@ -59,6 +39,23 @@ public class BaseResult {
 
     public void setData(Object data) {
         this.data = data;
+    }
+
+
+    public Object getCode() {
+        return code;
+    }
+
+    public void setCode(Object code) {
+        this.code = code;
+    }
+
+    public Object getMessage() {
+        return message;
+    }
+
+    public void setMessage(Object message) {
+        this.message = message;
     }
 
     @Override

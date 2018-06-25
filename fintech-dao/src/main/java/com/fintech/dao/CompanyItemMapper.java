@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.fintech.model.CompanyItem;
+import com.fintech.model.domain.CompanyItemDo;
 
 public interface CompanyItemMapper {
     int deleteByPrimaryKey(Integer id);
@@ -12,7 +13,7 @@ public interface CompanyItemMapper {
 
     int insertSelective(CompanyItem record);
 
-    List<CompanyItem> selectByPrimaryKeyList(Map<String, Object>parms);
+    List<CompanyItemDo> selectByPrimaryKeyList(Map<String, Object>parms);
 
     int updateByPrimaryKeySelective(CompanyItem record);
 

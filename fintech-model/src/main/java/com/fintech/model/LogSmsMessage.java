@@ -15,6 +15,8 @@ public class LogSmsMessage {
 
     private Date createTime;
 
+    private Integer sendType;
+
     public Long getId() {
         return id;
     }
@@ -61,5 +63,13 @@ public class LogSmsMessage {
 
     public void setCreateTime(Date createTime) {
         this.createTime = createTime;
+    }
+
+    public Integer getSendType() {
+        return sendType;
+    }
+
+    public void setSendType(Integer sendType) {
+        this.sendType = sendType;
     }
 }

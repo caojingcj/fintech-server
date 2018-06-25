@@ -1,23 +1,59 @@
 package com.fintech.service.impl;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.math.BigDecimal;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
+import com.fintech.common.QysRemoteSignHandler;
+import com.fintech.common.oss.FileUploadSample;
+import com.fintech.common.oss.OSSEntity;
+import com.fintech.common.properties.AppConfig;
 import com.fintech.dao.CompanyBaseinfoMapper;
+import com.fintech.dao.CompanyChannelMapper;
+import com.fintech.dao.CompanyItemMapper;
+import com.fintech.dao.CompanyPeriodFeeMapper;
+import com.fintech.dao.CustBaseinfoMapper;
 import com.fintech.dao.LogOrderMapper;
+import com.fintech.dao.OrderAttachmentMapper;
 import com.fintech.dao.OrderBaseinfoMapper;
 import com.fintech.dao.OrderDetailinfoMapper;
+import com.fintech.dao.UserContractMapper;
+import com.fintech.dao.procedure.ContractProcedureMapper;
+import com.fintech.dao.procedure.OrderProcedureMapper;
 import com.fintech.model.CompanyBaseinfo;
+import com.fintech.model.CompanyChannel;
+import com.fintech.model.CompanyPeriodFee;
 import com.fintech.model.LogOrder;
+import com.fintech.model.OrderAttachment;
 import com.fintech.model.OrderBaseinfo;
 import com.fintech.model.OrderDetailinfo;
+import com.fintech.model.UserContract;
+import com.fintech.model.domain.CompanyItemDo;
+import com.fintech.model.vo.OrderAttachmentVo;
+import com.fintech.model.vo.OrderBaseinfoVo;
+import com.fintech.model.vo.OrderDetailinfoVo;
+import com.fintech.model.vo.ProjectVo;
 import com.fintech.service.OrderBaseinfoService;
+import com.fintech.service.RedisService;
+import com.fintech.util.BeanUtils;
+import com.fintech.util.CommonUtil;
+import com.fintech.util.DateUtils;
 import com.fintech.util.FinTechException;
 import com.fintech.util.enumerator.ConstantInterface;
 import com.fintech.xcpt.FintechException;
+
+@Service
 public class OrderBaseinfoImpl implements OrderBaseinfoService {
 
     @Autowired
@@ -28,45 +64,207 @@ public class OrderBaseinfoImpl implements OrderBaseinfoService {
     private CompanyBaseinfoMapper companyBaseinfoMapper;
     @Autowired
     private LogOrderMapper logOrderMapper;
-
-    /* (非 Javadoc) 
-    * <p>Title: insertSelective</p> 
-    * <p>Description: </p> 
-    * @param record
-    * @throws FintechException 
-    * @see com.fintech.service.OrderBaseinfoService#insertSelective(com.fintech.model.OrderBaseinfo) 
-    */
+    @Autowired
+    private OrderProcedureMapper orderProcedureMapper;
+    @Autowired
+    private CompanyChannelMapper companyChannelMapper;
+    @Autowired
+    private CompanyPeriodFeeMapper companyPeriodFeeMapper;
+    @Autowired
+    private CompanyItemMapper companyItemMapper;
+    @Autowired
+    private CustBaseinfoMapper custBaseinfoMapper;
+    @Autowired
+    private OrderAttachmentMapper orderAttachmentMapper;
+    @Autowired
+    private RedisService redisService;
+    @Autowired
+    private AppConfig appConfig;
+    @Autowired
+    private QysRemoteSignHandler qysRemoteSignHandler;
+    @Autowired
+    private UserContractMapper userContractMapper;
+    @Autowired
+    private ContractProcedureMapper contractProcedureMapper;
+    /*
+     * (非 Javadoc) <p>Title: insertSelective</p> <p>Description: </p>
+     * 
+     * @param record
+     * 
+     * @throws FintechException
+     * 
+     * @see com.fintech.service.OrderBaseinfoService#insertSelective(com.fintech.model.OrderBaseinfo)
+     */
     @Override
     public void insertSelective(OrderBaseinfo record) throws FintechException {
-        //总在还款额不超过50w，分期还款中的笔数不超过3笔；
-        Map<String, Object> amount=orderBaseinfoMapper.selectByOrderAmountJudge(record.getCustCellphone());
-        if(Integer.parseInt(amount.get("amount").toString())>1||Integer.parseInt(amount.get("statusCount").toString())>3) {
-            throw new FinTechException(ConstantInterface.ValidateConfig.OrderValidate.ORDER_200001.getKey(),ConstantInterface.ValidateConfig.OrderValidate.ORDER_200001.getValue());
-        }
+//        // 总在还款额不超过50w，分期还款中的笔数不超过3笔；
+//        Map<String, Object> amount = orderBaseinfoMapper.selectByOrderAmountJudge(record.getCustCellphone());
+//        if (Integer.parseInt(amount.get("amount").toString()) > 1
+//                || Integer.parseInt(amount.get("statusCount").toString()) > 3) {
+//            throw new FinTechException(ConstantInterface.AppValidateConfig.OrderValidate.ORDER_200001.getKey(),
+//                    ConstantInterface.AppValidateConfig.OrderValidate.ORDER_200001.getValue());
+//        }
+//        orderBaseinfoMapper.insertSelective(record);
+//        // OrderDetailinfo orderDetailinfo=new OrderDetailinfo();
+//        // orderDetailinfoMapper.insertSelective(orderDetailinfo);
+        record.setOrderId(orderProcedureMapper.generateOrderId());
         orderBaseinfoMapper.insertSelective(record);
-//        OrderDetailinfo orderDetailinfo=new OrderDetailinfo();
-//        orderDetailinfoMapper.insertSelective(orderDetailinfo);
+        logOrderMapper.insertSelective(new LogOrder(record.getOrderId(),ConstantInterface.Enum.ConstantNumber.ONE.getKey().toString(), "00", null));
+        
     }
 
-    /* (非 Javadoc) 
-    * <p>Title: updateByPrimaryKeySelective</p> 
-    * <p>Description: </p> 
-    * @param record 
-    * @see com.fintech.service.OrderBaseinfoService#updateByPrimaryKeySelective(com.fintech.model.OrderBaseinfo) 
-    * 项目信息填写
-    */
+    /*
+     * (非 Javadoc) <p>Title: updateByPrimaryKeySelective</p> <p>Description: </p>
+     * 
+     * @param record
+     * 
+     * @see com.fintech.service.OrderBaseinfoService#updateByPrimaryKeySelective(com.fintech.model.OrderBaseinfo) 项目信息填写
+     */
     @Override
     public void updateByPrimaryKeySelective(OrderBaseinfo record) {
-        CompanyBaseinfo baseinfo=companyBaseinfoMapper.selectByPrimaryKeyInfo(record.getCompanyId());
-        if(baseinfo.getCompanyStatus().equals(String.valueOf(ConstantInterface.Enum.ConstantNumber.ZERO.getKey()))) {
-            throw new FinTechException(ConstantInterface.ValidateConfig.CompanyValidate.COMPANY_100006.getKey(),ConstantInterface.ValidateConfig.CompanyValidate.COMPANY_100006.getValue());
+        CompanyBaseinfo baseinfo = companyBaseinfoMapper.selectByPrimaryKeyInfo(record.getCompanyId());
+        if (baseinfo.getCompanyStatus().equals(String.valueOf(ConstantInterface.Enum.ConstantNumber.ZERO.getKey()))) {
+            throw new FinTechException(ConstantInterface.ValidateConfig.CompanyValidate.COMPANY_100006.getKey(),
+                    ConstantInterface.ValidateConfig.CompanyValidate.COMPANY_100006.getValue());
         }
         orderBaseinfoMapper.updateByPrimaryKeySelective(record);
-        logOrderMapper.insertSelective(new LogOrder(record.getOrderId(),ConstantInterface.Enum.ConstantNumber.ONE.getKey().toString(),"00", null));
+        logOrderMapper.insertSelective(new LogOrder(record.getOrderId(),
+                ConstantInterface.Enum.ConstantNumber.ONE.getKey().toString(), ConstantInterface.Enum.OrderStatus.ORDER_STATUS00.getKey(), null));
     }
+
     public static void main(String[] args) {
-        String ss="1";
+        String ss = "1";
         System.out.println(ss.equals(String.valueOf(ConstantInterface.Enum.ConstantNumber.ZERO.getKey())));
     }
 
+    @Override
+    public Map<String, Object> scanPiece(String companyId,String mobile) throws Exception {
+        CompanyBaseinfo baseinfo = companyBaseinfoMapper.selectByPrimaryKeyInfo(companyId);
+        if (baseinfo.getCompanyStatus().equals(ConstantInterface.Enum.ConstantNumber.ZERO.getKey().toString())) {
+            throw new Exception(ConstantInterface.AppValidateConfig.CompanyValidate.COMPANY_200101.toString());
+        }
+        Map<String, Object> parms = new HashMap<>();
+        parms.put("companyId", companyId);
+        List<CompanyChannel> channels = companyChannelMapper.selectByPrimaryKeyList(parms);// 咨询师
+        List<CompanyPeriodFee> periodFees = companyPeriodFeeMapper.selectByPrimaryKeyList(parms);// 费率
+        List<CompanyItemDo> items = companyItemMapper.selectByPrimaryKeyList(parms);// 项目
+        OrderBaseinfo orderBaseinfo=new OrderBaseinfo();
+        orderBaseinfo.setCompanyId(companyId);
+        orderBaseinfo.setCustCellphone(mobile);
+        orderBaseinfo.setOrderStatus(ConstantInterface.Enum.OrderStatus.ORDER_STATUS00.getKey());
+        orderBaseinfo.setCompanyName(baseinfo.getCompanyName());
+        orderBaseinfo.setOrderId(orderProcedureMapper.generateOrderId());
+        OrderDetailinfo detailinfo=new OrderDetailinfo();
+        detailinfo.setOrderId(orderBaseinfo.getOrderId());
+        orderBaseinfoMapper.insertSelective(orderBaseinfo);
+        orderDetailinfoMapper.insertSelective(detailinfo);
+        Map<String, Object> reslutMap = new HashMap<>();
+        reslutMap.put("channels", channels);
+        reslutMap.put("periodFees", periodFees);
+        reslutMap.put("items", items);
+        reslutMap.put("baseinfo", baseinfo);
+        reslutMap.put("order", orderBaseinfo);
+        return reslutMap;
+    }
+    
+    @Override
+    public void saveProject(ProjectVo projectVo) throws Exception {
+        // 总在还款额不超过50w，分期还款中的笔数不超过3笔；
+        Map<String, Object> amount = orderBaseinfoMapper.selectByOrderAmountJudge(redisService.get(projectVo.getToken()));
+        if (Integer.parseInt(amount.get("amount").toString()) > 1 || Integer.parseInt(amount.get("statusCount").toString()) > 3) {
+            throw new Exception(ConstantInterface.AppValidateConfig.OrderValidate.ORDER_200001.toString());
+        }
+        OrderBaseinfo record=new OrderBaseinfo();
+        record.setItemCode(projectVo.getItemCode());
+        record.setItemName(projectVo.getItemName());
+        record.setOrderAmount(new BigDecimal(projectVo.getOrderAmount()));
+        record.setTotalPeriod(projectVo.getTotalPeriod());
+        OrderDetailinfo detailinfo=new OrderDetailinfo();
+        detailinfo.setCompanyChannelId(projectVo.getCompanyChannelId());
+        detailinfo.setCompanyChannelName(projectVo.getCompanyChannelName());
+        detailinfo.setOrderId(projectVo.getOrderId());
+        orderBaseinfoMapper.updateByPrimaryKeySelective(record);
+        orderDetailinfoMapper.updateByPrimaryKeySelective(detailinfo);
+        logOrderMapper.insertSelective(new LogOrder(projectVo.getOrderId(),ConstantInterface.Enum.OrderLogStatus.ORDER_STATUS01.getKey(), ConstantInterface.Enum.OrderStatus.ORDER_STATUS00.getKey(), null));
+    }
+
+    @Override
+    public void saveDetailinfo(OrderDetailinfoVo orderDetailinfo) throws Exception {
+        OrderDetailinfo detailinfo=new OrderDetailinfo();
+        BeanUtils.copyProperties(orderDetailinfo, detailinfo);
+        orderDetailinfoMapper.updateByPrimaryKeySelective(detailinfo);
+        logOrderMapper.insertSelective(new LogOrder(orderDetailinfo.getOrderId(),ConstantInterface.Enum.OrderLogStatus.ORDER_STATUS04.getKey(), ConstantInterface.Enum.OrderStatus.ORDER_STATUS00.getKey(), null));
+    }
+
+    @Override
+    public String saveOrderAttachment(OrderAttachmentVo vo, MultipartHttpServletRequest multipartHttpServletRequest) {
+        try {
+            MultipartFile multipartFile=multipartHttpServletRequest.getFile("file");
+            InputStream is= multipartFile.getInputStream();
+            if(is.available()==0){
+                throw new Exception(ConstantInterface.AppValidateConfig.OrderValidate.ORDER_200002.toString());
+            }
+            File convFile=null;
+            String fileName,path = "";
+            OSSEntity oss=null;
+            String folder = CommonUtil.getStringTime(new Date(), "yyyyMMdd") + "/";
+            FileUploadSample sample = new FileUploadSample();
+            convFile = new File(multipartFile.getOriginalFilename());
+            multipartFile.transferTo(convFile);
+            String suffix = convFile.getName().substring(convFile.getName().lastIndexOf("."));
+            fileName = vo.getOrderId()+"-"+vo.getAtthType() + "-" + UUID.randomUUID() + suffix;
+            path = appConfig.getOSS_ORDER_ATTACMENT_PATH() + folder + fileName;
+            oss = new OSSEntity();
+            oss=sample.uploadFile(multipartFile.getInputStream(), path);
+            OrderAttachment attachment=new OrderAttachment();
+            BeanUtils.copyProperties(vo, attachment);
+            attachment.setAtthPath(oss.getUrl());
+            orderAttachmentMapper.insertSelective(attachment);
+            return oss.getUrl();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+    
+    
+    /* (非 Javadoc) 
+    * <p>Title: remoteSignCaOrder</p> 
+    * <p>Description: </p> 
+    * @param vo
+    * @return
+    * @throws IOException 
+    * @see com.fintech.service.OrderBaseinfoService#remoteSignCaOrder(com.fintech.model.vo.OrderBaseinfoVo) 
+    * 用户签署
+    */
+    @Override
+    public String remoteSignCaOrder(OrderBaseinfoVo vo) throws IOException {
+        String contractId=contractProcedureMapper.generateContractId();
+        OrderBaseinfo orderBaseinfo=orderBaseinfoMapper.selectByPrimaryKey(vo.getOrderId());
+        UserContract userContract=new UserContract();
+        userContract.setOrderId(vo.getOrderId());
+        userContract.setCustIdCardNo(orderBaseinfo.getCustIdCardNo());
+        userContract.setCustCellphone(orderBaseinfo.getCustCellphone());
+        userContract.setCustRealname(orderBaseinfo.getCustRealname());
+        userContract.setContractId(contractId);
+        userContractMapper.insertSelective(userContract);
+        OSSEntity oss=null;
+        Map<String, String>qysParams=resultCaMap(orderBaseinfo);
+        oss = qysRemoteSignHandler.signOrderCA(contractId, qysParams);
+        return oss.getUrl();
+    }
+
+    public Map<String, String> resultCaMap(OrderBaseinfo vo){
+        UserContract contract=userContractMapper.selectByOrderId(vo.getOrderId());
+        CompanyBaseinfo companyBaseinfo=companyBaseinfoMapper.selectByPrimaryKeyInfo(vo.getCompanyId());
+        Map<String, String> qysParams = new HashMap<>();
+        qysParams.put("CONTRACT_ID", contract.getContractId());
+        qysParams.put("SIGNING_TIME", DateUtils.getDateStr("yyyy年MM月dd日"));
+        qysParams.put("COMPANY_NAME", companyBaseinfo.getCompanyName());
+        qysParams.put("CORPORATE_NAME", companyBaseinfo.getCorporateName());
+        qysParams.put("COMPANY_ADDR", companyBaseinfo.getCompanyAddr());
+        return qysParams;
+    }
 }

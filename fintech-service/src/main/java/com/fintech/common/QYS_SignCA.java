@@ -7,16 +7,18 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import javax.annotation.PostConstruct;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.fintech.common.oss.FileUploadSample;
 import com.fintech.common.oss.OSSEntity;
@@ -50,6 +52,7 @@ import com.qiyuesuo.sdk.template.Template;
  * @Date 2017年6月23日 下午12:13:38
  * @Description 契约锁合同签署API<br>暂时只用到了RemoteSignService，Te
  */
+@Service("qYS_SignCA")
 public class QYS_SignCA {
     private static final Logger logger = LoggerFactory.getLogger(QYS_SignCA.class);
     private static SDKClient sdkClient = null;
@@ -59,21 +62,27 @@ public class QYS_SignCA {
     private static SealService sealService;//印章
     private static LocalSignService localSignService;//本地签
     private static StandardSignService standardSignService;//标准签
-    private static AppConfig config;
+    @Autowired
+    public AppConfig appConfig;
     
-    private static String serverUrl="https://openapi.qiyuesuo.me/";
-    private static String accessKey="hCDzvig7TF";
-    private static String accessSecret="txyriflJVg7xpjEo1LNPiAF1wen9C3";
-//    private static String serverUrl="https://openapi.qiyuesuo.com/";
-//    private static String accessKey="yxAIiAwH3L";
-//    private static String accessSecret="Bbvgf57uLlOJqzhz2Jiea4g7J5YEMs";
     
-    static {
-        logger.info("初始化CA,{}===》{}==>{}",serverUrl, accessKey, accessSecret);
-        sdkClient =new SDKClient(serverUrl, accessKey, accessSecret);
-        log =new ThreadLocal<ArrayList<String>>();
+    @PostConstruct
+    private void init() {
+        try {
+            logger.info("EK>初始化QYS_SignCA契约锁方法名Init[{}]操作时间[{}]",Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
+            String serverUrl = appConfig.getQYS_SERVER_URL();
+            String accessKey = appConfig.getQYS_ACCESS_KEY();
+            String accessSecret = appConfig.getQYES_ACCESS_SECRET();
+            sdkClient = new SDKClient(serverUrl, accessKey, accessSecret);
+            localSignService = new LocalSignServiceImpl(sdkClient);
+            remoteSignService = new RemoteSignServiceImpl(sdkClient);
+            sealService = new SealServiceImpl(sdkClient);
+            log =new ThreadLocal<ArrayList<String>>();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
-
+    
     private QYS_SignCA() {
         
     };//私有化构造器，防呆
@@ -342,16 +351,11 @@ public class QYS_SignCA {
      * @Description 下载签署完毕的合同到本地路径</p>
      * @param contractDocId 契约锁平台合同ID
      */
-    public static OSSEntity download(String companyId, long contractDocId) {
+    public static OSSEntity download(String contractId, long contractDocId) {
         OutputStream outputStream = null;
         try {
-            Date nowDate = new Date();
-            SimpleDateFormat year = new SimpleDateFormat("yyyyMM");
-            SimpleDateFormat day = new SimpleDateFormat("dd");
-            String nowDateTime = new SimpleDateFormat("yyyyMMddHHmmssSSS").format(nowDate);
-            String fileName = companyId + "_QYS" + nowDateTime;
-            String path = "manage/qys/" + year.format(nowDate) + "/" + day.format(nowDate);
-            String fileUrl = path + "/" + fileName;
+            String path = "order/qys/contract";
+            String fileUrl = path + "/" + contractId;
             File downToLocalFile = File.createTempFile(fileUrl, ".pdf");
             outputStream = new FileOutputStream(downToLocalFile);
             getService(RemoteSignService.class);
@@ -453,40 +457,32 @@ public class QYS_SignCA {
     }
 
     /**签署合同**/
-    public static OSSEntity signCommit(String companyId, long templateDocId, long platformSealId, Map<String, String> params, String stampPostion, String personSignPosition) {
-        //用模板创建合同
+    public static OSSEntity signCommit(String contractId, long templateDocId, long platformSealId, Map<String, String> params, String stampPostion, String personSignPosition) {
+      //用模板创建合同
         logger.info("EK>before---用模板创建合同>方法名[{}]操作时间[{}]",
             Thread.currentThread().getStackTrace()[1].getMethodName(),
             DateUtils.getDateTime());
         long contractDocId = QYS_SignCA
-            .createContractWithTemplate(templateDocId, params, companyId);
+            .createContractWithTemplate(templateDocId, params, contractId);
         logger.info("EK>Done--用模板创建合同>Success, contractDocId[{}]方法名[{}]操作时间[{}]",
             contractDocId,
             Thread.currentThread().getStackTrace()[1].getMethodName(),
             DateUtils.getDateTime());
         String arrStamp[] = stampPostion.split(",");
-        //      String arrPerson[]= personSignPosition.split(",");
         int pageS = Integer.valueOf(arrStamp[0]);
         float xS = Float.valueOf(arrStamp[1]);
         float vS = Float.valueOf(arrStamp[2]);
-        //      int pageP= Integer.valueOf(arrPerson[0]);
-        //      float xP=  Float.valueOf(arrPerson[1]);
-        //      float vP=  Float.valueOf(arrPerson[2]);
         //平台签名
         QYS_SignCA.platformSignWithStamp(contractDocId, platformSealId, pageS, xS, vS);
-        logger.info("EK>Done---平台签名>方法名[{}]操作时间[{}]",
-            Thread.currentThread().getStackTrace()[1].getMethodName(),
+        logger.info("EK>Done---平台签名>方法名[{}]操作时间[{}]",Thread.currentThread().getStackTrace()[1].getMethodName(),
             DateUtils.getDateTime());
-        //      //客户签名
-        //      QYS_SignCA.personSignWithStamp(contractDocId, params.get("BUSINESS_NAME"), "", "", pageP, xP, vP);
-        //      logger.info("EK>Done---客户签名>方法名[{}]操作时间[{}]",Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
         //合同完成
         QYS_SignCA.closeContract(contractDocId);
         logger.info("EK>Done---下载合同完成>方法名[{}]操作时间[{}]",
             Thread.currentThread().getStackTrace()[1].getMethodName(),
             DateUtils.getDateTime());
         //下载合同
-        OSSEntity ossEntity = QYS_SignCA.download(companyId, contractDocId);
+        OSSEntity ossEntity = QYS_SignCA.download(contractId, contractDocId);
         return ossEntity;
     }
 

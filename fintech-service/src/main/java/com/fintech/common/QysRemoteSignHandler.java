@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 
 import javax.annotation.PostConstruct;
 
@@ -46,37 +47,41 @@ public class QysRemoteSignHandler {
 	/** 
 	* @Fields sdkClient : TODO[ 契约锁SDK客户端封装类 ] 
 	*/
-	private static SDKClient sdkClient;
+	 static SDKClient sdkClient;
 	/**
 	 * 本地签接口
 	 */
-	private static LocalSignService localSignService;
+	 static LocalSignService localSignService;
 	/**
 	 * 远程签服务接口 远程签需要将合同文件保存在契约锁服务器
 	 */
-	private static RemoteSignService remoteSignService;
+	 static RemoteSignService remoteSignService;
 	/**
 	 * 印章服务接口
 	 */
-	private static SealService sealService;
+	 static SealService sealService;
 	@Autowired
-	private AppConfig qysConfig;// 配置文件
-
- 	long platformSealId;
+	public AppConfig appConfig;// 配置文件
+ 	private Long platformSealId;
+ 	private Long QYES_CA_DOCID;
+ 	private String QYES_CA_STAMP;
+ 	
+ 	
  	
 	@PostConstruct
 	private void init() {
 		try {
-	      	logger.info("EK>初始化契约锁方法名Init[{}]操作时间[{}]",Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
-//	      	platformSealId=manageCompanyCaMapper.selectByPrimaryKey("CA100").getCaDocid();//获取公章ID
-			String serverUrl = qysConfig.getQYS_SERVER_URL();
-			String accessKey = qysConfig.getQYS_ACCESS_KEY();
-			String accessSecret = qysConfig.getQYES_ACCESS_SECRET();
+	      	logger.info("EK>初始化QysRemoteSignHandler契约锁方法名Init[{}]操作时间[{}]",Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
+			String serverUrl = appConfig.getQYS_SERVER_URL();
+			String accessKey = appConfig.getQYS_ACCESS_KEY();
+			String accessSecret = appConfig.getQYES_ACCESS_SECRET();
 			sdkClient = new SDKClient(serverUrl, accessKey, accessSecret);
 			localSignService = new LocalSignServiceImpl(sdkClient);
 			remoteSignService = new RemoteSignServiceImpl(sdkClient);
 			sealService = new SealServiceImpl(sdkClient);
-
+			platformSealId=Long.parseLong(appConfig.getQYES_CA_SEALID());
+			QYES_CA_DOCID=Long.parseLong(appConfig.getQYES_CA_DOCID());
+			QYES_CA_STAMP=appConfig.getQYES_CA_STAMP();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -215,23 +220,18 @@ public class QysRemoteSignHandler {
 	        return documentId;
 	    }
 	
-	  public OSSEntity signCompanyCA(String companyId,String caCode,Map<String, String> qysParams) throws IOException {
-	      logger.info("EK>商户签约授权书>商户编号：[{}]方法名[{}]操作时间[{}]",companyId,Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
-	        try {
-	            OSSEntity oss=null;
-//	        	ManageCompanyCa ca=manageCompanyCaMapper.selectByPrimaryKey(caCode);
-//	        	long templateDocId=ca.getCaDocid();//商户签约授权书
-	        	/**** qys商户 签署 ***/
-//	        	String stampPosition = ca.getCaStamp();
-//	        	String personSignPosition = ca.getCaPersonsign();
-//	        	OSSEntity oss = QYS_SignCA.signCommit(companyId+"_"+UUID.randomUUID(), templateDocId, platformSealId, qysParams, stampPosition, personSignPosition);
-	        	return oss;
-	        } catch (Exception e) {
-	        	logger.info("EK>QYS ERROR>商户编号：[{}]方法名[{}]操作时间[{}]error:[{}]",companyId,Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime(),e.getMessage());
-	            e.printStackTrace();
-	        }
-	        return null;
-	    }
+    public OSSEntity signOrderCA(String contractId,Map<String, String> qysParams) throws IOException {
+          logger.info("EK>用户签约授权书>商户编号：[{}]方法名[{}]操作时间[{}]",contractId,Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
+            try {
+                /**** qys用户签署 ***/
+                OSSEntity oss = QYS_SignCA.signCommit(contractId, QYES_CA_DOCID, platformSealId, qysParams, QYES_CA_STAMP, null);
+                return oss;
+            } catch (Exception e) {
+                logger.info("EK>QYS ERROR>商户编号：[{}]方法名[{}]操作时间[{}]error:[{}]",contractId,Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime(),e.getMessage());
+                e.printStackTrace();
+            }
+            return null;
+        }
 	  
 	  public String getCaTemplate(long templateDocId,Map<String, String> qysParams) {
 		  String viewUrl = QYS_SignCA.getCaTemplate(templateDocId, qysParams,"合同号");

@@ -18,11 +18,21 @@
     where COMPANY_ID =#{companyId,jdbcType=CHAR}
   </select>
   
-  <select id="selectByPrimaryKeyList" resultMap="BaseResultMap" parameterType="java.util.Map" >
+    <resultMap id="BaseResultMapCompanyItemDo" type="com.fintech.model.domain.CompanyItemDo" >
+    <id column="ID" property="id" jdbcType="INTEGER" />
+    <result column="COMPANY_ID" property="companyId" jdbcType="CHAR" />
+    <result column="ITEM_CODE" property="itemCode" jdbcType="CHAR" />
+    <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="UPDATETIME" property="updatetime" jdbcType="TIMESTAMP" />
+    <result column="ITEM_NAME" property="itemName" jdbcType="VARCHAR" />
+  </resultMap>
+  <select id="selectByPrimaryKeyList" resultMap="BaseResultMapCompanyItemDo" parameterType="java.util.Map" >
     select 
-    <include refid="Base_Column_List" />
-    from company_item
+    <include refid="Base_Column_List" />,mcitem.ITEM_NAME
+    from company_item item left join master_company_item mcitem
+		on item.ITEM_CODE=mcitem.item_code
     where COMPANY_ID =#{companyId,jdbcType=CHAR}
+    order by mcitem.SORT_ORDER desc
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from company_item

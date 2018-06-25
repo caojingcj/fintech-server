@@ -32,4 +32,5 @@ public interface RedisService {
      
      String getVal(final String key) throws Exception;
      
+     void tokenValidate(String token)throws Exception;
 }

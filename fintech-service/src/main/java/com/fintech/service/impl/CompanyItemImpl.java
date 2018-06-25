@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.fintech.dao.CompanyItemMapper;
-import com.fintech.model.CompanyItem;
+import com.fintech.model.domain.CompanyItemDo;
 import com.fintech.service.CompanyItemService;
 
 /**   
@@ -30,7 +30,7 @@ public class CompanyItemImpl implements CompanyItemService{
 	* @see com.fintech.service.CompanyItemService#selectByPrimaryKeyList(java.util.Map) 
 	*/
 	@Override
-	public List<CompanyItem> selectByPrimaryKeyList(Map<String, Object> parms) {
+	public List<CompanyItemDo> selectByPrimaryKeyList(Map<String, Object> parms) {
 		return companyItemMapper.selectByPrimaryKeyList(parms);
 	}
 }

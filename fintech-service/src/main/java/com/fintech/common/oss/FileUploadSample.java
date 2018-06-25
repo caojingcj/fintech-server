@@ -12,8 +12,14 @@ import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
+import javax.annotation.PostConstruct;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.alibaba.fastjson.JSON;
 import com.aliyun.oss.OSSClient;
@@ -23,18 +29,33 @@ import com.aliyun.oss.model.ListObjectsRequest;
 import com.aliyun.oss.model.OSSObject;
 import com.aliyun.oss.model.OSSObjectSummary;
 import com.aliyun.oss.model.ObjectListing;
+import com.fintech.common.properties.AppConfig;
 import com.fintech.util.CommonUtil;
 import com.fintech.util.enumerator.ConstantInterface;
 import com.fintech.util.image.FileTypeUtil;
 
 import sun.misc.BASE64Decoder;
-
+@Component
 public class FileUploadSample {
-    private static String endpoint        = "http://oss-cn-beijing.aliyuncs.com";
-    private static String accessKeyId     = "LTAIItXXaQdi9XTf";
-    private static String accessKeySecret = "7H5iBahe3Oa4A3mhOVcdDLpUDGii6H";
-    private static String bucketName      = "manager-front";
-
+    
+    @Autowired
+    private AppConfig appConfig;
+    private static String endpoint        = "http://oss-cn-shanghai.aliyuncs.com";
+    private static String accessKeyId     = "LTAIFJarWhCyP9fu";
+    private static String accessKeySecret = "3KIqdmIjb5AwkAIwQYwgymTInCn3P1";
+    private static String bucketName      = "fintech-attachment";
+     static String ENDPOINT;
+     static String ACCESS_KEY_ID;
+     static String ACCESS_KEY_SECRET;
+     static String BUCKET_NAME;
+    @PostConstruct
+    public void init() {
+        ENDPOINT=appConfig.getENDPOINT();
+        ACCESS_KEY_ID=appConfig.getACCESS_KEY_ID();
+        ACCESS_KEY_SECRET=appConfig.getACCESS_KEY_SECRET();
+        BUCKET_NAME=appConfig.getBUCKET_NAME();
+    }
+    
      Logger logger = LoggerFactory.getLogger(FileUploadSample.class);
     /**
      * 上传字符串
@@ -44,15 +65,13 @@ public class FileUploadSample {
      * @return
      */
     public OSSEntity uploadStr(String content, String fileName) {
-        OSSClient ossClient = new OSSClient(endpoint, accessKeyId, accessKeySecret);
-        ossClient.putObject(bucketName, fileName, new ByteArrayInputStream(content.getBytes()));
+        OSSClient ossClient = new OSSClient(ENDPOINT, ACCESS_KEY_ID, ACCESS_KEY_SECRET);
+        ossClient.putObject(BUCKET_NAME, fileName, new ByteArrayInputStream(content.getBytes()));
         if (CommonUtil.isNullStr(fileName)) {
             fileName = CommonUtil.getUUIDString();
         }
-        String folder = CommonUtil.getStringTime(new Date(), "yyyyMMdd") + "/";
-        fileName = folder + fileName;
         // 关闭client
-        OSSObject o = ossClient.getObject(bucketName, fileName);
+        OSSObject o = ossClient.getObject(BUCKET_NAME, fileName);
         ossClient.shutdown();
         return getOSSEntity(o);
     }
@@ -65,7 +84,7 @@ public class FileUploadSample {
 //        keys.add("manage/merchant/20170831/EK000-19.jpg");
 //        System.out.println(s.deleteFile(keys));
         
-        File f = new File("C:/Users/qierkang/Desktop/测试照片/tests.zip");
+        File f = new File("C:/Users/erkang/Desktop/营业执照/test.jpg");
         FileInputStream fs = new FileInputStream(f);
         String fileName = f.getName();
         String suffix = fileName.substring(fileName.lastIndexOf("."));
@@ -73,19 +92,20 @@ public class FileUploadSample {
         boolean image = Arrays.asList(type)
             .contains(FileTypeUtil.getInputStreamType(fs).toString());
         System.out.println(image);
-////        String path = "manage/merchant/" + folder
-////                      + ConstantInterface.ManageAttachmentEnum.EK001.getValue() + "-"
-////                      + new Random().nextInt(40) + suffix;
+        String folder = CommonUtil.getStringTime(new Date(), "yyyyMMdd") + "/";
+        String path = "fintech/order/" + folder
+                      + "attchType" + "-"
+                      + new Random().nextInt(40) + suffix;
 ////        图片类型1：标准合同2：利率合同3：打款账户4：营业执照5：法人身份证6：商户授权书7：卫生许可证8：开户许可证9：委托授权书10：商户门头11:医院前台12：医疗器械13其他14商户交接表
 //        String path = "manage/merchant/attach/20170901/103716/"+ ConstantInterface.ManageAttachmentEnum.EK001.getValue() + "-"
 //                + new Random().nextInt(40)+ suffix;
 //        System.out.println(path);
-//        s.uploadFile(f, path);
+        s.uploadFile(f, path);
      // 构造ListObjectsRequest请求
-//        ListObjectsRequest listObjectsRequest = new ListObjectsRequest(bucketName);
+//        ListObjectsRequest listObjectsRequest = new ListObjectsRequest(BUCKET_NAME);
 //        listObjectsRequest.setPrefix("manage/merchant/attach/20170924/105378");
 //        // 递归列出fun目录下的所有文件
-//        OSSClient ossClient = new OSSClient(endpoint, accessKeyId, accessKeySecret);
+//        OSSClient ossClient = new OSSClient(ENDPOINT, ACCESS_KEY_ID, ACCESS_KEY_SECRET);
 //        ObjectListing listing = ossClient.listObjects(listObjectsRequest);
 //        // 遍历所有Object
 //        System.out.println("Objects:");
@@ -100,11 +120,11 @@ public class FileUploadSample {
     }
 
     public OSSEntity uploadFile(File file, String fileName) {
-        OSSClient ossClient = new OSSClient(endpoint, accessKeyId, accessKeySecret);
+        OSSClient ossClient = new OSSClient(ENDPOINT, ACCESS_KEY_ID, ACCESS_KEY_SECRET);
         checkFile(file);
         // 上传文件
-        ossClient.putObject(bucketName, fileName, file);
-        OSSObject o = ossClient.getObject(bucketName, fileName);
+        ossClient.putObject(BUCKET_NAME, fileName, file);
+        OSSObject o = ossClient.getObject(BUCKET_NAME, fileName);
         logger.info("感谢您使用阿里云对象存储服务>>>已上传文件：{}",o.getResponse().getUri());
         ossClient.shutdown();
         return getOSSEntity(o);
@@ -118,16 +138,14 @@ public class FileUploadSample {
      * @return
      */
     public OSSEntity uploadFile(byte[] bytes, String fileName) {
-    	String folder = CommonUtil.getStringTime(new Date(), "yyyyMMdd") + "/";
-        OSSClient ossClient = new OSSClient(endpoint, accessKeyId, accessKeySecret);
+        OSSClient ossClient = new OSSClient(ENDPOINT, ACCESS_KEY_ID, ACCESS_KEY_SECRET);
         // 创建OSSClient实例
         if (CommonUtil.isNullStr(fileName)) {
             fileName = CommonUtil.getUUIDString();
         }
-        fileName = folder + fileName;
         // 上传文件
-        ossClient.putObject(bucketName, fileName, new ByteArrayInputStream(bytes));
-        OSSObject o = ossClient.getObject(bucketName, fileName);
+        ossClient.putObject(BUCKET_NAME, fileName, new ByteArrayInputStream(bytes));
+        OSSObject o = ossClient.getObject(BUCKET_NAME, fileName);
         ossClient.shutdown();
         return getOSSEntity(o);
     }
@@ -166,18 +184,16 @@ public class FileUploadSample {
      * @throws IOException
      */
     public OSSEntity uploadFile(String url, String fileName) throws IOException {
-    	String folder = CommonUtil.getStringTime(new Date(), "yyyyMMdd") + "/";
-        OSSClient ossClient = new OSSClient(endpoint, accessKeyId, accessKeySecret);
+        OSSClient ossClient = new OSSClient(ENDPOINT, ACCESS_KEY_ID, ACCESS_KEY_SECRET);
         // 创建OSSClient实例
         if (CommonUtil.isNullStr(fileName)) {
             fileName = CommonUtil.getUUIDString();
         }
-        fileName = folder + fileName;
         try {
             // 上传文件
             InputStream inputStream = new URL(url).openStream();
-            ossClient.putObject(bucketName, fileName, inputStream);
-            OSSObject o = ossClient.getObject(bucketName, fileName);
+            ossClient.putObject(BUCKET_NAME, fileName, inputStream);
+            OSSObject o = ossClient.getObject(BUCKET_NAME, fileName);
             ossClient.shutdown();
             return getOSSEntity(o);
 
@@ -195,15 +211,13 @@ public class FileUploadSample {
      * @return
      */
     public OSSEntity uploadFile(InputStream inputStream, String fileName) {
-    	String folder = CommonUtil.getStringTime(new Date(), "yyyyMMdd") + "/";
-        OSSClient ossClient = new OSSClient(endpoint, accessKeyId, accessKeySecret);
+        OSSClient ossClient = new OSSClient(ENDPOINT, ACCESS_KEY_ID, ACCESS_KEY_SECRET);
         // 创建OSSClient实例
         if (CommonUtil.isNullStr(fileName)) {
             fileName = CommonUtil.getUUIDString();
         }
-        fileName = folder + fileName;
-        ossClient.putObject(bucketName, fileName, inputStream);
-        OSSObject o = ossClient.getObject(bucketName, fileName);
+        ossClient.putObject(BUCKET_NAME, fileName, inputStream);
+        OSSObject o = ossClient.getObject(BUCKET_NAME, fileName);
         logger.info("感谢您使用阿里云对象存储服务>>>已上传文件：{}",o.getResponse().getUri());
         ossClient.shutdown();
         return getOSSEntity(o);
@@ -220,12 +234,12 @@ public class FileUploadSample {
     * 
     */
     public boolean deleteFile(List<String> keys) {
-        if (bucketName == null || keys == null)
+        if (BUCKET_NAME == null || keys == null)
             return false;
         OSSClient ossClient = null;
         try {
-            ossClient = new OSSClient(endpoint, accessKeyId, accessKeySecret);
-            DeleteObjectsResult deleteObjectsResult = ossClient.deleteObjects(new DeleteObjectsRequest(bucketName).withKeys(keys));
+            ossClient = new OSSClient(ENDPOINT, ACCESS_KEY_ID, ACCESS_KEY_SECRET);
+            DeleteObjectsResult deleteObjectsResult = ossClient.deleteObjects(new DeleteObjectsRequest(BUCKET_NAME).withKeys(keys));
             List<String> deletedObjects = deleteObjectsResult.getDeletedObjects();
             for (String object : deletedObjects) {
                 logger.info("感谢您使用阿里云对象存储服务>>>已删除文件：{}",object);
@@ -249,13 +263,13 @@ public class FileUploadSample {
     * @throws 
     */
     public boolean deleteFolder(String companyId) {
-        if (bucketName == null || companyId == null)
+        if (BUCKET_NAME == null || companyId == null)
             return false;
         try {
-            ListObjectsRequest listObjectsRequest = new ListObjectsRequest(bucketName);
+            ListObjectsRequest listObjectsRequest = new ListObjectsRequest(BUCKET_NAME);
             listObjectsRequest.setPrefix("manage/merchant/attach/"+companyId);
             // 递归列出 所有文件
-            OSSClient ossClient = new OSSClient(endpoint, accessKeyId, accessKeySecret);
+            OSSClient ossClient = new OSSClient(ENDPOINT, ACCESS_KEY_ID, ACCESS_KEY_SECRET);
             ObjectListing listing = ossClient.listObjects(listObjectsRequest);
             // 遍历所有Object
             List<String> str=new ArrayList<>();

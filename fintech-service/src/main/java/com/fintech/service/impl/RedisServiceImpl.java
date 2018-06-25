@@ -21,6 +21,9 @@ import org.springframework.util.Assert;
 
 import com.fintech.service.RedisService;
 import com.fintech.util.GsonUtil;
+import com.fintech.util.StringUtil;
+import com.fintech.util.enumerator.ConstantInterface;
+import com.fintech.util.result.ResultUtils;
 
 @Service("redisService")
 @Transactional(rollbackFor = Exception.class)
@@ -252,5 +255,12 @@ public class RedisServiceImpl implements RedisService {
             String key="";
             Assert.hasText(key,"查无此用户Key ");
             System.out.println(123123);
+        }
+
+        @Override
+        public void tokenValidate(String token) throws Exception {
+            if (StringUtil.isEmpty(get(token))) {
+                throw new Exception(ConstantInterface.AppValidateConfig.LoginValidate.LOGIN_200300.toString());
+            }
         }
 }

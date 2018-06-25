@@ -2,7 +2,7 @@ package com.fintech.model.vo;
 
 import java.util.Date;
 
-public class LogSmsMessageVo {
+public class LogSmsMessageVo extends BaseVO {
     private Long id;
 
     private String sendMobile;

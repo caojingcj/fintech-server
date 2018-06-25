@@ -13,6 +13,14 @@ public class CompanyItem {
 
     private Date updatetime;
 
+    public CompanyItem() {
+    }
+    public CompanyItem(String companyId, String itemCode) {
+        super();
+        this.companyId = companyId;
+        this.itemCode = itemCode;
+    }
+
     public Integer getId() {
         return id;
     }

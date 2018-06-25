@@ -28,6 +28,12 @@ public class AppConfig {
     */
     @Value("${QYES_ACCESS_SECRET}")
     private String QYES_ACCESS_SECRET;
+    @Value("${QYES_CA_SEALID}")
+    private String QYES_CA_SEALID;
+    @Value("${QYES_CA_DOCID}")
+    private String QYES_CA_DOCID;
+    @Value("${QYES_CA_STAMP}")
+    private String QYES_CA_STAMP;
     /** 
     * @Fields MOXIE_APIKEY : TODO[ 魔蝎APIKEY ] 
     */
@@ -89,6 +95,85 @@ public class AppConfig {
     private String ALI_SMS_TEMPCODE;
     @Value("${ALI_SMS_TEMPCONTENT}")
     private String ALI_SMS_TEMPCONTENT;
+    @Value("${ENDPOINT}")
+    private String ENDPOINT;
+    @Value("${ACCESS_KEY_ID}")
+    private String ACCESS_KEY_ID;
+    @Value("${ACCESS_KEY_SECRET}")
+    private String ACCESS_KEY_SECRET;
+    @Value("${BUCKET_NAME}")
+    private String BUCKET_NAME;
+    @Value("${OSS_ORDER_ATTACMENT_PATH}")
+    private String OSS_ORDER_ATTACMENT_PATH;
+
+    
+    public String getQYES_CA_SEALID() {
+        return QYES_CA_SEALID;
+    }
+
+    public void setQYES_CA_SEALID(String qYES_CA_SEALID) {
+        QYES_CA_SEALID = qYES_CA_SEALID;
+    }
+
+    public String getQYES_CA_DOCID() {
+        return QYES_CA_DOCID;
+    }
+
+    public void setQYES_CA_DOCID(String qYES_CA_DOCID) {
+        QYES_CA_DOCID = qYES_CA_DOCID;
+    }
+
+    public String getQYES_CA_STAMP() {
+        return QYES_CA_STAMP;
+    }
+
+    public void setQYES_CA_STAMP(String qYES_CA_STAMP) {
+        QYES_CA_STAMP = qYES_CA_STAMP;
+    }
+
+    public String ACCESS_KEY_SECRET() {
+        return ENDPOINT;
+    }
+
+    public void setENDPOINT(String eNDPOINT) {
+        ENDPOINT = eNDPOINT;
+    }
+
+    public String getENDPOINT() {
+        return ENDPOINT;
+    }
+
+    public String getACCESS_KEY_ID() {
+        return ACCESS_KEY_ID;
+    }
+
+    public void setACCESS_KEY_ID(String aCCESS_KEY_ID) {
+        ACCESS_KEY_ID = aCCESS_KEY_ID;
+    }
+
+    public String getACCESS_KEY_SECRET() {
+        return ACCESS_KEY_SECRET;
+    }
+
+    public void setACCESS_KEY_SECRET(String aCCESS_KEY_SECRET) {
+        ACCESS_KEY_SECRET = aCCESS_KEY_SECRET;
+    }
+
+    public String getBUCKET_NAME() {
+        return BUCKET_NAME;
+    }
+
+    public void setBUCKET_NAME(String bUCKET_NAME) {
+        BUCKET_NAME = bUCKET_NAME;
+    }
+
+    public String getOSS_ORDER_ATTACMENT_PATH() {
+        return OSS_ORDER_ATTACMENT_PATH;
+    }
+
+    public void setOSS_ORDER_ATTACMENT_PATH(String oSS_ORDER_ATTACMENT_PATH) {
+        OSS_ORDER_ATTACMENT_PATH = oSS_ORDER_ATTACMENT_PATH;
+    }
 
     public String getALI_SMS_TEMPCONTENT() {
         return ALI_SMS_TEMPCONTENT;

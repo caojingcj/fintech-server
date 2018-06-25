@@ -163,4 +163,5 @@ public class OrderDetailinfo {
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
     }
+    
 }
