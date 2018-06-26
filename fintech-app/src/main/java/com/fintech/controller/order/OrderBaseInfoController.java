@@ -6,10 +6,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.fintech.common.properties.AppConfig;
@@ -95,7 +95,7 @@ public class OrderBaseInfoController {
     * @throws 
     */
     @RequestMapping(value = "saveProject",method = RequestMethod.POST)
-    public @ResponseBody Object saveProject(ProjectVo projectVo) {
+    public @ResponseBody Object saveProject(@RequestBody ProjectVo projectVo) {
         try {
             redisService.tokenValidate(projectVo.getToken());
             logger.info("EK 用户进件项目填写[[{}]方法名[{}]操作时间[{}]",projectVo,Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());

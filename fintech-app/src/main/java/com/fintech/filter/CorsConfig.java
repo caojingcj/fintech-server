@@ -1,4 +1,4 @@
-package com.fintech.common;
+package com.fintech.filter;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,7 +13,7 @@ import org.springframework.web.filter.CorsFilter;
 * @date 2018年3月23日 下午1:10:05  
 * @Description: TODO[ spring boot 解决post get所有跨域问题 ]
 允许任何域名使用
-允许任何头 乔融·
+允许任何头 
 允许任何方法（post、get等）
 */
 @Configuration

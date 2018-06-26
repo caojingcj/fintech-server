@@ -28,7 +28,7 @@
   </resultMap>
   <select id="selectByPrimaryKeyList" resultMap="BaseResultMapCompanyItemDo" parameterType="java.util.Map" >
     select 
-    <include refid="Base_Column_List" />,mcitem.ITEM_NAME
+    item.ID, item.COMPANY_ID, item.ITEM_CODE, item.CREATE_TIME, item.UPDATETIME,mcitem.ITEM_NAME
     from company_item item left join master_company_item mcitem
 		on item.ITEM_CODE=mcitem.item_code
     where COMPANY_ID =#{companyId,jdbcType=CHAR}

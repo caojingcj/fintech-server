@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -15,6 +16,7 @@ import com.fintech.model.LogMoxieinfo;
 import com.fintech.model.LogOrder;
 import com.fintech.service.LogMoxieinfoService;
 import com.fintech.service.LogOrderService;
+import com.fintech.service.RedisService;
 import com.fintech.util.DateUtils;
 import com.fintech.util.enumerator.ConstantInterface;
 import com.fintech.util.result.BaseResult;
@@ -37,8 +39,10 @@ public class MoxieController {
     private AppConfig appConfig;
     @Autowired
     private LogMoxieinfoService logMoxieinfoService;
-@Autowired
-private LogOrderService logOrderService;
+	@Autowired
+	private LogOrderService logOrderService;
+	@Autowired
+	private RedisService redisService;
 
     /** 
     * @Title: MoxieController.java 
@@ -51,26 +55,28 @@ private LogOrderService logOrderService;
     * @Description: TODO[ 魔蝎H5 ]
     * @throws 
     */
-    @RequestMapping("toMoxieCarrierH5")
-    public ModelAndView toMoxieCarrierH5(String orderId,String mobile,String idCard,String name) {
+	@RequestMapping(value = "toMoxieCarrierH5",method = RequestMethod.GET)
+    public @ResponseBody Object toMoxieCarrierH5(String orderId,String mobile,String idCard,String name,String token) {
         ModelAndView mav = new ModelAndView();
-        mav.addObject("mobile", mobile);
-        mav.addObject("name", name);
-        mav.addObject("idCard", idCard);
         try {
+        	redisService.tokenValidate(token);
+        	mav.addObject("mobile", mobile);
+        	mav.addObject("name", name);
+        	mav.addObject("idCard", idCard);
             logger.info("EK魔蝎日志 H5参数【姓名[{}手机号[{}]身份证[{}]]】>方法名[{}]操作时间[{}]",name,mobile,idCard,Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
-            logOrderService.insertSelective(new LogOrder(orderId, String.valueOf(03), String.valueOf(00), null));        
             String loginParams = URLEncoder.encode("{\"phone\":\"" + mobile + "\",\"name\":\"" +
                             name + "\",\"idcard\":\"" + idCard + "\"}", "UTF-8");
-                    mav.setViewName("redirect:https://api.51datakey.com/h5/importV3/index.html#/carrier" +
-                            "?apiKey=" + appConfig.getMOXIE_APIKEY() +//魔蝎分配给合作机构的Key
-                            "&userId=" + mobile +//接入方业务系统的标识用户的ID
-                            "&quitOnLoginDone=YES" +//登录成功时跳转到backUrl
-                            "&backUrl=" + appConfig.getMOXIE_BACKURL() +//任务成功后的回调地址
-                            "&themeColor=2196F3" +//主题颜色
-                            "&cacheDisable=YES" +//传递该参数为'YES'时，禁止缓存读取和写入。默认不传则会使用缓存
-                            "&loginParams=" + loginParams);
-                    logOrderService.insertSelective(new LogOrder(orderId,ConstantInterface.Enum.OrderLogStatus.ORDER_STATUS03.getKey(), ConstantInterface.Enum.OrderStatus.ORDER_STATUS00.getKey(), null));
+            String moxieUrl="https://api.51datakey.com/h5/importV3/index.html#/carrier?apiKey="+appConfig.getMOXIE_APIKEY()+"&userId="+mobile+"&quitOnLoginDone=YES&backUrl="+appConfig.getMOXIE_BACKURL()+"&themeColor=2196F3&cacheDisable=YES&loginParams="+loginParams;
+            logOrderService.insertSelective(new LogOrder(orderId, ConstantInterface.Enum.OrderLogStatus.ORDER_STATUS03.getKey(), ConstantInterface.Enum.OrderStatus.ORDER_STATUS00.getKey(), null));
+//                    mav.setViewName("redirect:https://api.51datakey.com/h5/importV3/index.html#/carrier" +
+//                            "?apiKey=" + appConfig.getMOXIE_APIKEY() +//魔蝎分配给合作机构的Key
+//                            "&userId=" + mobile +//接入方业务系统的标识用户的ID
+//                            "&quitOnLoginDone=YES" +//登录成功时跳转到backUrl
+//                            "&backUrl=" + appConfig.getMOXIE_BACKURL() +//任务成功后的回调地址
+//                            "&themeColor=2196F3" +//主题颜色
+//                            "&cacheDisable=YES" +//传递该参数为'YES'时，禁止缓存读取和写入。默认不传则会使用缓存
+//                            "&loginParams=" + loginParams);
+                    return ResultUtils.success(ResultUtils.SUCCESS_CODE_MSG,moxieUrl);
         } catch (Exception e) {
             logger.error("EK ERROR [{}]魔蝎日志 H5参数【姓名[{}手机号[{}]身份证[{}]]】>方法名[{}]操作时间[{}]",e.getMessage(),name,mobile,idCard,Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
         }
