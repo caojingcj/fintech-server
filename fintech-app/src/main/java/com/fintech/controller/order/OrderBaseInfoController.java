@@ -118,7 +118,7 @@ public class OrderBaseInfoController {
     * @throws 
     */
     @RequestMapping(value = "saveDetailinfo",method = RequestMethod.POST)
-    public @ResponseBody Object saveDetailinfo(OrderDetailinfoVo orderDetailinfo) {
+    public @ResponseBody Object saveDetailinfo(@RequestBody OrderDetailinfoVo orderDetailinfo) {
         try {
             redisService.tokenValidate(orderDetailinfo.getToken());
             logger.info("EK 用户进件项目填写[[{}]方法名[{}]操作时间[{}]",orderDetailinfo,Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
@@ -142,7 +142,7 @@ public class OrderBaseInfoController {
     * @throws 
     */
     @RequestMapping(value = "saveOrderAttachment",method = RequestMethod.POST)
-    public @ResponseBody Object saveOrderAttachment(OrderAttachmentVo vo,MultipartHttpServletRequest multipartHttpServletRequest) {
+    public @ResponseBody Object saveOrderAttachment(@RequestBody OrderAttachmentVo vo,MultipartHttpServletRequest multipartHttpServletRequest) {
         try {
             redisService.tokenValidate(vo.getToken());
             logger.info("EK 用户附件上传[{}]方法名[{}]操作时间[{}]",vo,Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
