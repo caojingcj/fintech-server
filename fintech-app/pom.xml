@@ -112,58 +112,6 @@
 
     <build>
         <finalName>fintech-app</finalName>
-        <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-                <configuration>
-                    <mainClass>com.fintech.Application</mainClass>
-                </configuration>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>repackage</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <!-- 拷贝当前环境文件 -->
-            <plugin>
-                <artifactId>maven-resources-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>copy-resources</id>
-                        <phase>validate</phase>
-                        <goals>
-                            <goal>copy-resources</goal>
-                        </goals>
-                        <configuration>
-                            <outputDirectory>${project.build.directory}/classes/</outputDirectory>
-                            <resources>
-                                <resource>
-                                    <directory>src/main/resources/config/${env}</directory>
-                                    <filtering>true</filtering>
-                                </resource> 
-                            </resources>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
-        <!-- 过滤当前环境文件 -->
-        <resources>
-            <resource>
-                <directory>src/main/resources</directory>
-                <includes>
-                    <include>*.*</include>
-                     <include>**/*.*</include>
-                    <include>templates/**</include>
-                    <!--<include>config/dev/*.properties</include>-->
-                    <!--<include>config/${env}/*.properties</include>-->
-                </includes>
-                <filtering>false</filtering>
-            </resource>
-        </resources>
     </build>
     
 </project>

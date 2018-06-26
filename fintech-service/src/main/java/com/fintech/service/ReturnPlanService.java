@@ -1,6 +1,7 @@
 package com.fintech.service;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import com.fintech.xcpt.FintechException;
 
@@ -56,5 +57,5 @@ public interface ReturnPlanService {
      * @return
      */
     public BigDecimal findReturnAmount(double orderAmount, double rateTotal, int totalPeriod);
-
+    
 }

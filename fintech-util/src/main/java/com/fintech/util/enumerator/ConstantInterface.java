@@ -158,6 +158,28 @@ public interface ConstantInterface {
                 return "[" + this.key + "]" + this.value;
             }
         }
+		
+		enum PartyAInfo {
+	        PartyA_Name("上海舵定信息科技有限公司"),
+	        PartyA_CORPORATE_NAME("华妍"),
+	        PartyA_COMPANY_ADDR("上海市奉贤区城乡路333号1幢一层1433室"),
+	        PartyA_COMPANY_ACCOUNT_NAME("上海舵定信息科技有限公司"),
+	        PartyA_COMPANY_ACCOUNT_BRANCH("宁波银行股份有限公司上海闵行支行"),
+	        PartyA_COMPANY_ACCOUNT_NO("70050122000274069"),
+	        PartyA_COMPANY_IDCARD("31011219921014522X");
+		    private final String value;
+		    private PartyAInfo(String value) {
+		        this.value = value;
+		    }
+		    public String getValue() {
+		        return value;
+		    }
+		    
+		    @Override
+		    public String toString() {
+		        return "[" + this.value + "]" ;
+		    }
+		}
 	}
 	public interface DruidDataConfig {
 	    /**
@@ -319,7 +341,7 @@ public interface ConstantInterface {
 	        */
 	        enum OrderValidate{
 	            ORDER_200001(200201,"总在还款额不超过50w或分期还款中的笔数不超过3笔"),
-	            ORDER_200002(200202,"图片不能为空！");
+	            ORDER_200002(200202,"该用户已经签署！");
 	            private Integer key;
 	            private String value;
 	            public Integer getKey() {

@@ -19,6 +19,7 @@ import com.fintech.common.QysRemoteSignHandler;
 import com.fintech.common.oss.FileUploadSample;
 import com.fintech.common.oss.OSSEntity;
 import com.fintech.common.properties.AppConfig;
+import com.fintech.dao.CompanyAccountinfoMapper;
 import com.fintech.dao.CompanyBaseinfoMapper;
 import com.fintech.dao.CompanyChannelMapper;
 import com.fintech.dao.CompanyItemMapper;
@@ -29,8 +30,10 @@ import com.fintech.dao.OrderAttachmentMapper;
 import com.fintech.dao.OrderBaseinfoMapper;
 import com.fintech.dao.OrderDetailinfoMapper;
 import com.fintech.dao.UserContractMapper;
+import com.fintech.dao.UserReturnplanMapper;
 import com.fintech.dao.procedure.ContractProcedureMapper;
 import com.fintech.dao.procedure.OrderProcedureMapper;
+import com.fintech.model.CompanyAccountinfo;
 import com.fintech.model.CompanyBaseinfo;
 import com.fintech.model.CompanyChannel;
 import com.fintech.model.CompanyPeriodFee;
@@ -46,6 +49,7 @@ import com.fintech.model.vo.OrderDetailinfoVo;
 import com.fintech.model.vo.ProjectVo;
 import com.fintech.service.OrderBaseinfoService;
 import com.fintech.service.RedisService;
+import com.fintech.service.ReturnPlanService;
 import com.fintech.util.BeanUtils;
 import com.fintech.util.CommonUtil;
 import com.fintech.util.DateUtils;
@@ -86,6 +90,12 @@ public class OrderBaseinfoImpl implements OrderBaseinfoService {
     private UserContractMapper userContractMapper;
     @Autowired
     private ContractProcedureMapper contractProcedureMapper;
+    @Autowired
+    private ReturnPlanService returnPlanService;
+    @Autowired
+    private UserReturnplanMapper userReturnplanMapper;
+    @Autowired
+    private CompanyAccountinfoMapper companyAccountinfoMapper;
     /*
      * (非 Javadoc) <p>Title: insertSelective</p> <p>Description: </p>
      * 
@@ -167,6 +177,14 @@ public class OrderBaseinfoImpl implements OrderBaseinfoService {
         return reslutMap;
     }
     
+    /* (非 Javadoc) 
+    * <p>Title: saveProject</p> 
+    * <p>Description: </p> 
+    * @param projectVo
+    * @throws Exception 
+    * @see com.fintech.service.OrderBaseinfoService#saveProject(com.fintech.model.vo.ProjectVo) 
+    * 项目信息填写
+    */
     @Override
     public void saveProject(ProjectVo projectVo) throws Exception {
         // 总在还款额不超过50w，分期还款中的笔数不超过3笔；
@@ -188,6 +206,14 @@ public class OrderBaseinfoImpl implements OrderBaseinfoService {
         logOrderMapper.insertSelective(new LogOrder(projectVo.getOrderId(),ConstantInterface.Enum.OrderLogStatus.ORDER_STATUS01.getKey(), ConstantInterface.Enum.OrderStatus.ORDER_STATUS00.getKey(), null));
     }
 
+    /* (非 Javadoc) 
+    * <p>Title: saveDetailinfo</p> 
+    * <p>Description: </p> 
+    * @param orderDetailinfo
+    * @throws Exception 
+    * @see com.fintech.service.OrderBaseinfoService#saveDetailinfo(com.fintech.model.vo.OrderDetailinfoVo) 
+    * 个人信息填写
+    */
     @Override
     public void saveDetailinfo(OrderDetailinfoVo orderDetailinfo) throws Exception {
         OrderDetailinfo detailinfo=new OrderDetailinfo();
@@ -220,6 +246,7 @@ public class OrderBaseinfoImpl implements OrderBaseinfoService {
             BeanUtils.copyProperties(vo, attachment);
             attachment.setAtthPath(oss.getUrl());
             orderAttachmentMapper.insertSelective(attachment);
+            logOrderMapper.insertSelective(new LogOrder(vo.getOrderId(),ConstantInterface.Enum.OrderLogStatus.ORDER_STATUS05.getKey(), ConstantInterface.Enum.OrderStatus.ORDER_STATUS01.getKey(), null));
             return oss.getUrl();
         } catch (IOException e) {
             e.printStackTrace();
@@ -240,31 +267,130 @@ public class OrderBaseinfoImpl implements OrderBaseinfoService {
     * 用户签署
     */
     @Override
-    public String remoteSignCaOrder(OrderBaseinfoVo vo) throws IOException {
-        String contractId=contractProcedureMapper.generateContractId();
+    public String remoteSignCaOrder(OrderBaseinfoVo vo) throws Exception {
         OrderBaseinfo orderBaseinfo=orderBaseinfoMapper.selectByPrimaryKey(vo.getOrderId());
-        UserContract userContract=new UserContract();
-        userContract.setOrderId(vo.getOrderId());
-        userContract.setCustIdCardNo(orderBaseinfo.getCustIdCardNo());
-        userContract.setCustCellphone(orderBaseinfo.getCustCellphone());
-        userContract.setCustRealname(orderBaseinfo.getCustRealname());
-        userContract.setContractId(contractId);
-        userContractMapper.insertSelective(userContract);
+        if(orderBaseinfo.getOrderStatus().equals(ConstantInterface.Enum.OrderStatus.ORDER_STATUS05.getKey())) {
+            throw new Exception(ConstantInterface.AppValidateConfig.OrderValidate.ORDER_200002.toString());
+        }
         OSSEntity oss=null;
         Map<String, String>qysParams=resultCaMap(orderBaseinfo);
-        oss = qysRemoteSignHandler.signOrderCA(contractId, qysParams);
+        orderBaseinfo.setContractId(qysParams.get("CONTRACT_ID"));
+        orderBaseinfo.setOrderStatus(ConstantInterface.Enum.OrderStatus.ORDER_STATUS05.getKey());
+        oss = qysRemoteSignHandler.signOrderCA(orderBaseinfo.getContractId(), qysParams);
+        orderBaseinfoMapper.updateByPrimaryKeySelective(orderBaseinfo);
+        returnPlanService.generateReturnPlan(vo.getOrderId());//生成还款计划
+        logOrderMapper.insertSelective(new LogOrder(vo.getOrderId(),ConstantInterface.Enum.OrderLogStatus.ORDER_STATUS06.getKey(), ConstantInterface.Enum.OrderStatus.ORDER_STATUS05.getKey(), null));
         return oss.getUrl();
     }
+    
+    /* (非 Javadoc) 
+    * <p>Title: previewCaOrder</p> 
+    * <p>Description: </p> 
+    * @param orderId
+    * @return
+    * @throws Exception 
+    * @see com.fintech.service.OrderBaseinfoService#previewCaOrder(java.lang.String) 
+    * 用户签署协议预览
+    */
+    @Override
+    public Map<String, String> previewCaOrder(String orderId) throws Exception {
+        OrderBaseinfo orderBaseinfo=orderBaseinfoMapper.selectByPrimaryKey(orderId);
+        return  resultCaMap(orderBaseinfo);
+    }
 
+    /** 
+    * @Title: OrderBaseinfoImpl.java 
+    * @author qierkang xyqierkang@163.com   
+    * @date 2018年6月26日 下午11:54:47  
+    * @param @param vo
+    * @param @return    设定文件 
+    * @Description: TODO[ 签署 封装返回 map ]
+    * @throws 
+    */
     public Map<String, String> resultCaMap(OrderBaseinfo vo){
         UserContract contract=userContractMapper.selectByOrderId(vo.getOrderId());
+        UserContract userContract=new UserContract();
+        if(contract==null) {
+            String contractId=contractProcedureMapper.generateContractId();
+            userContract.setOrderId(vo.getOrderId());
+            userContract.setCustIdCardNo(vo.getCustIdCardNo());
+            userContract.setCustCellphone(vo.getCustCellphone());
+            userContract.setCustRealname(vo.getCustRealname());
+            userContract.setContractId(contractId);
+            userContractMapper.insertSelective(userContract);
+        }
         CompanyBaseinfo companyBaseinfo=companyBaseinfoMapper.selectByPrimaryKeyInfo(vo.getCompanyId());
+        CompanyAccountinfo accountinfo= companyAccountinfoMapper.selectByPrimaryKey(vo.getCompanyId());
         Map<String, String> qysParams = new HashMap<>();
-        qysParams.put("CONTRACT_ID", contract.getContractId());
+        qysParams.put("PartyA_Name", ConstantInterface.Enum.PartyAInfo.PartyA_Name.getValue());
+        qysParams.put("PartyA_CORPORATE_NAME",ConstantInterface.Enum.PartyAInfo.PartyA_CORPORATE_NAME.getValue());
+        qysParams.put("PartyA_COMPANY_ADDR", ConstantInterface.Enum.PartyAInfo.PartyA_COMPANY_ADDR.getValue());
+        qysParams.put("PartyA_COMPANY_ACCOUNT_NAME", ConstantInterface.Enum.PartyAInfo.PartyA_COMPANY_ACCOUNT_NAME.getValue());
+        qysParams.put("PartyA_COMPANY_ACCOUNT_BRANCH", ConstantInterface.Enum.PartyAInfo.PartyA_COMPANY_ACCOUNT_BRANCH.getValue());
+        qysParams.put("PartyA_COMPANY_ACCOUNT_NO", ConstantInterface.Enum.PartyAInfo.PartyA_COMPANY_ACCOUNT_NO.getValue());
+        qysParams.put("CONTRACT_ID", contract!=null?contract.getContractId():userContract.getContractId());
         qysParams.put("SIGNING_TIME", DateUtils.getDateStr("yyyy年MM月dd日"));
         qysParams.put("COMPANY_NAME", companyBaseinfo.getCompanyName());
         qysParams.put("CORPORATE_NAME", companyBaseinfo.getCorporateName());
         qysParams.put("COMPANY_ADDR", companyBaseinfo.getCompanyAddr());
+        qysParams.put("COMPANY_ACCOUNT_NAME", accountinfo.getCompanyAccountName());
+        qysParams.put("COMPANY_ACCOUNT_BRANCH", accountinfo.getCompanyAccountBranch());
+        qysParams.put("COMPANY_ACCOUNT_NO", accountinfo.getCompanyAccountNo());
+        qysParams.put("ITEM_NAME", vo.getItemName());
+        qysParams.put("ORDER_AMOUNT",String.valueOf(vo.getOrderAmount()));
+        qysParams.put("CUST_REALNAME", vo.getCustRealname());
         return qysParams;
     }
+    /* (非 Javadoc) 
+    * <p>Title: orderBaseinfos</p> 
+    * <p>Description: </p> 
+    * @param token
+    * @return
+    * @throws Exception 
+    * @see com.fintech.service.OrderBaseinfoService#orderBaseinfos(java.lang.String) 
+    * 查询订单列表
+    */
+    @Override
+    public List<OrderBaseinfo> orderBaseinfos(String token) throws Exception{
+        Map<String, Object>parms=new HashMap<>();
+        parms.put("custCellphone", redisService.get(token));
+        return orderBaseinfoMapper.selectByPrimaryKeyList(parms);
+    }
+    /* (非 Javadoc) 
+    * <p>Title: orderBaseinfoDetail</p> 
+    * <p>Description: </p> 
+    * @param orderId
+    * @return
+    * @throws Exception 
+    * @see com.fintech.service.OrderBaseinfoService#orderBaseinfoDetail(java.lang.String) 
+    * 订单详情
+    */
+    @Override
+    public Map<String, Object> orderBaseinfoDetail(String orderId) throws Exception{
+        Map<String, Object>parms=new HashMap<>();
+        parms.put("orderId", orderId);
+        Map<String, Object>map=new HashMap<>();
+        map.put("orderBaseInfo", orderBaseinfoMapper.selectByPrimaryKey(orderId));
+        map.put("userReturnplan", userReturnplanMapper.selectByPrimaryKeyList(parms));
+        return map;
+    }
+    
+    /* (非 Javadoc) 
+    * <p>Title: orderBaseinfoDetail</p> 
+    * <p>Description: </p> 
+    * @param orderId
+    * @return
+    * @throws Exception 
+    * @see com.fintech.service.OrderBaseinfoService#orderBaseinfoDetail(java.lang.String) 
+    */
+    @Override
+    public Map<String, Object> userReturnplans(String token) throws Exception{
+        Map<String, Object>parms=new HashMap<>();
+        Map<String, Object>map=new HashMap<>();
+        parms.put("custCellphone", redisService.get(token));
+        map.put("userReturnplan", userReturnplanMapper.selectByPrimaryKeyList(parms));
+        return map;
+    }
+    
+    
 }

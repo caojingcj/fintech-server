@@ -23,7 +23,7 @@ import com.fintech.util.DateUtils;
 @Configuration
 @ComponentScan("com.fintech")
 @EnableAutoConfiguration
-@PropertySource(value = {"classpath:jdbc.properties","classpath:serviceconfig.properties"}, ignoreResourceNotFound = true)
+@PropertySource(value = {"classpath:jdbc.properties","classpath:appconfig.properties"}, ignoreResourceNotFound = true)
 public class ServiceApplication extends SpringBootServletInitializer{
     private static Logger logger = LoggerFactory.getLogger(ServiceApplication.class);
     

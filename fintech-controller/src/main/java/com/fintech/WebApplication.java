@@ -35,7 +35,7 @@ import com.fintech.util.DateUtils;
 //@MapperScan("com.fintech.dao.mapper")
 //@RequestMapping(value = {"/",""})
 @EnableAutoConfiguration
-@PropertySource(value = {"classpath:jdbc.properties","classpath:webconfig.properties"}, ignoreResourceNotFound = true)
+@PropertySource(value = {"classpath:jdbc.properties","classpath:serviceconfig.properties"}, ignoreResourceNotFound = true)
 public class WebApplication extends SpringBootServletInitializer implements EmbeddedServletContainerCustomizer{
     private static Logger logger = LoggerFactory.getLogger(WebApplication.class);
     

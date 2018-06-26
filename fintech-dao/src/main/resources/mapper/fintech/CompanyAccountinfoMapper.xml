@@ -21,13 +21,7 @@
     select 
     <include refid="Base_Column_List" />
     from company_accountinfo
-    where 
-    <if test="id != null" >
-    ID = #{id,jdbcType=INTEGER}
-    </if>
-    <if test="companyId != null" >
-    COMPANY_ID = #{companyId}
-      </if>
+    where COMPANY_ID = #{companyId} and IS_ENABLED=1 order by CREATE_TIME desc limit 1 
   </select>
   
   <select id="selectByPrimaryKeyList" resultMap="BaseResultMap"  parameterType="java.util.Map">

@@ -13,6 +13,8 @@ public interface CompanyAccountinfoMapper {
     int insertSelective(CompanyAccountinfo record);
 
     List<CompanyAccountinfo> selectByPrimaryKeyList(Map<String, Object>parms);
+    
+    CompanyAccountinfo selectByPrimaryKey(String companyId);
 
     int updateByPrimaryKeySelective(CompanyAccountinfo record);
 

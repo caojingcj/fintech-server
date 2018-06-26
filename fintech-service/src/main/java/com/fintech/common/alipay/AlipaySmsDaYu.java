@@ -5,6 +5,8 @@ import java.util.Date;
 
 import javax.annotation.PostConstruct;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,9 +19,13 @@ import com.aliyuncs.dysmsapi.model.v20170525.SendSmsResponse;
 import com.aliyuncs.exceptions.ClientException;
 import com.aliyuncs.profile.DefaultProfile;
 import com.aliyuncs.profile.IClientProfile;
+import com.fintech.common.QysRemoteSignHandler;
 import com.fintech.common.properties.AppConfig;
-@Service
+import com.fintech.util.DateUtils;
+@Service("alipaySmsDaYu")
 public class AlipaySmsDaYu {
+    private static final Logger logger = LoggerFactory.getLogger(AlipaySmsDaYu.class);
+
     @Autowired
     private AppConfig appConfig;
     //产品名称:云通信短信API产品,开发者无需替换
@@ -31,6 +37,7 @@ public class AlipaySmsDaYu {
     
     @PostConstruct
     public void init() {
+        logger.info("EK>初始化阿里大鱼短信 方法名Init[{}]操作时间[{}]",Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
         ALI_SMS_ACCESSKEYID=appConfig.getALI_SMS_ACCESSKEYID();
         ALI_SMS_ACCESSKEYSECRET=appConfig.getALI_SMS_ACCESSKEYSECRET();
     }

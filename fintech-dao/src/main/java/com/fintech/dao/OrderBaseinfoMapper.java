@@ -13,7 +13,9 @@ public interface OrderBaseinfoMapper {
     int insert(OrderBaseinfo record);
 
     int insertSelective(OrderBaseinfo record);
-
+    
+    List<OrderBaseinfo> selectByPrimaryKeyList(Map<String, Object>parms);
+    
     OrderBaseinfo selectByPrimaryKey(@Param("orderId")String orderId);
     
     OrderBaseinfo selectByPrimaryKeySelective(Map<String, Object> parms);

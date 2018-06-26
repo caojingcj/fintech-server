@@ -69,13 +69,13 @@ public class OrderBaseInfoController {
     public @ResponseBody BaseResult appLogin(String mobile,String token) {
         try {
             redisService.tokenValidate(token);
-            logger.info("EK 用户扫码进件[[{}][{}]]方法名[{}]操作时间[{}]",mobile,token,Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
+            logger.info("EK 客户扫码进件[[{}][{}]]方法名[{}]操作时间[{}]",mobile,token,Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
             // Map<String, Object>params=CommonUtil.object2Map(vo);
             // Map<String, Object>params=new HashMap<String, Object>();
             // params.put("companyId", "999999");
             // 拿商户999999测试 generateVerifyCode
             String companyId = "999999";
-            // 用户已经有过记录 直接跑出商户信息
+            // 客户已经有过记录 直接跑出商户信息
           Map<String, Object>resultMap=orderBaseinfoService.scanPiece(companyId,mobile);
             return ResultUtils.success(ResultUtils.SUCCESS_CODE_MSG, resultMap);
         } catch (Exception e) {
@@ -98,7 +98,7 @@ public class OrderBaseInfoController {
     public @ResponseBody Object saveProject(@RequestBody ProjectVo projectVo) {
         try {
             redisService.tokenValidate(projectVo.getToken());
-            logger.info("EK 用户进件项目填写[[{}]方法名[{}]操作时间[{}]",projectVo,Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
+            logger.info("EK 客户进件项目填写[[{}]方法名[{}]操作时间[{}]",projectVo,Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
             orderBaseinfoService.saveProject(projectVo);
             return ResultUtils.success(ResultUtils.SUCCESS_CODE_MSG);
         } catch (Exception e) {
@@ -114,14 +114,14 @@ public class OrderBaseInfoController {
     * @date 2018年6月26日 上午3:23:58  
     * @param @param orderDetailinfo
     * @param @return    设定文件 
-    * @Description: TODO[ 用户个人信息填写 ]
+    * @Description: TODO[ 客户个人信息填写 ]
     * @throws 
     */
     @RequestMapping(value = "saveDetailinfo",method = RequestMethod.POST)
     public @ResponseBody Object saveDetailinfo(@RequestBody OrderDetailinfoVo orderDetailinfo) {
         try {
             redisService.tokenValidate(orderDetailinfo.getToken());
-            logger.info("EK 用户进件项目填写[[{}]方法名[{}]操作时间[{}]",orderDetailinfo,Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
+            logger.info("EK 客户进件项目填写[[{}]方法名[{}]操作时间[{}]",orderDetailinfo,Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
             orderBaseinfoService.saveDetailinfo(orderDetailinfo);
             return ResultUtils.success(ResultUtils.SUCCESS_CODE_MSG);
         } catch (Exception e) {
@@ -138,14 +138,14 @@ public class OrderBaseInfoController {
     * @param @param vo
     * @param @param multipartfiles
     * @param @return    设定文件 
-    * @Description: TODO[ 用户附件上传 ]
+    * @Description: TODO[ 客户附件上传 ]
     * @throws 
     */
     @RequestMapping(value = "saveOrderAttachment",method = RequestMethod.POST)
-    public @ResponseBody Object saveOrderAttachment(@RequestBody OrderAttachmentVo vo,MultipartHttpServletRequest multipartHttpServletRequest) {
+    public @ResponseBody Object saveOrderAttachment(OrderAttachmentVo vo,MultipartHttpServletRequest multipartHttpServletRequest) {
         try {
             redisService.tokenValidate(vo.getToken());
-            logger.info("EK 用户附件上传[{}]方法名[{}]操作时间[{}]",vo,Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
+            logger.info("EK 客户附件上传[{}]方法名[{}]操作时间[{}]",vo,Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
             String url=orderBaseinfoService.saveOrderAttachment(vo, multipartHttpServletRequest);
             return ResultUtils.success(ResultUtils.SUCCESS_CODE_MSG,url);
         } catch (Exception e) {
@@ -159,11 +159,101 @@ public class OrderBaseInfoController {
     public @ResponseBody Object remoteSignCaOrder(OrderBaseinfoVo vo) {
         try {
             redisService.tokenValidate(vo.getToken());
-            logger.info("EK 用户附件上传[{}]方法名[{}]操作时间[{}]",vo,Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
+            logger.info("EK 客户签署协议[{}]方法名[{}]操作时间[{}]",vo,Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
             String url=orderBaseinfoService.remoteSignCaOrder(vo);
             return ResultUtils.success(ResultUtils.SUCCESS_CODE_MSG,url);
         } catch (Exception e) {
             logger.error("ERROR EK参数[{}] 报错[{}] 方法名[{}]报错时间[{}]", vo.toString(),e.getMessage(),
+                    Thread.currentThread().getStackTrace()[1].getMethodName(), DateUtils.getDateTime());
+            return ResultUtils.error(ResultUtils.ERROR_CODE, e.getMessage());
+        }
+    }
+    
+    /** 
+    * @Title: OrderBaseInfoController.java 
+    * @author qierkang xyqierkang@163.com   
+    * @date 2018年6月26日 下午11:54:28  
+    * @param @param orderId
+    * @param @param token
+    * @param @return    设定文件 
+    * @Description: TODO[ 客户签署协议预览]
+    * @throws 
+    */
+    @RequestMapping(value = "previewCaOrder",method = RequestMethod.GET)
+    public @ResponseBody Object previewCaOrder(String orderId,String token) {
+        try {
+            redisService.tokenValidate(token);
+            logger.info("EK 客户签署协议预览[{}]方法名[{}]操作时间[{}]",orderId,Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
+            return ResultUtils.success(ResultUtils.SUCCESS_CODE_MSG,orderBaseinfoService.previewCaOrder(orderId));
+        } catch (Exception e) {
+            logger.error("ERROR EK参数[{}] 报错[{}] 方法名[{}]报错时间[{}]", orderId,e.getMessage(),
+                    Thread.currentThread().getStackTrace()[1].getMethodName(), DateUtils.getDateTime());
+            return ResultUtils.error(ResultUtils.ERROR_CODE, e.getMessage());
+        }
+    }
+    
+    /** 
+    * @Title: OrderBaseInfoController.java 
+    * @author qierkang xyqierkang@163.com   
+    * @date 2018年6月27日 上午12:20:43  
+    * @param @param token
+    * @param @return    设定文件 
+    * @Description: TODO[ 客户订单列表]
+    * @throws 
+    */
+    @RequestMapping(value = "orderBaseinfos",method = RequestMethod.GET)
+    public @ResponseBody Object orderBaseinfos(String token) {
+        try {
+            redisService.tokenValidate(token);
+            logger.info("EK 客户订单列表[{}]方法名[{}]操作时间[{}]",token,Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
+            return ResultUtils.success(ResultUtils.SUCCESS_CODE_MSG,orderBaseinfoService.orderBaseinfos(token));
+        } catch (Exception e) {
+            logger.error("ERROR EK参数[{}] 报错[{}] 方法名[{}]报错时间[{}]", token,e.getMessage(),
+                    Thread.currentThread().getStackTrace()[1].getMethodName(), DateUtils.getDateTime());
+            return ResultUtils.error(ResultUtils.ERROR_CODE, e.getMessage());
+        }
+    }
+    
+    /** 
+    * @Title: OrderBaseInfoController.java 
+    * @author qierkang xyqierkang@163.com   
+    * @date 2018年6月27日 上午2:49:04  
+    * @param @param token
+    * @param @param orderId
+    * @param @return    设定文件 
+    * @Description: TODO[ 客户订单详情]
+    * @throws 
+    */
+    @RequestMapping(value = "orderBaseinfoDetail",method = RequestMethod.GET)
+    public @ResponseBody Object orderBaseinfoDetail(String token,String orderId) {
+        try {
+            redisService.tokenValidate(token);
+            logger.info("EK 客户订单列表[{}]方法名[{}]操作时间[{}]",token,Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
+            return ResultUtils.success(ResultUtils.SUCCESS_CODE_MSG,orderBaseinfoService.orderBaseinfoDetail(orderId));
+        } catch (Exception e) {
+            logger.error("ERROR EK参数[{}] 报错[{}] 方法名[{}]报错时间[{}]", token,e.getMessage(),
+                    Thread.currentThread().getStackTrace()[1].getMethodName(), DateUtils.getDateTime());
+            return ResultUtils.error(ResultUtils.ERROR_CODE, e.getMessage());
+        }
+    }
+    
+    /** 
+    * @Title: OrderBaseInfoController.java 
+    * @author qierkang xyqierkang@163.com   
+    * @date 2018年6月27日 上午2:48:57  
+    * @param @param token
+    * @param @return    设定文件 
+    * @Description: TODO[ 我要还款 ]
+    * @throws 
+    */
+    @RequestMapping(value = "userReturnplans",method = RequestMethod.GET)
+    public @ResponseBody Object userReturnplans(String token) {
+        try {
+            redisService.tokenValidate(token);
+            logger.info("EK 客户订单列表[{}]方法名[{}]操作时间[{}]",token,Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
+            return ResultUtils.success(ResultUtils.SUCCESS_CODE_MSG,orderBaseinfoService.userReturnplans(token));
+        } catch (Exception e) {
+            logger.error("ERROR EK参数[{}] 报错[{}] 方法名[{}]报错时间[{}]", token,e.getMessage(),
                     Thread.currentThread().getStackTrace()[1].getMethodName(), DateUtils.getDateTime());
             return ResultUtils.error(ResultUtils.ERROR_CODE, e.getMessage());
         }

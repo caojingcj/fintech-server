@@ -33,6 +33,18 @@
     from user_returnplan
     where ID = #{id,jdbcType=INTEGER}
   </select>
+  <select id="selectByPrimaryKeyList" resultMap="BaseResultMap" parameterType="java.util.Map" >
+    select 
+    <include refid="Base_Column_List" />
+    from user_returnplan
+    where  1=1
+    <if test="orderId != null" >
+        AND ORDER_ID= #{orderId}
+    </if>
+    <if test="custCellphone != null" >
+        AND CUST_CELLPHONE= #{custCellphone} order by RETURN_STATUS,CREATE_TIME
+    </if>
+  </select>
   <select id="selectByOrderPeriod" resultMap="BaseResultMap" >
     select 
     <include refid="Base_Column_List" />

@@ -23,6 +23,12 @@
     CUST_ID_CARD_VAL_BEGIN, CUST_ID_CARD_VAL_END, CUST_ID_CARD_FRONT, CUST_ID_CARD_BACK, 
     IDENTITY_TIME, IS_ENABLED, CUST_DEVICE_CODE, CREATE_TIME, UPDATETIME
   </sql>
+  <select id="selectByPrimaryKeyList" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from cust_baseinfo
+    where CUST_CELLPHONE = #{custCellphone,jdbcType=CHAR}
+  </select>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
     <include refid="Base_Column_List" />
