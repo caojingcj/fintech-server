@@ -1,12 +1,12 @@
 package com.fintech.service;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.fintech.model.OrderBaseinfo;
+import com.fintech.model.vo.CustBaseinfoVo;
 import com.fintech.model.vo.OrderAttachmentVo;
 import com.fintech.model.vo.OrderBaseinfoVo;
 import com.fintech.model.vo.OrderDetailinfoVo;
@@ -22,6 +22,8 @@ public interface OrderBaseinfoService {
     Map<String, Object> scanPiece(String companyId, String mobile) throws Exception;
 
     void saveProject(ProjectVo projectVo) throws Exception;
+    
+    void saveIdentity(CustBaseinfoVo custBaseinfoVo) throws Exception;
 
     void saveDetailinfo(OrderDetailinfoVo orderDetailinfo) throws Exception;
 

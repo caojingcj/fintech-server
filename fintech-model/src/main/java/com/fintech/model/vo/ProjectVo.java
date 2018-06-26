@@ -10,6 +10,15 @@ public class ProjectVo extends BaseVO {
     private String orderAmount;
     private Integer companyChannelId;
     private String companyChannelName;
+    private String companyChannelPhone;
+
+    public String getCompanyChannelPhone() {
+        return companyChannelPhone;
+    }
+
+    public void setCompanyChannelPhone(String companyChannelPhone) {
+        this.companyChannelPhone = companyChannelPhone;
+    }
 
     public Integer getCompanyChannelId() {
         return companyChannelId;

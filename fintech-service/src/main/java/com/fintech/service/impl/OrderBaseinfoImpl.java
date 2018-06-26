@@ -37,12 +37,14 @@ import com.fintech.model.CompanyAccountinfo;
 import com.fintech.model.CompanyBaseinfo;
 import com.fintech.model.CompanyChannel;
 import com.fintech.model.CompanyPeriodFee;
+import com.fintech.model.CustBaseinfo;
 import com.fintech.model.LogOrder;
 import com.fintech.model.OrderAttachment;
 import com.fintech.model.OrderBaseinfo;
 import com.fintech.model.OrderDetailinfo;
 import com.fintech.model.UserContract;
 import com.fintech.model.domain.CompanyItemDo;
+import com.fintech.model.vo.CustBaseinfoVo;
 import com.fintech.model.vo.OrderAttachmentVo;
 import com.fintech.model.vo.OrderBaseinfoVo;
 import com.fintech.model.vo.OrderDetailinfoVo;
@@ -197,9 +199,11 @@ public class OrderBaseinfoImpl implements OrderBaseinfoService {
         record.setItemName(projectVo.getItemName());
         record.setOrderAmount(new BigDecimal(projectVo.getOrderAmount()));
         record.setTotalPeriod(projectVo.getTotalPeriod());
+        record.setOrderId(projectVo.getOrderId());
         OrderDetailinfo detailinfo=new OrderDetailinfo();
         detailinfo.setCompanyChannelId(projectVo.getCompanyChannelId());
         detailinfo.setCompanyChannelName(projectVo.getCompanyChannelName());
+        detailinfo.setCompanyChannelPhone(projectVo.getCompanyChannelPhone());
         detailinfo.setOrderId(projectVo.getOrderId());
         orderBaseinfoMapper.updateByPrimaryKeySelective(record);
         orderDetailinfoMapper.updateByPrimaryKeySelective(detailinfo);
@@ -391,6 +395,42 @@ public class OrderBaseinfoImpl implements OrderBaseinfoService {
         map.put("userReturnplan", userReturnplanMapper.selectByPrimaryKeyList(parms));
         return map;
     }
-    
+
+    /* (非 Javadoc) 
+    * <p>Title: saveIdentity</p> 
+    * <p>Description: </p> 
+    * @param custBaseinfoVo
+    * @throws Exception 
+    * @see com.fintech.service.OrderBaseinfoService#saveIdentity(com.fintech.model.vo.CustBaseinfoVo) 
+    * 身份认证 oci还未接入
+    */
+    @Override
+    public void saveIdentity(CustBaseinfoVo custBaseinfoVo) throws Exception {
+        String mobile=redisService.get(custBaseinfoVo.getToken());
+        CustBaseinfo custBaseinfo=new CustBaseinfo();
+        if(custBaseinfoMapper.selectByPrimaryKey(mobile)!=null) {
+            throw new Exception(ConstantInterface.AppValidateConfig.OrderValidate.ORDER_200003.toString());
+        }
+        BeanUtils.copyProperties(custBaseinfoVo, custBaseinfo);
+        custBaseinfo.setCustRealname("戚尔康");
+        custBaseinfo.setCustIdCardNo("320830199207180035");
+        custBaseinfo.setCustCellphone(mobile);
+        custBaseinfo.setIdentityStatus(String.valueOf(1));
+        custBaseinfo.setCustNation("汉族");
+        custBaseinfo.setCustAddress("东兰路288");
+        custBaseinfo.setCustIdCardValBegin(new Date());
+        custBaseinfo.setCustIdCardValEnd(new Date());
+        custBaseinfo.setCustIdCardFront("oci正在对接，请等待回调");
+        custBaseinfo.setCustIdCardBack("oci正在对接，请等待回调");
+        custBaseinfo.setIdentityTime(new Date());
+        custBaseinfo.setIsEnabled(true);
+        custBaseinfo.setCustDeviceCode("wx");
+        custBaseinfoMapper.insertSelective(custBaseinfo);
+        OrderBaseinfo orderBaseinfo=orderBaseinfoMapper.selectByPrimaryKey(custBaseinfoVo.getOrderId());
+        orderBaseinfo.setCustRealname(custBaseinfo.getCustRealname());
+        orderBaseinfo.setCustCellphone(custBaseinfo.getCustCellphone());
+        orderBaseinfo.setCustIdCardNo(custBaseinfo.getCustIdCardNo());
+        orderBaseinfoMapper.updateByPrimaryKeySelective(orderBaseinfo);
+    }
     
 }

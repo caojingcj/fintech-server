@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.fintech.common.properties.AppConfig;
+import com.fintech.model.vo.CustBaseinfoVo;
 import com.fintech.model.vo.OrderAttachmentVo;
 import com.fintech.model.vo.OrderBaseinfoVo;
 import com.fintech.model.vo.OrderDetailinfoVo;
@@ -111,6 +112,29 @@ public class OrderBaseInfoController {
     /** 
     * @Title: OrderBaseInfoController.java 
     * @author qierkang xyqierkang@163.com   
+    * @date 2018年6月27日 上午5:11:28  
+    * @param @param custBaseinfoVo
+    * @param @return    设定文件 
+    * @Description: TODO[ 客户身份认证 ]
+    * @throws 
+    */
+    @RequestMapping(value = "saveIdentity",method = RequestMethod.POST)
+    public @ResponseBody Object saveIdentity(@RequestBody CustBaseinfoVo custBaseinfoVo) {
+        try {
+            redisService.tokenValidate(custBaseinfoVo.getToken());
+            logger.info("EK 客户身份认证[[{}]方法名[{}]操作时间[{}]",custBaseinfoVo,Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
+            orderBaseinfoService.saveIdentity(custBaseinfoVo);
+            return ResultUtils.success(ResultUtils.SUCCESS_CODE_MSG);
+        } catch (Exception e) {
+            logger.error("ERROR EK参数[{}] 报错[{}] 方法名[{}]报错时间[{}]", custBaseinfoVo,e.getMessage(),
+                    Thread.currentThread().getStackTrace()[1].getMethodName(), DateUtils.getDateTime());
+            return ResultUtils.error(ResultUtils.ERROR_CODE, e.getMessage());
+        }
+    }
+    
+    /** 
+    * @Title: OrderBaseInfoController.java 
+    * @author qierkang xyqierkang@163.com   
     * @date 2018年6月26日 上午3:23:58  
     * @param @param orderDetailinfo
     * @param @return    设定文件 
@@ -155,6 +179,15 @@ public class OrderBaseInfoController {
         }
     }
     
+    /** 
+    * @Title: OrderBaseInfoController.java 
+    * @author qierkang xyqierkang@163.com   
+    * @date 2018年6月27日 上午4:36:57  
+    * @param @param vo
+    * @param @return    设定文件 
+    * @Description: TODO[ 客户签署CA ]
+    * @throws 
+    */
     @RequestMapping(value = "remoteSignCaOrder",method = RequestMethod.GET)
     public @ResponseBody Object remoteSignCaOrder(OrderBaseinfoVo vo) {
         try {

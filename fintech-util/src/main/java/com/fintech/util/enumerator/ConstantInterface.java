@@ -341,7 +341,8 @@ public interface ConstantInterface {
 	        */
 	        enum OrderValidate{
 	            ORDER_200001(200201,"总在还款额不超过50w或分期还款中的笔数不超过3笔"),
-	            ORDER_200002(200202,"该用户已经签署！");
+	            ORDER_200002(200202,"该客户已经签署！"),
+	            ORDER_200003(200203,"该客户已经认证！");
 	            private Integer key;
 	            private String value;
 	            public Integer getKey() {
