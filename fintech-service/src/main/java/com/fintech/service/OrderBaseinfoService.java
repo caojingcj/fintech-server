@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
+import com.fintech.model.CustBaseinfo;
 import com.fintech.model.OrderBaseinfo;
 import com.fintech.model.vo.CustBaseinfoVo;
 import com.fintech.model.vo.OrderAttachmentVo;
@@ -23,8 +24,6 @@ public interface OrderBaseinfoService {
 
     void saveProject(ProjectVo projectVo) throws Exception;
     
-    void saveIdentity(CustBaseinfoVo custBaseinfoVo) throws Exception;
-
     void saveDetailinfo(OrderDetailinfoVo orderDetailinfo) throws Exception;
 
     String saveOrderAttachment(OrderAttachmentVo vo, MultipartHttpServletRequest multipartHttpServletRequest);
@@ -38,4 +37,8 @@ public interface OrderBaseinfoService {
     Map<String, Object> orderBaseinfoDetail(String orderId) throws Exception;
 
     Map<String, Object> userReturnplans(String token) throws Exception;
+    
+    CustBaseinfo saveIdentityPositive(CustBaseinfoVo custBaseinfoVo,MultipartHttpServletRequest multipartHttpServletRequest) throws Exception;
+    
+    CustBaseinfo saveIdentitySide(CustBaseinfoVo custBaseinfoVo,MultipartHttpServletRequest multipartHttpServletRequest) throws Exception;
 }

@@ -105,8 +105,47 @@ public class AppConfig {
     private String BUCKET_NAME;
     @Value("${OSS_ORDER_ATTACMENT_PATH}")
     private String OSS_ORDER_ATTACMENT_PATH;
+    @Value("${OSS_ORDER_OCR_PATH}")
+    private String OSS_ORDER_OCR_PATH;
+    @Value("${OCR_API_KEY}")
+    private String OCR_API_KEY;
+    @Value("${OCR_API_SECRET}")
+    private String OCR_API_SECRET;
+    @Value("${OCR_API_URL}")
+    private String OCR_API_URL;
 
-    
+    public String getOSS_ORDER_OCR_PATH() {
+        return OSS_ORDER_OCR_PATH;
+    }
+
+    public void setOSS_ORDER_OCR_PATH(String oSS_ORDER_OCR_PATH) {
+        OSS_ORDER_OCR_PATH = oSS_ORDER_OCR_PATH;
+    }
+
+    public String getOCR_API_URL() {
+        return OCR_API_URL;
+    }
+
+    public void setOCR_API_URL(String oCR_API_URL) {
+        OCR_API_URL = oCR_API_URL;
+    }
+
+    public String getOCR_API_KEY() {
+        return OCR_API_KEY;
+    }
+
+    public void setOCR_API_KEY(String oCR_API_KEY) {
+        OCR_API_KEY = oCR_API_KEY;
+    }
+
+    public String getOCR_API_SECRET() {
+        return OCR_API_SECRET;
+    }
+
+    public void setOCR_API_SECRET(String oCR_API_SECRET) {
+        OCR_API_SECRET = oCR_API_SECRET;
+    }
+
     public String getQYES_CA_SEALID() {
         return QYES_CA_SEALID;
     }

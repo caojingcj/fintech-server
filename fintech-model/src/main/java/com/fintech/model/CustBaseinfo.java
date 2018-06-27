@@ -152,4 +152,15 @@ public class CustBaseinfo {
     public void setUpdatetime(Date updatetime) {
         this.updatetime = updatetime;
     }
+
+    @Override
+    public String toString() {
+        return "CustBaseinfo [custCellphone=" + custCellphone + ", identityStatus=" + identityStatus + ", custRealname="
+                + custRealname + ", custIdCardNo=" + custIdCardNo + ", custNation=" + custNation + ", custAddress="
+                + custAddress + ", custIdCardValBegin=" + custIdCardValBegin + ", custIdCardValEnd=" + custIdCardValEnd
+                + ", custIdCardFront=" + custIdCardFront + ", custIdCardBack=" + custIdCardBack + ", identityTime="
+                + identityTime + ", isEnabled=" + isEnabled + ", custDeviceCode=" + custDeviceCode + ", createTime="
+                + createTime + ", updatetime=" + updatetime + "]";
+    }
+    
 }

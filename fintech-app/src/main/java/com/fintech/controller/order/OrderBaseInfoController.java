@@ -118,14 +118,28 @@ public class OrderBaseInfoController {
     * @Description: TODO[ 客户身份认证 ]
     * @throws 
     */
-    @RequestMapping(value = "saveIdentity",method = RequestMethod.POST)
-    public @ResponseBody Object saveIdentity(@RequestBody CustBaseinfoVo custBaseinfoVo) {
+    @RequestMapping(value = "saveIdentityPositive",method = RequestMethod.POST)
+    public @ResponseBody Object saveIdentityPositive(CustBaseinfoVo custBaseinfoVo,MultipartHttpServletRequest multipartHttpServletRequest) {
         try {
             redisService.tokenValidate(custBaseinfoVo.getToken());
             logger.info("EK 客户身份认证[[{}]方法名[{}]操作时间[{}]",custBaseinfoVo,Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
-            orderBaseinfoService.saveIdentity(custBaseinfoVo);
-            return ResultUtils.success(ResultUtils.SUCCESS_CODE_MSG);
+            return ResultUtils.success(ResultUtils.SUCCESS_CODE_MSG,orderBaseinfoService.saveIdentityPositive(custBaseinfoVo, multipartHttpServletRequest));
         } catch (Exception e) {
+            e.printStackTrace();
+            logger.error("ERROR EK参数[{}] 报错[{}] 方法名[{}]报错时间[{}]", custBaseinfoVo,e.getMessage(),
+                    Thread.currentThread().getStackTrace()[1].getMethodName(), DateUtils.getDateTime());
+            return ResultUtils.error(ResultUtils.ERROR_CODE, e.getMessage());
+        }
+    }
+    
+    @RequestMapping(value = "saveIdentitySide",method = RequestMethod.POST)
+    public @ResponseBody Object saveIdentitySide(CustBaseinfoVo custBaseinfoVo,MultipartHttpServletRequest multipartHttpServletRequest) {
+        try {
+            redisService.tokenValidate(custBaseinfoVo.getToken());
+            logger.info("EK 客户身份认证[[{}]方法名[{}]操作时间[{}]",custBaseinfoVo,Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
+            return ResultUtils.success(ResultUtils.SUCCESS_CODE_MSG,orderBaseinfoService.saveIdentitySide(custBaseinfoVo, multipartHttpServletRequest));
+        } catch (Exception e) {
+            e.printStackTrace();
             logger.error("ERROR EK参数[{}] 报错[{}] 方法名[{}]报错时间[{}]", custBaseinfoVo,e.getMessage(),
                     Thread.currentThread().getStackTrace()[1].getMethodName(), DateUtils.getDateTime());
             return ResultUtils.error(ResultUtils.ERROR_CODE, e.getMessage());

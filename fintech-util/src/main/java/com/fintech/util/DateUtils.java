@@ -814,6 +814,13 @@ public class DateUtils {
 		return date;
 	}
     
+    public static Date parse(String strDate) {
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        ParsePosition pos = new ParsePosition(0);
+        Date strtodate = formatter.parse(strDate, pos);
+        return strtodate;
+     }
+    
     /**
 	 * 以指定格式返回当时时间
 	 * 

@@ -4,13 +4,14 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
-import org.apache.http.ParseException;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -24,14 +25,18 @@ import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
-import com.alibaba.fastjson.JSONObject;
+import net.sf.json.JSONObject;
+
 
 public class HttpClient {
 
@@ -46,7 +51,7 @@ public class HttpClient {
 	private static long endTime = 0L;
 
     public static String jsonPost(String url, Map<String, Object> params) {
-        JSONObject json = new JSONObject(params);
+        com.alibaba.fastjson.JSONObject json = new com.alibaba.fastjson.JSONObject(params);
         String reqStr = json.toJSONString();
         String respStr = post(url, reqStr,CONTENT_JSON,params);
         return respStr;
@@ -316,9 +321,47 @@ public class HttpClient {
 	                         System.out.println("resp=" + respStr);  
 	                         return respStr;  
 	                     }  
-	
-	public static void main(String[] args) {
-	    
-    }
-
+        	/** 
+        	* @Title: HttpClient.java 
+        	* @author qierkang xyqierkang@163.com   
+        	* @date 2018年6月28日 上午3:11:37  
+        	* @param @param url
+        	* @param @param parms
+        	* @param @param multipartFile
+        	* @param @return    设定文件 
+        	* @Description: TODO[ HTTP 文件上传 ]
+        	* @throws 
+        	*/
+        	public static JSONObject postFileUrl(String url,Map<String, Object>parms,MultipartFile multipartFile) {
+        	    CloseableHttpClient httpClient = HttpClientBuilder.create().build();
+        	    CloseableHttpResponse httpResponse = null;
+        	    try {
+                    HttpPost httpPost = new HttpPost(url);
+                    MultipartEntityBuilder multipartEntityBuilder = MultipartEntityBuilder.create();
+                    multipartEntityBuilder.addBinaryBody("image",multipartFile.getInputStream(),ContentType.MULTIPART_FORM_DATA, multipartFile.getName());
+                    for (Entry<String,Object> map : parms.entrySet()) {
+                        multipartEntityBuilder.addTextBody(map.getKey(), map.getValue().toString());
+                    }
+                    HttpEntity httpEntity = multipartEntityBuilder.build();
+                    httpPost.setEntity(httpEntity);
+                    logger.info("EK http post 文件上传 【地址[{}]参数[{}]文件[{}]】>方法名[{}]操作时间[{}]",url,parms,multipartFile,Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
+                    httpResponse = httpClient.execute(httpPost);
+                     JSONObject JSONObject = handleResponse(httpResponse);
+                     System.out.println(JSONObject);
+                     logger.info("EK http post 文件上传 返回[{}]操作时间[{}]",JSONObject,DateUtils.getDateTime());
+                    return JSONObject;
+                } catch (ClientProtocolException e) {
+                    logger.error("EK ERROR ClientProtocolException [{}] http post 文件上传 【地址[{}]参数[{}]文件[{}]】>方法名[{}]操作时间[{}]",e.getMessage(),url,parms,multipartFile,Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
+                } catch (IOException e) {
+                    logger.error("EK ERROR IOException [{}] http post 文件上传 【地址[{}]参数[{}]文件[{}]】>方法名[{}]操作时间[{}]",e.getMessage(),url,parms,multipartFile,Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
+                }finally {
+                    try {
+                        httpClient.close();
+                        httpResponse.close();
+                    } catch (IOException e) {
+                        logger.error("EK ERROR 关闭IOException出错！ [{}] http post 文件上传 【地址[{}]参数[{}]文件[{}]】>方法名[{}]操作时间[{}]",e.getMessage(),url,parms,multipartFile,Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
+                    }
+                }
+        	    return null;
+        	}
 }

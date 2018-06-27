@@ -49,6 +49,8 @@ import com.fintech.model.vo.OrderAttachmentVo;
 import com.fintech.model.vo.OrderBaseinfoVo;
 import com.fintech.model.vo.OrderDetailinfoVo;
 import com.fintech.model.vo.ProjectVo;
+import com.fintech.model.vo.faceid.FaceidIDCardPositiveVo;
+import com.fintech.model.vo.faceid.FaceidIDCardSideVo;
 import com.fintech.service.OrderBaseinfoService;
 import com.fintech.service.RedisService;
 import com.fintech.service.ReturnPlanService;
@@ -56,8 +58,15 @@ import com.fintech.util.BeanUtils;
 import com.fintech.util.CommonUtil;
 import com.fintech.util.DateUtils;
 import com.fintech.util.FinTechException;
+import com.fintech.util.HttpClient;
+import com.fintech.util.StringUtil;
 import com.fintech.util.enumerator.ConstantInterface;
 import com.fintech.xcpt.FintechException;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import com.qiyuesuo.pdf.text.M;
+
+import net.sf.json.JSONObject;
 
 @Service
 public class OrderBaseinfoImpl implements OrderBaseinfoService {
@@ -402,35 +411,123 @@ public class OrderBaseinfoImpl implements OrderBaseinfoService {
     * @param custBaseinfoVo
     * @throws Exception 
     * @see com.fintech.service.OrderBaseinfoService#saveIdentity(com.fintech.model.vo.CustBaseinfoVo) 
-    * 身份认证 oci还未接入
+    * faceId身份证正面扫
     */
     @Override
-    public void saveIdentity(CustBaseinfoVo custBaseinfoVo) throws Exception {
-        String mobile=redisService.get(custBaseinfoVo.getToken());
-        CustBaseinfo custBaseinfo=new CustBaseinfo();
-        if(custBaseinfoMapper.selectByPrimaryKey(mobile)!=null) {
-            throw new Exception(ConstantInterface.AppValidateConfig.OrderValidate.ORDER_200003.toString());
+    public CustBaseinfo saveIdentityPositive(CustBaseinfoVo custBaseinfoVo,MultipartHttpServletRequest multipartHttpServletRequest) throws Exception {
+        Date date=new Date();
+        Gson gson=new Gson();
+        MultipartFile multipartFile=multipartHttpServletRequest.getFile("file");
+        InputStream is= multipartFile.getInputStream();
+        if(is.available()==0){
+            throw new Exception(ConstantInterface.AppValidateConfig.OrderValidate.ORDER_200002.toString());
         }
+        File convFile = new File(multipartFile.getOriginalFilename());
+        multipartFile.transferTo(convFile);
+        Map<String, Object>parms=new HashMap<>();
+        parms.put("api_key", appConfig.getOCR_API_KEY());
+        parms.put("api_secret", appConfig.getOCR_API_SECRET());
+        JSONObject result=HttpClient.postFileUrl(appConfig.getOCR_API_URL(), parms, multipartFile);
+        FaceidIDCardPositiveVo faceidVo=gson.fromJson(result.toString(),new TypeToken<FaceidIDCardPositiveVo>() {}.getType());
+        if(StringUtil.isEmpty(faceidVo.getId_card_number())) {
+            throw new Exception(ConstantInterface.AppValidateConfig.OrderValidate.ORDER_200004.toString());
+        }
+        String fileName,path = "";
+        OSSEntity oss=null;
+        String folder = CommonUtil.getStringTime(date, "yyyyMMdd") + "/";
+        FileUploadSample sample = new FileUploadSample();
+        String suffix = convFile.getName().substring(convFile.getName().lastIndexOf("."));
+        String mobile=redisService.get(custBaseinfoVo.getToken());
+        fileName =mobile+"-" +UUID.randomUUID() + suffix;
+        path = appConfig.getOSS_ORDER_OCR_PATH() + folder + fileName;
+        oss = new OSSEntity();
+        oss=sample.uploadFile(multipartFile.getInputStream(), path);
+        CustBaseinfo custBaseinfo=new CustBaseinfo();
+//        if(custBaseinfoMapper.selectByPrimaryKey(mobile)!=null) {
+//            throw new Exception(ConstantInterface.AppValidateConfig.OrderValidate.ORDER_200003.toString());
+//        }
         BeanUtils.copyProperties(custBaseinfoVo, custBaseinfo);
-        custBaseinfo.setCustRealname("戚尔康");
-        custBaseinfo.setCustIdCardNo("320830199207180035");
+        CustBaseinfo baseinfo=custBaseinfoMapper.selectByPrimaryKey(mobile);
+        custBaseinfo.setCustRealname(faceidVo.getName());
+        custBaseinfo.setCustIdCardNo(faceidVo.getId_card_number());
         custBaseinfo.setCustCellphone(mobile);
         custBaseinfo.setIdentityStatus(String.valueOf(1));
-        custBaseinfo.setCustNation("汉族");
-        custBaseinfo.setCustAddress("东兰路288");
-        custBaseinfo.setCustIdCardValBegin(new Date());
-        custBaseinfo.setCustIdCardValEnd(new Date());
-        custBaseinfo.setCustIdCardFront("oci正在对接，请等待回调");
-        custBaseinfo.setCustIdCardBack("oci正在对接，请等待回调");
-        custBaseinfo.setIdentityTime(new Date());
+        custBaseinfo.setCustNation(faceidVo.getRace());
+        custBaseinfo.setCustAddress(faceidVo.getAddress());
+        custBaseinfo.setCustIdCardFront(oss.getUrl());
+        custBaseinfo.setIdentityTime(date);
         custBaseinfo.setIsEnabled(true);
         custBaseinfo.setCustDeviceCode("wx");
-        custBaseinfoMapper.insertSelective(custBaseinfo);
+        if(baseinfo==null) {
+            custBaseinfoMapper.insertSelective(custBaseinfo);
+        }else {
+            custBaseinfoMapper.updateByPrimaryKeySelective(custBaseinfo);
+            BeanUtils.copyProperties(baseinfo, custBaseinfo);
+        }
         OrderBaseinfo orderBaseinfo=orderBaseinfoMapper.selectByPrimaryKey(custBaseinfoVo.getOrderId());
         orderBaseinfo.setCustRealname(custBaseinfo.getCustRealname());
         orderBaseinfo.setCustCellphone(custBaseinfo.getCustCellphone());
         orderBaseinfo.setCustIdCardNo(custBaseinfo.getCustIdCardNo());
         orderBaseinfoMapper.updateByPrimaryKeySelective(orderBaseinfo);
+        return custBaseinfo;
     }
     
+    /* (非 Javadoc) 
+    * <p>Title: saveIdentitySide</p> 
+    * <p>Description: </p> 
+    * @param custBaseinfoVo
+    * @param multipartHttpServletRequest
+    * @throws Exception 
+    * @see com.fintech.service.OrderBaseinfoService#saveIdentitySide(com.fintech.model.vo.CustBaseinfoVo, org.springframework.web.multipart.MultipartHttpServletRequest) 
+    *  faceId身份证反面
+    */
+    @Override
+    public CustBaseinfo saveIdentitySide(CustBaseinfoVo custBaseinfoVo,MultipartHttpServletRequest multipartHttpServletRequest) throws Exception {
+        Date date=new Date();
+        Gson gson=new Gson();
+        MultipartFile multipartFile=multipartHttpServletRequest.getFile("file");
+        InputStream is= multipartFile.getInputStream();
+        if(is.available()==0){
+            throw new Exception(ConstantInterface.AppValidateConfig.OrderValidate.ORDER_200004.toString());
+        }
+        File convFile = new File(multipartFile.getOriginalFilename());
+        Map<String, Object>parms=new HashMap<>();
+        parms.put("api_key", appConfig.getOCR_API_KEY());
+        parms.put("api_secret", appConfig.getOCR_API_SECRET());
+        JSONObject result=HttpClient.postFileUrl(appConfig.getOCR_API_URL(), parms, multipartFile);
+        FaceidIDCardSideVo faceidVo = gson.fromJson(result.toString(),new TypeToken<FaceidIDCardSideVo>() {}.getType());
+        String fileName,path = "";
+        OSSEntity oss=null;
+        String folder = CommonUtil.getStringTime(date, "yyyyMMdd") + "/";
+        FileUploadSample sample = new FileUploadSample();
+        multipartFile.transferTo(convFile);
+        String mobile=redisService.get(custBaseinfoVo.getToken());
+        String suffix = convFile.getName().substring(convFile.getName().lastIndexOf("."));
+        fileName = mobile+ "-" + UUID.randomUUID() + suffix;
+        path = appConfig.getOSS_ORDER_OCR_PATH() + folder + fileName;
+        oss = new OSSEntity();
+        oss=sample.uploadFile(multipartFile.getInputStream(), path);
+        CustBaseinfo custBaseinfo=new CustBaseinfo();
+        BeanUtils.copyProperties(custBaseinfoVo, custBaseinfo);
+        custBaseinfo.setCustCellphone(mobile);
+        CustBaseinfo baseinfo=custBaseinfoMapper.selectByPrimaryKey(mobile);
+        String [] idTime=faceidVo.getValid_date().split("-");
+        custBaseinfo.setCustIdCardValBegin(DateUtils.parse(idTime[0].replace(".", "-")));
+        custBaseinfo.setCustIdCardValEnd(DateUtils.parse(idTime[1].replace(".", "-")));
+        custBaseinfo.setCustIdCardBack(oss.getUrl());
+        custBaseinfo.setIdentityTime(date);
+        if(baseinfo==null) {
+            custBaseinfoMapper.insertSelective(custBaseinfo);
+        }else {
+            custBaseinfoMapper.updateByPrimaryKeySelective(custBaseinfo);
+            BeanUtils.copyProperties(baseinfo, custBaseinfo);
+        }
+        OrderBaseinfo orderBaseinfo=orderBaseinfoMapper.selectByPrimaryKey(custBaseinfoVo.getOrderId());
+        orderBaseinfo.setCustRealname(custBaseinfo.getCustRealname());
+        orderBaseinfo.setCustCellphone(custBaseinfo.getCustCellphone());
+        orderBaseinfo.setCustIdCardNo(custBaseinfo.getCustIdCardNo());
+        orderBaseinfoMapper.updateByPrimaryKeySelective(orderBaseinfo);
+        return custBaseinfo;
+    }
+
 }
