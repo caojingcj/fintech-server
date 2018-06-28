@@ -443,9 +443,6 @@ public class OrderBaseinfoImpl implements OrderBaseinfoService {
         oss = new OSSEntity();
         oss=sample.uploadFile(multipartFile.getInputStream(), path);
         CustBaseinfo custBaseinfo=new CustBaseinfo();
-//        if(custBaseinfoMapper.selectByPrimaryKey(mobile)!=null) {
-//            throw new Exception(ConstantInterface.AppValidateConfig.OrderValidate.ORDER_200003.toString());
-//        }
         BeanUtils.copyProperties(custBaseinfoVo, custBaseinfo);
         CustBaseinfo baseinfo=custBaseinfoMapper.selectByPrimaryKey(mobile);
         custBaseinfo.setCustRealname(faceidVo.getName());
@@ -465,9 +462,9 @@ public class OrderBaseinfoImpl implements OrderBaseinfoService {
             BeanUtils.copyProperties(baseinfo, custBaseinfo);
         }
         OrderBaseinfo orderBaseinfo=orderBaseinfoMapper.selectByPrimaryKey(custBaseinfoVo.getOrderId());
-        orderBaseinfo.setCustRealname(custBaseinfo.getCustRealname());
+        orderBaseinfo.setCustRealname(faceidVo.getName());
         orderBaseinfo.setCustCellphone(custBaseinfo.getCustCellphone());
-        orderBaseinfo.setCustIdCardNo(custBaseinfo.getCustIdCardNo());
+        orderBaseinfo.setCustIdCardNo(faceidVo.getId_card_number());
         orderBaseinfoMapper.updateByPrimaryKeySelective(orderBaseinfo);
         return custBaseinfo;
     }
