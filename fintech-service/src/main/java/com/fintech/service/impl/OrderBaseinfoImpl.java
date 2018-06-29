@@ -179,6 +179,7 @@ public class OrderBaseinfoImpl implements OrderBaseinfoService {
         detailinfo.setOrderId(orderBaseinfo.getOrderId());
         orderBaseinfoMapper.insertSelective(orderBaseinfo);
         orderDetailinfoMapper.insertSelective(detailinfo);
+        logOrderMapper.insertSelective(new LogOrder(orderBaseinfo.getOrderId(),ConstantInterface.Enum.OrderLogStatus.ORDER_STATUS00.getKey(), ConstantInterface.Enum.OrderStatus.ORDER_STATUS00.getKey(), null));
         Map<String, Object> reslutMap = new HashMap<>();
         reslutMap.put("channels", channels);
         reslutMap.put("periodFees", periodFees);

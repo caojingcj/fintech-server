@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -14,8 +15,9 @@ import org.springframework.web.servlet.ModelAndView;
 import com.fintech.common.properties.AppConfig;
 import com.fintech.model.LogMoxieinfo;
 import com.fintech.model.LogOrder;
-import com.fintech.service.LogMoxieinfoService;
+import com.fintech.model.vo.moxie.BackMoxieTaskSubmitVo;
 import com.fintech.service.LogOrderService;
+import com.fintech.service.MoxieService;
 import com.fintech.service.RedisService;
 import com.fintech.util.DateUtils;
 import com.fintech.util.enumerator.ConstantInterface;
@@ -38,7 +40,7 @@ public class MoxieController {
     @Autowired
     private AppConfig appConfig;
     @Autowired
-    private LogMoxieinfoService logMoxieinfoService;
+    private MoxieService moxieService;
 	@Autowired
 	private LogOrderService logOrderService;
 	@Autowired
@@ -91,16 +93,27 @@ public class MoxieController {
     * @Description: TODO[ 获取魔蝎报告 ]
     * @throws 
     */
-    @RequestMapping("getMXPresentation")
+    @RequestMapping(value = "getMXPresentation",method = RequestMethod.GET)
     public @ResponseBody BaseResult toMoxieCarrierH5(LogMoxieinfo record) {
         logger.info("EK 获取魔蝎报告[{}]方法名[{}]操作时间[{}]",record,Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
         try {
-            logMoxieinfoService.insertSelective(record);
+            moxieService.insertSelective(record);
             return ResultUtils.success(ResultUtils.SUCCESS_CODE_MSG);
         } catch (Exception e) {
             logger.error("ERROR EK参数[{}] 报错[{}] 方法名[{}]报错时间[{}]",record,e.getMessage(),Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
             return ResultUtils.error(ResultUtils.ERROR_CODE,e.getMessage());
         }
-        
+    }
+    
+    @RequestMapping(value = "backMoxieTaskSubmit",method = RequestMethod.POST)
+    public @ResponseBody Object backMoxieTaskSubmit(@RequestBody BackMoxieTaskSubmitVo vo) {
+        logger.info("EK 接到魔蝎回调：任务创建通知[{}]方法名[{}]操作时间[{}]",vo,Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
+        try {
+            moxieService.backMoxieTaskSubmit(vo);
+            return ResultUtils.success(ResultUtils.SUCCESS_CODE_MSG);
+        } catch (Exception e) {
+            logger.error("ERROR EK参数[{}] 报错[{}] 方法名[{}]报错时间[{}]",vo,e.getMessage(),Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
+            return ResultUtils.error(ResultUtils.ERROR_CODE,e.getMessage());
+        }
     }
 }

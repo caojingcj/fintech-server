@@ -13,6 +13,8 @@ import org.springframework.stereotype.Component;
 
 @Component("appconfig")
 public class AppConfig {
+    @Value("${server_port}")
+    private Integer server_port;
     /**
      * @Fields QYS_SERVER_URL : TODO[ 契约锁API地址 ]
      */
@@ -332,6 +334,14 @@ public class AppConfig {
 
     public void setQYES_ACCESS_SECRET(String qYES_ACCESS_SECRET) {
         QYES_ACCESS_SECRET = qYES_ACCESS_SECRET;
+    }
+
+    public Integer getServer_port() {
+        return server_port;
+    }
+
+    public void setServer_port(Integer server_port) {
+        this.server_port = server_port;
     }
 
 }

@@ -1,8 +1,10 @@
 package com.fintech.service;
 
+import java.util.Map;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 public interface WxApiService {
-    String wxOpenId(HttpServletRequest request, HttpServletResponse response)throws Exception;
+    Map<String, Object>  wxOpenId(HttpServletRequest request, HttpServletResponse response)throws Exception;
 }

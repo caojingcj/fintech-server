@@ -43,10 +43,14 @@
     <include refid="Base_Column_List" />
     from order_baseinfo
     where 1=1
-    <if test="custCellphone != null and custCellphone !=''">
+     <if test="custCellphone != null and custCellphone !=''">
     	and CUST_CELLPHONE=#{custCellphone}
     </if>
+    <if test="orderStatus != null and orderStatus !=''">
+    	and ORDER_STATUS=#{orderStatus}
+    </if>
   </select>
+  
   
   <select id="selectByOrderAmountJudge" resultType="java.util.HashMap" parameterType="java.lang.String">
   SELECT

@@ -7,7 +7,8 @@ import com.fintech.common.moxie.MoxieUtil;
 import com.fintech.common.properties.AppConfig;
 import com.fintech.dao.LogMoxieinfoMapper;
 import com.fintech.model.LogMoxieinfo;
-import com.fintech.service.LogMoxieinfoService;
+import com.fintech.model.vo.moxie.BackMoxieTaskSubmitVo;
+import com.fintech.service.MoxieService;
 
 /**   
 * @Title: LogMoxieinfoImpl.java 
@@ -17,7 +18,7 @@ import com.fintech.service.LogMoxieinfoService;
 * @Description: TODO[ 用一句话描述该文件做什么 ]
 */
 @Service
-public class LogMoxieinfoImpl implements LogMoxieinfoService {
+public class MoxieImpl implements MoxieService {
     @Autowired
     private LogMoxieinfoMapper logMoxieinfoMapper;
     @Autowired
@@ -50,6 +51,11 @@ public class LogMoxieinfoImpl implements LogMoxieinfoService {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void backMoxieTaskSubmit(BackMoxieTaskSubmitVo submitVo) {
+        
     }
 
 }

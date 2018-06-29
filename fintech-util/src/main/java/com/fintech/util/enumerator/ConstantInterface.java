@@ -344,7 +344,7 @@ public interface ConstantInterface {
 	            ORDER_200002(200202,"该客户已经签署！"),
 	            ORDER_200003(200203,"该客户已经认证！"),
 	            ORDER_200004(200204,"认证异常，图片格式或清晰度有问题"),
-	            ORDER_200005(200205,"异常请求，请在公众号操作"),
+	            ORDER_200005(200205,"null异常请求，请在公众号操作"),
 	            ORDER_200006(200206,"异常请求，无法获取微信认证");
 	            private Integer key;
 	            private String value;

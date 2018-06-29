@@ -21,7 +21,7 @@ public class HttpGetUtil {
 
     public static String httpRequestToString(String url, Map<String, String> params) {
         String result = null;
-        logger.info("EK 发送HttpGetUtil 请求地址：[{}]参数：[{}]操作时间[{}]",url,params,params,Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
+        logger.info("EK 发送HttpGetUtil 请求地址：[{}]参数：[{}]操作时间[{}]",url,params,Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
         try {
             InputStream is = httpRequestToStream(url, params);
             BufferedReader in = new BufferedReader(new InputStreamReader(is, "UTF-8"));
@@ -31,6 +31,7 @@ public class HttpGetUtil {
                 buffer.append(line);
             }
             result = buffer.toString();
+            logger.info("EK 发送HttpGetUtil 返回[{}]操作时间[{}]",result,DateUtils.getDateTime());
         } catch (Exception e) {
             return null;
         }

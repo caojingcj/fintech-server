@@ -1,10 +1,14 @@
 package com.fintech.service.impl;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.fintech.dao.CustBaseinfoMapper;
+import com.fintech.dao.LogOrderMapper;
 import com.fintech.model.CustBaseinfo;
+import com.fintech.model.LogOrder;
 import com.fintech.model.vo.LogSmsMessageVo;
 import com.fintech.service.AppLoginService;
 import com.fintech.service.LogSmsMessageService;
@@ -22,6 +26,9 @@ public class AppLoginImpl implements AppLoginService {
     private RedisService redisService;
     @Autowired
     private LogSmsMessageService logSmsMessageService;
+    @Autowired
+    private LogOrderMapper logOrderMapper;
+    private static final Logger logger = LoggerFactory.getLogger(AppLoginImpl.class);
 
     /* (非 Javadoc) 
     * <p>Title: appLoginVerification</p> 
@@ -42,6 +49,7 @@ public class AppLoginImpl implements AppLoginService {
         String token=TokenUtil.getToken();
         redisService.set(token,mobile);
         redisService.set(openId,token);
+        logger.info("mobile[{}]openId[{}]token[{}]",mobile,openId,token);
         if(custBaseinfoMapper.selectByPrimaryKey(mobile)==null) {
             CustBaseinfo custBaseinfo=new CustBaseinfo();
             custBaseinfo.setCustCellphone(mobile);

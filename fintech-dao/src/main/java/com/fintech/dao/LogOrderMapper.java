@@ -10,6 +10,8 @@ public interface LogOrderMapper {
     int insertSelective(LogOrder record);
 
     LogOrder selectByPrimaryKey(Integer id);
+    
+    LogOrder selectByPrimaryKeyStatus(String orderId);
 
     int updateByPrimaryKeySelective(LogOrder record);
 

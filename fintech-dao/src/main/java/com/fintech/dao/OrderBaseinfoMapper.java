@@ -17,7 +17,7 @@ public interface OrderBaseinfoMapper {
     List<OrderBaseinfo> selectByPrimaryKeyList(Map<String, Object>parms);
     
     OrderBaseinfo selectByPrimaryKey(@Param("orderId")String orderId);
-    
+
     OrderBaseinfo selectByPrimaryKeySelective(Map<String, Object> parms);
     
     int updateByPrimaryKeySelective(OrderBaseinfo record);
@@ -25,4 +25,5 @@ public interface OrderBaseinfoMapper {
     int updateByPrimaryKey(OrderBaseinfo record);
     
     Map<String, Object> selectByOrderAmountJudge(@Param("custCellphone")String custCellphone);
+    
 }

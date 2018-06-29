@@ -7,13 +7,12 @@ import javax.servlet.MultipartConfigElement;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.context.embedded.ConfigurableEmbeddedServletContainer;
 import org.springframework.boot.context.embedded.EmbeddedServletContainerCustomizer;
-import org.springframework.boot.context.embedded.ServletRegistrationBean;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.boot.web.servlet.MultipartConfigFactory;
 import org.springframework.boot.web.servlet.ServletComponentScan;
@@ -24,7 +23,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 
-import com.fintech.controller.weixin.WxCodeServlet;
+import com.fintech.common.properties.AppConfig;
 import com.fintech.util.DateUtils;
 
 /**   
@@ -44,8 +43,8 @@ import com.fintech.util.DateUtils;
 public class Application extends SpringBootServletInitializer implements EmbeddedServletContainerCustomizer{
     private static Logger logger = LoggerFactory.getLogger(Application.class);
     
-    @Value("${server.port}")
-    private Integer port;
+    @Autowired
+    private AppConfig appConfig;
     
     public static void main(String[] args) {
         SpringApplication.run(Application.class ,args);
@@ -89,7 +88,7 @@ public class Application extends SpringBootServletInitializer implements Embedde
       */
      @Override
      public void customize(ConfigurableEmbeddedServletContainer container){
-         container.setPort(port);
+         container.setPort(appConfig.getServer_port());
      }
      
 }
