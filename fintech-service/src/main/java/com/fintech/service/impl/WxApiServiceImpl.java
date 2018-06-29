@@ -43,9 +43,10 @@ public class WxApiServiceImpl implements WxApiService {
             params.put("code", code);
             String result = HttpGetUtil.httpRequestToString("https://api.weixin.qq.com/sns/oauth2/access_token", params);
             JSONObject jsonObject = JSONObject.fromObject(result);
-            if(jsonObject.isNullObject()) {
-                throw new Exception(ConstantInterface.AppValidateConfig.OrderValidate.ORDER_200005.toString());
-            }
+            System.out.println("微信返回："+jsonObject);
+//            if(jsonObject.isNullObject()) {
+//                throw new Exception(ConstantInterface.AppValidateConfig.OrderValidate.ORDER_200005.toString());
+//            }
             openid = jsonObject.get("openid").toString();
             String token=redisService.get(openid);
             if(!StringUtil.isEmpty(token)) {

@@ -54,6 +54,7 @@ public class WxApiController {
             StringBuffer url = new StringBuffer(
                     "https://open.weixin.qq.com/connect/oauth2/authorize?redirect_uri=" + redirect_uri + "&appid=wx4e291d39c10f3c63&response_type=code&scope=snsapi_base&state=1#wechat_redirect");
             String callback = request.getParameter("callback");// 获取code
+            System.out.println("回调的连接"+url);
             if(StringUtil.isEmpty(callback)) {
                 response.sendRedirect(url.toString());// 这里请不要使用get请求单纯的将页面跳转到该url即可
             }
