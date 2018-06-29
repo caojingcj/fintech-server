@@ -1,9 +1,5 @@
 package com.fintech.controller.login;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,24 +8,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.fintech.common.properties.AppConfig;
-import com.fintech.model.CompanyBaseinfo;
-import com.fintech.model.CompanyChannel;
-import com.fintech.model.CompanyItem;
-import com.fintech.model.CompanyPeriodFee;
-import com.fintech.model.vo.LogSmsMessageVo;
-import com.fintech.service.CompanyBaseinfoService;
-import com.fintech.service.CompanyChannelService;
-import com.fintech.service.CompanyItemService;
-import com.fintech.service.CompanyPeriodFeeService;
-import com.fintech.service.LogSmsMessageService;
+import com.fintech.service.AppLoginService;
+import com.fintech.service.OrderBaseinfoService;
 import com.fintech.service.RedisService;
 import com.fintech.util.DateUtils;
-import com.fintech.util.StringUtil;
 import com.fintech.util.enumerator.ConstantInterface;
 import com.fintech.util.result.BaseResult;
 import com.fintech.util.result.ResultUtils;
-import com.fintech.util.sign.TokenUtil;
 
 /**   
 * @Title: AppLoginController.java 
@@ -42,19 +27,9 @@ import com.fintech.util.sign.TokenUtil;
 @RequestMapping(value = "app/appLogin")
 public class AppLoginController {
     @Autowired
-    private AppConfig appConfig;
-    @Autowired
     private RedisService redisService;
     @Autowired
-    private CompanyBaseinfoService companyBaseinfoService;
-    @Autowired
-    private LogSmsMessageService logSmsMessageService;
-    @Autowired
-    private CompanyChannelService companyChannelService;
-    @Autowired
-    private CompanyPeriodFeeService companyPeriodFeeService;
-    @Autowired
-    private CompanyItemService companyItemService;
+    private AppLoginService appLoginService;
     public static Logger logger = LoggerFactory.getLogger(AppLoginController.class);
 
     
@@ -86,12 +61,7 @@ public class AppLoginController {
     public @ResponseBody BaseResult appLogin(String mobile) {
         try {
             logger.info("EK 发送登录验证码[{}] 方法名[{}]操作时间[{}]",mobile,Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
-            String sendCode=logSmsMessageService.generateVerifyCode(mobile, 4);
-            redisService.setVal(ConstantInterface.AppValidateConfig.ObjectRedisValidate.OBJECT_REDIS_CODE.getValue()+mobile,sendCode, 60 * 10); //放入redis 10分钟有效期
-            LogSmsMessageVo record=new LogSmsMessageVo();
-            record.setSendMobile(mobile);
-            record.setSendCode(sendCode);
-            logSmsMessageService.sendSmsMessage(record);
+            appLoginService.appLogin(mobile);
             return ResultUtils.success(ResultUtils.SUCCESS_CODE_MSG);
         } catch (Exception e) {
             logger.error("ERROR EK参数[{}] 报错[{}] 方法名[{}]报错时间[{}]",mobile,e.getMessage(),
@@ -136,16 +106,10 @@ public class AppLoginController {
     * @throws 
     */
     @RequestMapping(value ="appLoginVerification",method = RequestMethod.GET)
-    public @ResponseBody BaseResult appLoginVerification(String mobile,String code) {
+    public @ResponseBody BaseResult appLoginVerification(String mobile,String openId,String code) {
         logger.info("EK 方法名[{}]操作时间[{}]",Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
         try {
-            String getCode=redisService.get(ConstantInterface.AppValidateConfig.ObjectRedisValidate.OBJECT_REDIS_CODE.getValue()+mobile); //放入redis 10分钟有效期
-            if(StringUtil.isEmpty(getCode)||!getCode.equals(code)) {
-                return ResultUtils.error(ConstantInterface.AppValidateConfig.LoginValidate.LOGIN_200301.getKey(),ConstantInterface.AppValidateConfig.LoginValidate.LOGIN_200301.getValue());
-            }
-            String token=TokenUtil.getToken();
-            redisService.set(token,mobile);
-            return ResultUtils.success(ResultUtils.SUCCESS_CODE_MSG,token);
+            return ResultUtils.success(ResultUtils.SUCCESS_CODE_MSG,appLoginService.appLoginVerification(mobile, openId,code));
         } catch (Exception e) {
             logger.error("ERROR EK参数[{}] 报错[{}] 方法名[{}]报错时间[{}]",mobile,e.getMessage(),Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
             return ResultUtils.error(ResultUtils.ERROR_CODE,e.getMessage());

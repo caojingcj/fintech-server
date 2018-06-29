@@ -423,10 +423,10 @@ public class OrderBaseinfoImpl implements OrderBaseinfoService {
             throw new Exception(ConstantInterface.AppValidateConfig.OrderValidate.ORDER_200002.toString());
         }
         File convFile = new File(multipartFile.getOriginalFilename());
-        multipartFile.transferTo(convFile);
         Map<String, Object>parms=new HashMap<>();
         parms.put("api_key", appConfig.getOCR_API_KEY());
         parms.put("api_secret", appConfig.getOCR_API_SECRET());
+        parms.put("multi_oriented_detection", ConstantInterface.Enum.ConstantNumber.ONE.getKey());
         JSONObject result=HttpClient.postFileUrl(appConfig.getOCR_API_URL(), parms, multipartFile);
         FaceidIDCardPositiveVo faceidVo=gson.fromJson(result.toString(),new TypeToken<FaceidIDCardPositiveVo>() {}.getType());
         if(StringUtil.isEmpty(faceidVo.getId_card_number())) {
@@ -444,7 +444,6 @@ public class OrderBaseinfoImpl implements OrderBaseinfoService {
         oss=sample.uploadFile(multipartFile.getInputStream(), path);
         CustBaseinfo custBaseinfo=new CustBaseinfo();
         BeanUtils.copyProperties(custBaseinfoVo, custBaseinfo);
-        CustBaseinfo baseinfo=custBaseinfoMapper.selectByPrimaryKey(mobile);
         custBaseinfo.setCustRealname(faceidVo.getName());
         custBaseinfo.setCustIdCardNo(faceidVo.getId_card_number());
         custBaseinfo.setCustCellphone(mobile);
@@ -455,12 +454,7 @@ public class OrderBaseinfoImpl implements OrderBaseinfoService {
         custBaseinfo.setIdentityTime(date);
         custBaseinfo.setIsEnabled(true);
         custBaseinfo.setCustDeviceCode("wx");
-        if(baseinfo==null) {
-            custBaseinfoMapper.insertSelective(custBaseinfo);
-        }else {
-            custBaseinfoMapper.updateByPrimaryKeySelective(custBaseinfo);
-            BeanUtils.copyProperties(baseinfo, custBaseinfo);
-        }
+        custBaseinfoMapper.updateByPrimaryKeySelective(custBaseinfo);
         OrderBaseinfo orderBaseinfo=orderBaseinfoMapper.selectByPrimaryKey(custBaseinfoVo.getOrderId());
         orderBaseinfo.setCustRealname(faceidVo.getName());
         orderBaseinfo.setCustCellphone(custBaseinfo.getCustCellphone());
@@ -491,13 +485,13 @@ public class OrderBaseinfoImpl implements OrderBaseinfoService {
         Map<String, Object>parms=new HashMap<>();
         parms.put("api_key", appConfig.getOCR_API_KEY());
         parms.put("api_secret", appConfig.getOCR_API_SECRET());
+        parms.put("multi_oriented_detection", ConstantInterface.Enum.ConstantNumber.ONE.getKey());//对image参数启用图片旋转检测功能。当image参数中传入的图片未检测到人脸时，是否对图片尝试旋转90度、180度、270度后再检测人脸。本参数取值只能是 “1” 或 "0" （缺省值为“0”）:
         JSONObject result=HttpClient.postFileUrl(appConfig.getOCR_API_URL(), parms, multipartFile);
         FaceidIDCardSideVo faceidVo = gson.fromJson(result.toString(),new TypeToken<FaceidIDCardSideVo>() {}.getType());
         String fileName,path = "";
         OSSEntity oss=null;
         String folder = CommonUtil.getStringTime(date, "yyyyMMdd") + "/";
         FileUploadSample sample = new FileUploadSample();
-        multipartFile.transferTo(convFile);
         String mobile=redisService.get(custBaseinfoVo.getToken());
         String suffix = convFile.getName().substring(convFile.getName().lastIndexOf("."));
         fileName = mobile+ "-" + UUID.randomUUID() + suffix;
@@ -506,19 +500,13 @@ public class OrderBaseinfoImpl implements OrderBaseinfoService {
         oss=sample.uploadFile(multipartFile.getInputStream(), path);
         CustBaseinfo custBaseinfo=new CustBaseinfo();
         BeanUtils.copyProperties(custBaseinfoVo, custBaseinfo);
-        custBaseinfo.setCustCellphone(mobile);
-        CustBaseinfo baseinfo=custBaseinfoMapper.selectByPrimaryKey(mobile);
         String [] idTime=faceidVo.getValid_date().split("-");
+        custBaseinfo.setCustCellphone(mobile);
         custBaseinfo.setCustIdCardValBegin(DateUtils.parse(idTime[0].replace(".", "-")));
         custBaseinfo.setCustIdCardValEnd(DateUtils.parse(idTime[1].replace(".", "-")));
         custBaseinfo.setCustIdCardBack(oss.getUrl());
         custBaseinfo.setIdentityTime(date);
-        if(baseinfo==null) {
-            custBaseinfoMapper.insertSelective(custBaseinfo);
-        }else {
-            custBaseinfoMapper.updateByPrimaryKeySelective(custBaseinfo);
-            BeanUtils.copyProperties(baseinfo, custBaseinfo);
-        }
+         custBaseinfoMapper.updateByPrimaryKeySelective(custBaseinfo);
         OrderBaseinfo orderBaseinfo=orderBaseinfoMapper.selectByPrimaryKey(custBaseinfoVo.getOrderId());
         orderBaseinfo.setCustRealname(custBaseinfo.getCustRealname());
         orderBaseinfo.setCustCellphone(custBaseinfo.getCustCellphone());

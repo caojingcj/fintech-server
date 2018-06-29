@@ -41,4 +41,7 @@ public interface OrderBaseinfoService {
     CustBaseinfo saveIdentityPositive(CustBaseinfoVo custBaseinfoVo,MultipartHttpServletRequest multipartHttpServletRequest) throws Exception;
     
     CustBaseinfo saveIdentitySide(CustBaseinfoVo custBaseinfoVo,MultipartHttpServletRequest multipartHttpServletRequest) throws Exception;
+    
+//    Map<String, Object>myOrderEntry(String openId);
+    
 }

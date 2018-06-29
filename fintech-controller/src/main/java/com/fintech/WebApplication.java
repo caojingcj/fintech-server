@@ -53,15 +53,15 @@ public class WebApplication extends SpringBootServletInitializer implements Embe
      @Bean
      MultipartConfigElement multipartConfigElement() {
         MultipartConfigFactory factory = new MultipartConfigFactory();
-        String location = System.getProperty("user.dir") + "/data/tmp";
-        logger.info("EK 创建临时文件夹路径[{}]方法名[{}]操作时间[{}]",location,Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
-        File tmpFile = new File(location);
+        File tmpFile = new File(this.getClass().getResource("/").getPath()+ "/data/tmp");
+        logger.info("EK 创建临时文件夹路径[{}]方法名[{}]操作时间[{}]",tmpFile,Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
         if (!tmpFile.exists()) {
             tmpFile.mkdirs();
         }
-        factory.setLocation(location);
+        factory.setLocation(tmpFile.getPath());
         return factory.createMultipartConfig();
     }
+     
     @Bean
     public ErrorPageFilter errorPageFilter() {
         return new ErrorPageFilter();

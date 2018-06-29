@@ -13,8 +13,10 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.context.embedded.ConfigurableEmbeddedServletContainer;
 import org.springframework.boot.context.embedded.EmbeddedServletContainerCustomizer;
+import org.springframework.boot.context.embedded.ServletRegistrationBean;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.boot.web.servlet.MultipartConfigFactory;
+import org.springframework.boot.web.servlet.ServletComponentScan;
 import org.springframework.boot.web.support.ErrorPageFilter;
 import org.springframework.boot.web.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.Bean;
@@ -22,6 +24,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 
+import com.fintech.controller.weixin.WxCodeServlet;
 import com.fintech.util.DateUtils;
 
 /**   
@@ -37,6 +40,7 @@ import com.fintech.util.DateUtils;
 //@RequestMapping(value = {"/",""})
 @EnableAutoConfiguration
 @PropertySource(value = {"classpath:jdbc.properties","classpath:serviceconfig.properties"}, ignoreResourceNotFound = true)
+@ServletComponentScan //注册servlet注解ServletConfigure
 public class Application extends SpringBootServletInitializer implements EmbeddedServletContainerCustomizer{
     private static Logger logger = LoggerFactory.getLogger(Application.class);
     
@@ -46,7 +50,6 @@ public class Application extends SpringBootServletInitializer implements Embedde
     public static void main(String[] args) {
         SpringApplication.run(Application.class ,args);
     }
-    
     /**
      * 文件上传临时路径
      * 支持Linux路径（网络图片流需要临时文件夹地址）
@@ -54,15 +57,15 @@ public class Application extends SpringBootServletInitializer implements Embedde
      @Bean
      MultipartConfigElement multipartConfigElement() {
         MultipartConfigFactory factory = new MultipartConfigFactory();
-        String location = System.getProperty("user.dir") + "/data/tmp";
-        logger.info("EK 创建临时文件夹路径[{}]方法名[{}]操作时间[{}]",location,Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
-        File tmpFile = new File(location);
+        File tmpFile = new File(this.getClass().getResource("/").getPath()+ "/data/tmp");
+        logger.info("EK 创建临时文件夹路径[{}]方法名[{}]操作时间[{}]",tmpFile,Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
         if (!tmpFile.exists()) {
             tmpFile.mkdirs();
         }
-        factory.setLocation(location);
+        factory.setLocation(tmpFile.getPath());
         return factory.createMultipartConfig();
     }
+     
     @Bean
     public ErrorPageFilter errorPageFilter() {
         return new ErrorPageFilter();
@@ -88,4 +91,5 @@ public class Application extends SpringBootServletInitializer implements Embedde
      public void customize(ConfigurableEmbeddedServletContainer container){
          container.setPort(port);
      }
+     
 }
