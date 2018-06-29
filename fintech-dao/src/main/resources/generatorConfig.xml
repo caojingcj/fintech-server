@@ -45,7 +45,7 @@
             <!--<property name="rootInterface" value="com.MutiModule.common.mybatis.base.BaseEntity"/>-->
         </javaClientGenerator>
          <!-- 配置表信息 -->
-        <table schema="fintech" tableName="log_sms_message"
+        <table schema="fintech" tableName="log_mozhanginfo"
                enableCountByExample="false" enableUpdateByExample="false"
                enableDeleteByExample="false" enableSelectByExample="false"
                selectByExampleQueryId="false">

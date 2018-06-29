@@ -940,6 +940,12 @@ public class DateUtils {
         return res;
     }
     
+    public static Date stampToDateTime(long l){
+        long lt = new Long(l);
+        Date date = new Date(lt);
+        return date;
+    }
+    
     /**
      * Date => String
      * 

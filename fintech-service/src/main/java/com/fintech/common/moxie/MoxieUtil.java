@@ -34,9 +34,18 @@ import net.sf.json.JSONObject;
 @Component
 public class MoxieUtil {
     private static final Logger LOGGER = LoggerFactory.getLogger(MoxieUtil.class);
-    @Autowired
-    private static AppConfig appConfig;
-    public static String doPostWithApikey(String url, JSONObject jsonParam) throws Exception {
+    /** 
+    * @Title: MoxieUtil.java 
+    * @author qierkang xyqierkang@163.com   
+    * @date 2018年6月30日 上午1:58:34  
+    * @param @param url
+    * @param @param jsonParam
+    * @param @return
+    * @param @throws Exception    设定文件 
+    * @Description: TODO[ 魔杖获取token  post ]
+    * @throws 
+    */
+    public static String doPostWithApikey(String url, JSONObject jsonParam,String token) throws Exception {
         LOGGER.debug("[moxie] doPostWithApikey() start! \n\turl ={} \n\tjsonParam={}.", url, jsonParam);
         if (StringUtils.isEmpty(jsonParam) || StringUtils.isEmpty(url)) {
             LOGGER.error("[moxie] doPostWithApikey() parameter url or jsonParam is null !");
@@ -53,7 +62,7 @@ public class MoxieUtil {
             httpClient = HttpClients.createDefault();
             //创建httpPost
             httpPost = new HttpPost(url);
-            httpPost.setHeader("Authorization", appConfig.getMOXIE_APIKEY());
+            httpPost.setHeader("Authorization", token);
             httpPost.setHeader("Content-Type", "application/json");
             stringEntity = new StringEntity(jsonParam.toString(), "utf-8");
             stringEntity.setContentEncoding("UTF-8");
@@ -73,7 +82,7 @@ public class MoxieUtil {
         return result;
     }
 
-    public static String doGetWithApikey(String url) throws Exception {
+    public static String doGetWithApikey(String url,String token) throws Exception {
         LOGGER.debug("[moxie] doGetWithApikey() start! \n\turl = {}", url);
         if (StringUtils.isEmpty(url)) {
             LOGGER.error("[moxie] doGetWithApikey() parameter url is null !");
@@ -89,7 +98,7 @@ public class MoxieUtil {
             httpClient = HttpClients.createDefault();
             //创建httpGet
             httpGet = new HttpGet(url);
-            httpGet.setHeader("Authorization", appConfig.getMOXIE_APIKEY());
+            httpGet.setHeader("Authorization", token);
             response = httpClient.execute(httpGet);
             entity = response.getEntity();
             if (entity != null) {
@@ -104,7 +113,7 @@ public class MoxieUtil {
         return result;
     }
 
-    public static String doGetWithToken(String url) throws Exception {
+    public static String doGetWithToken(String url,String token) throws Exception {
         LOGGER.debug("[moxie] doGetWithToken() start! url = {}", url);
         if (StringUtils.isEmpty(url)) {
             LOGGER.error("[moxie] doGetWithToken() parameter url is null !");
@@ -120,8 +129,8 @@ public class MoxieUtil {
             httpClient = HttpClients.createDefault();
             //创建httpGet
             httpGet = new HttpGet(url);
-//            httpGet.setHeader("Authorization", config.getMOXIE_TOKEN());
-            httpGet.setHeader("Authorization", "token db401c3ba5694a7b91205f8749d993f3");
+            httpGet.setHeader("Authorization", token);
+//            httpGet.setHeader("Authorization", "token db401c3ba5694a7b91205f8749d993f3");
             response = httpClient.execute(httpGet);
             entity = response.getEntity();
             if (entity != null) {
@@ -154,7 +163,7 @@ public class MoxieUtil {
         try {
             String result = MoxieUtil.doGetWithToken(url
                     .replace("{task_id}", "6f91bbd0-76da-11e8-b29a-00163e13fa10")
-                    .replace("{mobile}", "13813948485"));
+                    .replace("{mobile}", "13813948485"),"6f91bbd0-76da-11e8-b29a-00163e13fa10");
             System.out.println(result);
         } catch (Exception e) {
             // TODO Auto-generated catch block

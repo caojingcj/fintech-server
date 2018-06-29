@@ -9,7 +9,7 @@ public interface LogMoxieinfoMapper {
 
     int insertSelective(LogMoxieinfo record);
 
-    LogMoxieinfo selectByPrimaryKey(Long id);
+    LogMoxieinfo selectByPrimaryKey(String MoxieTaskId);
 
     int updateByPrimaryKeySelective(LogMoxieinfo record);
 

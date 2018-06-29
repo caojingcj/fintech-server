@@ -65,10 +65,10 @@ public class MoxieController {
         	mav.addObject("mobile", mobile);
         	mav.addObject("name", name);
         	mav.addObject("idCard", idCard);
-            logger.info("EK魔蝎日志 H5参数【姓名[{}手机号[{}]身份证[{}]]】>方法名[{}]操作时间[{}]",name,mobile,idCard,Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
+            logger.info("EK魔蝎日志 H5参数【定单号[{}]姓名[{}]手机号[{}]身份证[{}]】>方法名[{}]操作时间[{}]",orderId,name,mobile,idCard,Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
             String loginParams = URLEncoder.encode("{\"phone\":\"" + mobile + "\",\"name\":\"" +
                             name + "\",\"idcard\":\"" + idCard + "\"}", "UTF-8");
-            String moxieUrl="https://api.51datakey.com/h5/importV3/index.html#/carrier?apiKey="+appConfig.getMOXIE_APIKEY()+"&userId="+mobile+"&quitOnLoginDone=YES&backUrl="+appConfig.getMOXIE_BACKURL()+"&themeColor=2196F3&cacheDisable=YES&loginParams="+loginParams;
+            String moxieUrl="https://api.51datakey.com/h5/importV3/index.html#/carrier?apiKey="+appConfig.getMOXIE_APIKEY()+"&userId="+orderId+"&quitOnLoginDone=YES&backUrl="+appConfig.getMOXIE_BACKURL()+"&themeColor=2196F3&cacheDisable=YES&loginParams="+loginParams;
             logOrderService.insertSelective(new LogOrder(orderId, ConstantInterface.Enum.OrderLogStatus.ORDER_STATUS03.getKey(), ConstantInterface.Enum.OrderStatus.ORDER_STATUS00.getKey(), null));
 //                    mav.setViewName("redirect:https://api.51datakey.com/h5/importV3/index.html#/carrier" +
 //                            "?apiKey=" + appConfig.getMOXIE_APIKEY() +//魔蝎分配给合作机构的Key
@@ -80,7 +80,7 @@ public class MoxieController {
 //                            "&loginParams=" + loginParams);
                     return ResultUtils.success(ResultUtils.SUCCESS_CODE_MSG,moxieUrl);
         } catch (Exception e) {
-            logger.error("EK ERROR [{}]魔蝎日志 H5参数【姓名[{}手机号[{}]身份证[{}]]】>方法名[{}]操作时间[{}]",e.getMessage(),name,mobile,idCard,Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
+            logger.error("EK ERROR [{}]魔蝎日志 H5参数【定单号[{}]姓名[{}手机号[{}]身份证[{}]]】>方法名[{}]操作时间[{}]",e.getMessage(),orderId,name,mobile,idCard,Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
         }
         return mav;
     }

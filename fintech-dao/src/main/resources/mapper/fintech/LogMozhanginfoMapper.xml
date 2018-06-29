@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.fintech.dao.LogMozhanginfoMapper" >
+  <resultMap id="BaseResultMap" type="com.fintech.model.LogMozhanginfo" >
+    <id column="ID" property="id" jdbcType="BIGINT" />
+    <result column="MOZHANG_MOBILE" property="mozhangMobile" jdbcType="VARCHAR" />
+    <result column="MOZHANG_IDCARD" property="mozhangIdcard" jdbcType="VARCHAR" />
+    <result column="MOZHANG_NAME" property="mozhangName" jdbcType="VARCHAR" />
+    <result column="MOZHANG_CONTENT" property="mozhangContent" jdbcType="CHAR" />
+    <result column="ORDER_ID" property="orderId" jdbcType="VARCHAR" />
+    <result column="MOZHANG_TASK_ID" property="mozhangTaskId" jdbcType="VARCHAR" />
+    <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="REPORT_TIME" property="reportTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, MOZHANG_MOBILE, MOZHANG_IDCARD, MOZHANG_NAME, MOZHANG_CONTENT, ORDER_ID, MOZHANG_TASK_ID, 
+    CREATE_TIME, UPDATE_TIME, REPORT_TIME
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from log_mozhanginfo
+    where MOZHANG_TASK_ID = #{mozhangTaskId}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from log_mozhanginfo
+    where ID = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.fintech.model.LogMozhanginfo" >
+    insert into log_mozhanginfo (ID, MOZHANG_MOBILE, MOZHANG_IDCARD, 
+      MOZHANG_NAME, MOZHANG_CONTENT, ORDER_ID, 
+      MOZHANG_TASK_ID, CREATE_TIME, UPDATE_TIME, 
+      REPORT_TIME)
+    values (#{id,jdbcType=BIGINT}, #{mozhangMobile,jdbcType=VARCHAR}, #{mozhangIdcard,jdbcType=VARCHAR}, 
+      #{mozhangName,jdbcType=VARCHAR}, #{mozhangContent,jdbcType=CHAR}, #{orderId,jdbcType=VARCHAR}, 
+      #{mozhangTaskId,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{reportTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.fintech.model.LogMozhanginfo" >
+    insert into log_mozhanginfo
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="mozhangMobile != null" >
+        MOZHANG_MOBILE,
+      </if>
+      <if test="mozhangIdcard != null" >
+        MOZHANG_IDCARD,
+      </if>
+      <if test="mozhangName != null" >
+        MOZHANG_NAME,
+      </if>
+      <if test="mozhangContent != null" >
+        MOZHANG_CONTENT,
+      </if>
+      <if test="orderId != null" >
+        ORDER_ID,
+      </if>
+      <if test="mozhangTaskId != null" >
+        MOZHANG_TASK_ID,
+      </if>
+      <if test="createTime != null" >
+        CREATE_TIME,
+      </if>
+      <if test="updateTime != null" >
+        UPDATE_TIME,
+      </if>
+      <if test="reportTime != null" >
+        REPORT_TIME,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="mozhangMobile != null" >
+        #{mozhangMobile,jdbcType=VARCHAR},
+      </if>
+      <if test="mozhangIdcard != null" >
+        #{mozhangIdcard,jdbcType=VARCHAR},
+      </if>
+      <if test="mozhangName != null" >
+        #{mozhangName,jdbcType=VARCHAR},
+      </if>
+      <if test="mozhangContent != null" >
+        #{mozhangContent,jdbcType=CHAR},
+      </if>
+      <if test="orderId != null" >
+        #{orderId,jdbcType=VARCHAR},
+      </if>
+      <if test="mozhangTaskId != null" >
+        #{mozhangTaskId,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="reportTime != null" >
+        #{reportTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.fintech.model.LogMozhanginfo" >
+    update log_mozhanginfo
+    <set >
+      <if test="mozhangMobile != null" >
+        MOZHANG_MOBILE = #{mozhangMobile,jdbcType=VARCHAR},
+      </if>
+      <if test="mozhangIdcard != null" >
+        MOZHANG_IDCARD = #{mozhangIdcard,jdbcType=VARCHAR},
+      </if>
+      <if test="mozhangName != null" >
+        MOZHANG_NAME = #{mozhangName,jdbcType=VARCHAR},
+      </if>
+      <if test="mozhangContent != null" >
+        MOZHANG_CONTENT = #{mozhangContent,jdbcType=CHAR},
+      </if>
+      <if test="orderId != null" >
+        ORDER_ID = #{orderId,jdbcType=VARCHAR},
+      </if>
+      <if test="mozhangTaskId != null" >
+        MOZHANG_TASK_ID = #{mozhangTaskId,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="reportTime != null" >
+        REPORT_TIME = #{reportTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.fintech.model.LogMozhanginfo" >
+    update log_mozhanginfo
+    set MOZHANG_MOBILE = #{mozhangMobile,jdbcType=VARCHAR},
+      MOZHANG_IDCARD = #{mozhangIdcard,jdbcType=VARCHAR},
+      MOZHANG_NAME = #{mozhangName,jdbcType=VARCHAR},
+      MOZHANG_CONTENT = #{mozhangContent,jdbcType=CHAR},
+      ORDER_ID = #{orderId,jdbcType=VARCHAR},
+      MOZHANG_TASK_ID = #{mozhangTaskId,jdbcType=VARCHAR},
+      CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+      REPORT_TIME = #{reportTime,jdbcType=TIMESTAMP}
+    where ID = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

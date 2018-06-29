@@ -10,32 +10,24 @@
     <result column="MOXIE_TYPE" property="moxieType" jdbcType="VARCHAR" />
     <result column="ORDER_ID" property="orderId" jdbcType="VARCHAR" />
     <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
     <result column="MOXIE_TASK_ID" property="moxieTaskId" jdbcType="VARCHAR" />
+    <result column="REPORT_TIME" property="reportTime" jdbcType="TIMESTAMP" />
   </resultMap>
   <sql id="Base_Column_List" >
     ID, MOXIE_MOBILE, MOXIE_IDCARD, MOXIE_NAME, MOXIE_CONTENT, MOXIE_TYPE, ORDER_ID, 
-    CREATE_TIME, MOXIE_TASK_ID
+    CREATE_TIME,UPDATE_TIME, MOXIE_TASK_ID,REPORT_TIME
   </sql>
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
     <include refid="Base_Column_List" />
     from log_moxieinfo
-    where ID = #{id,jdbcType=BIGINT}
+    where MOXIE_TASK_ID = #{moxieTaskId}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
     delete from log_moxieinfo
     where ID = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="com.fintech.model.LogMoxieinfo" >
-    insert into log_moxieinfo (ID, MOXIE_MOBILE, MOXIE_IDCARD, 
-      MOXIE_NAME, MOXIE_CONTENT, MOXIE_TYPE, 
-      ORDER_ID, CREATE_TIME, MOXIE_TASK_ID
-      )
-    values (#{id,jdbcType=BIGINT}, #{moxieMobile,jdbcType=VARCHAR}, #{moxieIdcard,jdbcType=VARCHAR}, 
-      #{moxieName,jdbcType=VARCHAR}, #{moxieContent,jdbcType=CHAR}, #{moxieType,jdbcType=VARCHAR}, 
-      #{orderId,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{moxieTaskId,jdbcType=VARCHAR}
-      )
-  </insert>
   <insert id="insertSelective" parameterType="com.fintech.model.LogMoxieinfo" >
     insert into log_moxieinfo
     <trim prefix="(" suffix=")" suffixOverrides="," >
@@ -63,8 +55,14 @@
       <if test="createTime != null" >
         CREATE_TIME,
       </if>
+      <if test="updateTime != null" >
+        UPDATE_TIME,
+      </if>
       <if test="moxieTaskId != null" >
         MOXIE_TASK_ID,
+      </if>
+      <if test="reportTime != null" >
+        REPORT_TIME,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
@@ -92,8 +90,14 @@
       <if test="createTime != null" >
         #{createTime,jdbcType=TIMESTAMP},
       </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
       <if test="moxieTaskId != null" >
         #{moxieTaskId,jdbcType=VARCHAR},
+      </if>
+      <if test="reportTime != null" >
+        #{reportTime,jdbcType=TIMESTAMP},
       </if>
     </trim>
   </insert>
@@ -121,22 +125,16 @@
       <if test="createTime != null" >
         CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
       </if>
+      <if test="updateTime != null" >
+        UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
       <if test="moxieTaskId != null" >
         MOXIE_TASK_ID = #{moxieTaskId,jdbcType=VARCHAR},
       </if>
+       <if test="reportTime != null" >
+       REPORT_TIME = #{reportTime,jdbcType=TIMESTAMP},
+      </if>
     </set>
-    where ID = #{id,jdbcType=BIGINT}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="com.fintech.model.LogMoxieinfo" >
-    update log_moxieinfo
-    set MOXIE_MOBILE = #{moxieMobile,jdbcType=VARCHAR},
-      MOXIE_IDCARD = #{moxieIdcard,jdbcType=VARCHAR},
-      MOXIE_NAME = #{moxieName,jdbcType=VARCHAR},
-      MOXIE_CONTENT = #{moxieContent,jdbcType=CHAR},
-      MOXIE_TYPE = #{moxieType,jdbcType=VARCHAR},
-      ORDER_ID = #{orderId,jdbcType=VARCHAR},
-      CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
-      MOXIE_TASK_ID = #{moxieTaskId,jdbcType=VARCHAR}
     where ID = #{id,jdbcType=BIGINT}
   </update>
 </mapper>

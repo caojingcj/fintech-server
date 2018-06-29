@@ -121,6 +121,46 @@ public class AppConfig {
     private String WEIXIN_API_APPID;
     @Value("${WEIXIN_API_GRANT_TYPE}")
     private String WEIXIN_API_GRANT_TYPE;
+    @Value("${MOZHANG_SECRET}")
+    private String MOZHANG_SECRET;
+    @Value("${MOZHANG_CUSTOMER_ID}")
+    private String MOZHANG_CUSTOMER_ID;
+    @Value("${MOZHANG_TOKEN_URL}")
+    private String MOZHANG_TOKEN_URL;
+    @Value("${MOZHANG_REPORT_URL}")
+    private String MOZHANG_REPORT_URL;
+
+    public String getMOZHANG_SECRET() {
+        return MOZHANG_SECRET;
+    }
+
+    public void setMOZHANG_SECRET(String mOZHANG_SECRET) {
+        MOZHANG_SECRET = mOZHANG_SECRET;
+    }
+
+    public String getMOZHANG_CUSTOMER_ID() {
+        return MOZHANG_CUSTOMER_ID;
+    }
+
+    public void setMOZHANG_CUSTOMER_ID(String mOZHANG_CUSTOMER_ID) {
+        MOZHANG_CUSTOMER_ID = mOZHANG_CUSTOMER_ID;
+    }
+
+    public String getMOZHANG_TOKEN_URL() {
+        return MOZHANG_TOKEN_URL;
+    }
+
+    public void setMOZHANG_TOKEN_URL(String mOZHANG_TOKEN_URL) {
+        MOZHANG_TOKEN_URL = mOZHANG_TOKEN_URL;
+    }
+
+    public String getMOZHANG_REPORT_URL() {
+        return MOZHANG_REPORT_URL;
+    }
+
+    public void setMOZHANG_REPORT_URL(String mOZHANG_REPORT_URL) {
+        MOZHANG_REPORT_URL = mOZHANG_REPORT_URL;
+    }
 
     public String getWEIXIN_API_SECRET() {
         return WEIXIN_API_SECRET;

@@ -19,7 +19,19 @@ public class LogMoxieinfo {
 
     private Date createTime;
 
+    private Date updateTime;
+    
+    private Date reportTime;
+
     private String moxieTaskId;
+
+    public Date getReportTime() {
+        return reportTime;
+    }
+
+    public void setReportTime(Date reportTime) {
+        this.reportTime = reportTime;
+    }
 
     public Long getId() {
         return id;
@@ -91,5 +103,13 @@ public class LogMoxieinfo {
 
     public void setMoxieTaskId(String moxieTaskId) {
         this.moxieTaskId = moxieTaskId;
+    }
+
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
     }
 }
