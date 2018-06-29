@@ -169,23 +169,29 @@ public class OrderBaseinfoImpl implements OrderBaseinfoService {
         List<CompanyChannel> channels = companyChannelMapper.selectByPrimaryKeyList(parms);// 咨询师
         List<CompanyPeriodFee> periodFees = companyPeriodFeeMapper.selectByPrimaryKeyList(parms);// 费率
         List<CompanyItemDo> items = companyItemMapper.selectByPrimaryKeyList(parms);// 项目
-        OrderBaseinfo orderBaseinfo=new OrderBaseinfo();
-        orderBaseinfo.setCompanyId(companyId);
-        orderBaseinfo.setCustCellphone(mobile);
-        orderBaseinfo.setOrderStatus(ConstantInterface.Enum.OrderStatus.ORDER_STATUS00.getKey());
-        orderBaseinfo.setCompanyName(baseinfo.getCompanyName());
-        orderBaseinfo.setOrderId(orderProcedureMapper.generateOrderId());
-        OrderDetailinfo detailinfo=new OrderDetailinfo();
-        detailinfo.setOrderId(orderBaseinfo.getOrderId());
-        orderBaseinfoMapper.insertSelective(orderBaseinfo);
-        orderDetailinfoMapper.insertSelective(detailinfo);
-        logOrderMapper.insertSelective(new LogOrder(orderBaseinfo.getOrderId(),ConstantInterface.Enum.OrderLogStatus.ORDER_STATUS00.getKey(), ConstantInterface.Enum.OrderStatus.ORDER_STATUS00.getKey(), null));
+        Map<String, Object>mapOrder=new HashMap<>();
         Map<String, Object> reslutMap = new HashMap<>();
+        mapOrder.put("custCellphone", mobile);
+        mapOrder.put("orderStatus", ConstantInterface.Enum.OrderStatus.ORDER_STATUS00.getKey());
+        OrderBaseinfo orderBaseinfo=new OrderBaseinfo();
+        OrderBaseinfo info=orderBaseinfoMapper.selectByPrimaryKeySelective(mapOrder);
+        if(info==null) {
+            orderBaseinfo.setCompanyId(companyId);
+            orderBaseinfo.setCustCellphone(mobile);
+            orderBaseinfo.setOrderStatus(ConstantInterface.Enum.OrderStatus.ORDER_STATUS00.getKey());
+            orderBaseinfo.setCompanyName(baseinfo.getCompanyName());
+            orderBaseinfo.setOrderId(orderProcedureMapper.generateOrderId());
+            OrderDetailinfo detailinfo=new OrderDetailinfo();
+            detailinfo.setOrderId(orderBaseinfo.getOrderId());
+            orderBaseinfoMapper.insertSelective(orderBaseinfo);
+            orderDetailinfoMapper.insertSelective(detailinfo);
+            logOrderMapper.insertSelective(new LogOrder(orderBaseinfo.getOrderId(),ConstantInterface.Enum.OrderLogStatus.ORDER_STATUS00.getKey(), ConstantInterface.Enum.OrderStatus.ORDER_STATUS00.getKey(), null));
+        }
         reslutMap.put("channels", channels);
         reslutMap.put("periodFees", periodFees);
         reslutMap.put("items", items);
         reslutMap.put("baseinfo", baseinfo);
-        reslutMap.put("order", orderBaseinfo);
+        reslutMap.put("order", info==null?orderBaseinfo:info);
         return reslutMap;
     }
     
