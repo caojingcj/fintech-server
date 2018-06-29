@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.fintech.common.properties.AppConfig;
 import com.fintech.dao.LogOrderMapper;
 import com.fintech.dao.OrderBaseinfoMapper;
 import com.fintech.model.LogOrder;
@@ -35,6 +36,8 @@ public class WxApiServiceImpl implements WxApiService {
     private OrderBaseinfoMapper orderBaseinfoMapper;
     @Autowired
     private LogOrderMapper logOrderMapper;
+    @Autowired
+    private AppConfig appConfig;
 
     @Override
     public Map<String, Object> wxOpenId(HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -45,14 +48,14 @@ public class WxApiServiceImpl implements WxApiService {
 //            throw new Exception(ConstantInterface.AppValidateConfig.OrderValidate.ORDER_200005.toString());
 //        }
         Map<String, Object>parms=new HashMap<>();
-            response.setContentType("text/html");
-            request.setCharacterEncoding("UTF-8");
-            response.setCharacterEncoding("UTF-8");
+            response.setContentType(ConstantInterface.Enum.CONTENT_TYPE.CONTENT_TYPE_TEXTHTML.getValue());
+            request.setCharacterEncoding(ConstantInterface.Enum.ENCODING.ENCODING_UTF8.getValue());
+            response.setCharacterEncoding(ConstantInterface.Enum.ENCODING.ENCODING_UTF8.getValue());
             String code = request.getParameter("code");// 获取code
             Map<String, String> weixinMap = new HashMap<>();
-            weixinMap.put("secret", "1ac45a12a035d3a279b69d7f0e58aaa5");
-            weixinMap.put("appid", "wx4e291d39c10f3c63");
-            weixinMap.put("grant_type", "authorization_code");
+            weixinMap.put("secret", appConfig.getWEIXIN_API_SECRET());
+            weixinMap.put("appid", appConfig.getWEIXIN_API_APPID());
+            weixinMap.put("grant_type",appConfig.getWEIXIN_API_GRANT_TYPE());
             weixinMap.put("code", code);
 //            String result = HttpGetUtil.httpRequestToString("https://api.weixin.qq.com/sns/oauth2/access_token", weixinMap);
 //            JSONObject jsonObject = JSONObject.fromObject(result);

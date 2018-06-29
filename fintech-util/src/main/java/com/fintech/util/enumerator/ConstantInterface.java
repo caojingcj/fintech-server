@@ -180,6 +180,85 @@ public interface ConstantInterface {
 		        return "[" + this.value + "]" ;
 		    }
 		}
+		
+		/**   
+		* @Title: ConstantInterface.java 
+		* @Package com.fintech.util.enumerator 
+		* @author qierkang xyqierkang@163.com   
+		* @date 2018年6月29日 下午11:45:03  
+		* @Description: TODO[ 用一句话描述该文件做什么 ]
+		*/
+		enum ENCODING {
+		    ENCODING_UTF8("UTF-8"),
+		    ENCODING_GBK("GBK"),
+		    ENCODING_ISO88591("ISO-8859-1"),
+		    ENCODING_GB2312("GB2312");
+            private final String value;
+            private ENCODING(String value) {
+                this.value = value;
+            }
+            public String getValue() {
+                return value;
+            }
+            
+            @Override
+            public String toString() {
+                return "[" + this.value + "]" ;
+            }
+        }
+		/**   
+		* @Title: ConstantInterface.java 
+		* @Package com.fintech.util.enumerator 
+		* @author qierkang xyqierkang@163.com   
+		* @date 2018年6月29日 下午11:45:00  
+		* @Description: TODO[ 用一句话描述该文件做什么 ]
+		*/
+		enum CONTENT_TYPE {
+		    /** 
+		    * @Fields CONTENT_TYPE_TEXTHTML : TODO[ 用一句话描述这个变量表示什么 ] 
+		    */ 
+		    CONTENT_TYPE_TEXTHTML("text/html"),
+		    /** 
+		    * @Fields CONTENT_TYPE_APPLICATION_X_WWW_FORM_URLENCODED : TODO[ 
+		    * 最常见的 POST 提交数据的方式了。浏览器的原生 form 表单，如果不设置 enctype 属性，
+		    * 那么最终就会以 application/x-www-form-urlencoded方式提交数据。 
+                        传递的key/val会经过URL转码，所以如果传递的参数存在中文或者特殊字符需要注意。 ] 
+                //例子
+                //b=曹,a=1
+                POST  HTTP/1.1(CRLF)
+                Host: www.example.com(CRLF)
+                Content-Type: application/x-www-form-urlencoded(CRLF)
+                Cache-Control: no-cache(CRLF)
+                (CRLF)
+                b=%E6%9B%B9&a=1(CRLF)
+                //这里b参数的值"曹"因为URL转码变成其他的字符串了
+		    */ 
+		    CONTENT_TYPE_APPLICATION_X_WWW_FORM_URLENCODED("application/x-www-form-urlencoded"),
+		    /** 
+		    * @Fields CONTENT_TYPE_APPLICATION_JSON : TODO[ 用一句话描述这个变量表示什么 ] 
+		    */ 
+		    CONTENT_TYPE_APPLICATION_JSON("application/json"),
+		    /** 
+		    * @Fields CONTENT_TYPE_MULTIPART_FORM_DATA : TODO[ 
+		    * 使用表单上传文件时，必须让 form 的 enctyped 等于这个值。 
+                        并且Http协议会使用boundary来分割上传的参数
+		    *  ] 
+		    */ 
+		    CONTENT_TYPE_MULTIPART_FORM_DATA("multipart/form-data");
+		    private final String value;
+		    private CONTENT_TYPE(String value) {
+		        this.value = value;
+		    }
+		    public String getValue() {
+		        return value;
+		    }
+		    
+		    @Override
+		    public String toString() {
+		        return "[" + this.value + "]" ;
+		    }
+		}
+		
 	}
 	public interface DruidDataConfig {
 	    /**

@@ -115,6 +115,36 @@ public class AppConfig {
     private String OCR_API_SECRET;
     @Value("${OCR_API_URL}")
     private String OCR_API_URL;
+    @Value("${WEIXIN_API_SECRET}")
+    private String WEIXIN_API_SECRET;
+    @Value("${WEIXIN_API_APPID}")
+    private String WEIXIN_API_APPID;
+    @Value("${WEIXIN_API_GRANT_TYPE}")
+    private String WEIXIN_API_GRANT_TYPE;
+
+    public String getWEIXIN_API_SECRET() {
+        return WEIXIN_API_SECRET;
+    }
+
+    public void setWEIXIN_API_SECRET(String wEIXIN_API_SECRET) {
+        WEIXIN_API_SECRET = wEIXIN_API_SECRET;
+    }
+
+    public String getWEIXIN_API_APPID() {
+        return WEIXIN_API_APPID;
+    }
+
+    public void setWEIXIN_API_APPID(String wEIXIN_API_APPID) {
+        WEIXIN_API_APPID = wEIXIN_API_APPID;
+    }
+
+    public String getWEIXIN_API_GRANT_TYPE() {
+        return WEIXIN_API_GRANT_TYPE;
+    }
+
+    public void setWEIXIN_API_GRANT_TYPE(String wEIXIN_API_GRANT_TYPE) {
+        WEIXIN_API_GRANT_TYPE = wEIXIN_API_GRANT_TYPE;
+    }
 
     public String getOSS_ORDER_OCR_PATH() {
         return OSS_ORDER_OCR_PATH;
