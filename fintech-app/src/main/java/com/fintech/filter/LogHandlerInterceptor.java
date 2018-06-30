@@ -33,7 +33,7 @@ public class LogHandlerInterceptor implements HandlerInterceptor {
 	/**
 	 * @Fields urls : TODO[ 设置白名单用户 ]
 	 */
-	private static String[] url = { "/app/weixin/wxCode", "/app/appLogin/appLogin", "/app/appLogin/appLoginVerification", "/error" };
+	private static String[] url = { "/app/weixin/wxCode", "/app/appLogin/appLogin", "/app/appLogin/appLoginVerification","/app/weixin/wxOpenId", "/error" };
 	public List<String>    urlList = Arrays.asList(url);
 	
 	
