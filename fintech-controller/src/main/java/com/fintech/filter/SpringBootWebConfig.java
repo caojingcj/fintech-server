@@ -18,7 +18,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 * @Description: TODO[ 初始化拦截器 ]
 */
 @Configuration
-public class WebConfig extends WebMvcConfigurerAdapter {
+public class SpringBootWebConfig extends WebMvcConfigurerAdapter {
 	/* (非 Javadoc) 
 	* <p>Title: addInterceptors</p> 
 	* <p>Description: </p> 
