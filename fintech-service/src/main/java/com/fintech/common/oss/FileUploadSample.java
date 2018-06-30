@@ -31,6 +31,7 @@ import com.aliyun.oss.model.OSSObjectSummary;
 import com.aliyun.oss.model.ObjectListing;
 import com.fintech.common.properties.AppConfig;
 import com.fintech.util.CommonUtil;
+import com.fintech.util.DateUtils;
 import com.fintech.util.enumerator.ConstantInterface;
 import com.fintech.util.image.FileTypeUtil;
 
@@ -125,7 +126,7 @@ public class FileUploadSample {
         // 上传文件
         ossClient.putObject(BUCKET_NAME, fileName, file);
         OSSObject o = ossClient.getObject(BUCKET_NAME, fileName);
-        logger.info("感谢您使用阿里云对象存储服务>>>已上传文件：{}",o.getResponse().getUri());
+        logger.info("EK 感谢您使用阿里云对象存储服务>>>已上传文件：[{}]方法名[{}]操作时间[{}]",o.getResponse().getUri(),Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
         ossClient.shutdown();
         return getOSSEntity(o);
     }
@@ -218,7 +219,7 @@ public class FileUploadSample {
         }
         ossClient.putObject(BUCKET_NAME, fileName, inputStream);
         OSSObject o = ossClient.getObject(BUCKET_NAME, fileName);
-        logger.info("感谢您使用阿里云对象存储服务>>>已上传文件：{}",o.getResponse().getUri());
+        logger.info("EK 感谢您使用阿里云对象存储服务>>>已上传文件：[{}]方法名[{}]操作时间[{}]",o.getResponse().getUri(),Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
         ossClient.shutdown();
         return getOSSEntity(o);
     }
@@ -242,7 +243,7 @@ public class FileUploadSample {
             DeleteObjectsResult deleteObjectsResult = ossClient.deleteObjects(new DeleteObjectsRequest(BUCKET_NAME).withKeys(keys));
             List<String> deletedObjects = deleteObjectsResult.getDeletedObjects();
             for (String object : deletedObjects) {
-                logger.info("感谢您使用阿里云对象存储服务>>>已删除文件：{}",object);
+                logger.info("EK 感谢您使用阿里云对象存储服务>>>已删除文件：[{}]方法名[{}]操作时间[{}]",object,Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
           }
         } catch (Exception oe) {
             oe.printStackTrace();

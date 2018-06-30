@@ -99,7 +99,7 @@ public class HttpClient {
 	            endTime = System.currentTimeMillis();
 //	            logger.info("调用API 花费时间(单位：毫秒)：" + (endTime - startTime));
 	            net.sf.json.JSONObject JSONObject = handleResponse(response);
-		    logger.info("POST请求服务器返回:{}",JSONObject);
+		    logger.info("POST请求服务器返回:[{}]",JSONObject);
 			if (JSONObject != null) return JSONObject;
 		} catch (Exception e) {
 			logger.error("HTTP请求异常",e);

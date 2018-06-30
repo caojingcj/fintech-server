@@ -70,7 +70,7 @@ public class OrderBaseInfoController {
     public @ResponseBody BaseResult appLogin(String mobile,String token) {
         try {
             redisService.tokenValidate(token);
-            logger.info("EK 客户扫码进件[[{}][{}]]方法名[{}]操作时间[{}]",mobile,token,Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
+            logger.info("EK 客户扫码进件[mobile[{}]token[{}]]方法名[{}]操作时间[{}]",mobile,token,Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
             // Map<String, Object>params=CommonUtil.object2Map(vo);
             // Map<String, Object>params=new HashMap<String, Object>();
             // params.put("companyId", "999999");
@@ -230,7 +230,7 @@ public class OrderBaseInfoController {
     public @ResponseBody Object previewCaOrder(String orderId,String token) {
         try {
             redisService.tokenValidate(token);
-            logger.info("EK 客户签署协议预览[{}]方法名[{}]操作时间[{}]",orderId,Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
+            logger.info("EK 客户签署协议预览[orderId{}]方法名[{}]操作时间[{}]",orderId,Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
             return ResultUtils.success(ResultUtils.SUCCESS_CODE_MSG,orderBaseinfoService.previewCaOrder(orderId));
         } catch (Exception e) {
             logger.error("ERROR EK参数[{}] 报错[{}] 方法名[{}]报错时间[{}]", orderId,e.getMessage(),
@@ -252,7 +252,7 @@ public class OrderBaseInfoController {
     public @ResponseBody Object orderBaseinfos(String token) {
         try {
             redisService.tokenValidate(token);
-            logger.info("EK 客户订单列表[{}]方法名[{}]操作时间[{}]",token,Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
+            logger.info("EK 客户订单列表[token{}]方法名[{}]操作时间[{}]",token,Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
             return ResultUtils.success(ResultUtils.SUCCESS_CODE_MSG,orderBaseinfoService.orderBaseinfos(token));
         } catch (Exception e) {
             logger.error("ERROR EK参数[{}] 报错[{}] 方法名[{}]报错时间[{}]", token,e.getMessage(),
@@ -275,7 +275,7 @@ public class OrderBaseInfoController {
     public @ResponseBody Object orderBaseinfoDetail(String token,String orderId) {
         try {
             redisService.tokenValidate(token);
-            logger.info("EK 客户订单列表[{}]方法名[{}]操作时间[{}]",token,Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
+            logger.info("EK 客户订单列表[token[{}]orderId[{}]]方法名[{}]操作时间[{}]",token,orderId,Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
             return ResultUtils.success(ResultUtils.SUCCESS_CODE_MSG,orderBaseinfoService.orderBaseinfoDetail(orderId));
         } catch (Exception e) {
             logger.error("ERROR EK参数[{}] 报错[{}] 方法名[{}]报错时间[{}]", token,e.getMessage(),
@@ -297,7 +297,7 @@ public class OrderBaseInfoController {
     public @ResponseBody Object userReturnplans(String token) {
         try {
             redisService.tokenValidate(token);
-            logger.info("EK 客户订单列表[{}]方法名[{}]操作时间[{}]",token,Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
+            logger.info("EK 客户订单列表[token{}]方法名[{}]操作时间[{}]",token,Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
             return ResultUtils.success(ResultUtils.SUCCESS_CODE_MSG,orderBaseinfoService.userReturnplans(token));
         } catch (Exception e) {
             logger.error("ERROR EK参数[{}] 报错[{}] 方法名[{}]报错时间[{}]", token,e.getMessage(),
@@ -310,7 +310,7 @@ public class OrderBaseInfoController {
     public @ResponseBody Object wxJsTicket(String token) {
         try {
             redisService.tokenValidate(token);
-            logger.info("EK 客户订单列表[{}]方法名[{}]操作时间[{}]",token,Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
+            logger.info("EK 客户订单列表[token{}]方法名[{}]操作时间[{}]",token,Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
             return ResultUtils.success(ResultUtils.SUCCESS_CODE_MSG,redisService.get("WEIXIN_API_JSAPI"));
         } catch (Exception e) {
             logger.error("ERROR EK参数[{}] 报错[{}] 方法名[{}]报错时间[{}]", token,e.getMessage(),

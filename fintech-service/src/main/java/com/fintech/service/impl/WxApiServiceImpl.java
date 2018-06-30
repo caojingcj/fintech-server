@@ -9,7 +9,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import com.fintech.common.properties.AppConfig;
@@ -20,7 +19,6 @@ import com.fintech.model.OrderBaseinfo;
 import com.fintech.service.RedisService;
 import com.fintech.service.WxApiService;
 import com.fintech.util.DateUtils;
-import com.fintech.util.HttpClient;
 import com.fintech.util.HttpGetUtil;
 import com.fintech.util.StringUtil;
 import com.fintech.util.enumerator.ConstantInterface;
@@ -88,14 +86,4 @@ public class WxApiServiceImpl implements WxApiService {
         parms.put("loginFlag", loginFlag);
         return parms;
     }
-
-    @Scheduled(fixedRate = 1000 * 60 * 59 * 2) // 服务器启动时执行一次，之后每隔一个小时59分执行一次。
-    private void wxAuthentication() throws Exception {
-        String WEIXIN_API_ACCESS_TOKEN=HttpClient.get(appConfig.getWEIXIN_API_ACCESS_TOKEN_URL().replace("{token}", appConfig.getWEIXIN_API_APPID()).replace("{secret}", appConfig.getWEIXIN_API_SECRET()));
-        String WEIXIN_API_JSAPI=HttpClient.get(appConfig.getWEIXIN_API_ACCESS_TOKEN_URL().replace("{accessToken}", WEIXIN_API_ACCESS_TOKEN));
-        logger.info("EK 启动定时任务，每隔一个小时59分执行一次 获取微信token[{}]jsapi[{}]操作时间[{}]", WEIXIN_API_ACCESS_TOKEN, WEIXIN_API_JSAPI, DateUtils.getDateTime());
-        redisService.set("WEIXIN_API_ACCESS_TOKEN", WEIXIN_API_ACCESS_TOKEN);
-        redisService.set("WEIXIN_API_JSAPI", WEIXIN_API_JSAPI);
-    }
-
 }

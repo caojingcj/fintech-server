@@ -37,7 +37,7 @@ public class TokenUtil {
 		long timestamp = System.currentTimeMillis();
 		String token = null;
 		token = String.format("%s_%d", sb.toString(), timestamp);
-		logger.info("未加密的token:" +token+"---"+secKey);
+		logger.info("未加密的token:[{}]secKey[{}]",token,secKey);
 		token = XXTEAUtil.encrypt(token, secKey);
 		return token;
 	}
