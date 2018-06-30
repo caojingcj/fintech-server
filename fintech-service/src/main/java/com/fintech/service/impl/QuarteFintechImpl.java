@@ -17,10 +17,12 @@ import com.fintech.model.LogOrder;
 import com.fintech.model.OrderBaseinfo;
 import com.fintech.service.QuarteFintechService;
 import com.fintech.service.RedisService;
+import com.fintech.service.ReturnPlanService;
 import com.fintech.util.DateUtils;
 import com.fintech.util.HttpClient;
 import com.fintech.util.StringUtil;
 import com.fintech.util.enumerator.ConstantInterface;
+import com.fintech.xcpt.FintechException;
 
 import net.sf.json.JSONObject;
 
@@ -44,6 +46,8 @@ public class QuarteFintechImpl implements QuarteFintechService {
     private LogOrderMapper logOrderMapper;
     @Autowired
     private CustBaseinfoMapper custBaseinfoMapper;
+    @Autowired
+    private ReturnPlanService returnPlanService;
 
     /* (非 Javadoc) 
     * <p>Title: wxAuthentication</p> 
@@ -108,6 +112,21 @@ public class QuarteFintechImpl implements QuarteFintechService {
             custBaseinfo.setIdentityStatus(String.valueOf(ConstantInterface.Enum.ConstantNumber.TOW.getKey()));
             custBaseinfoMapper.updateByPrimaryKeySelective(custBaseinfo);
         }
+    }
+    
+    /* (非 Javadoc) 
+    * <p>Title: quarteOverDueInfo</p> 
+    * <p>Description: </p> 
+    * @throws FintechException 
+    * @see com.fintech.service.QuarteFintechService#quarteOverDueInfo() 
+    * 更新逾期数据
+    * 0 10 00 * * ?
+    */
+    @Scheduled(cron = "0 10 00 * * ?")
+    @Override
+    public void quarteOverDueInfo() throws FintechException {
+        logger.info("EK定时任务：更新逾期数据》操作时间[{}]", DateUtils.getDateTime());
+        returnPlanService.updateOverDueInfo();
     }
 
 }

@@ -1,5 +1,7 @@
 package com.fintech.service;
 
+import com.fintech.xcpt.FintechException;
+
 public interface QuarteFintechService {
     /** 
     * @Title: QuarteFintechService.java 
@@ -14,4 +16,6 @@ public interface QuarteFintechService {
     void cancelOrder() throws Exception;
 
     void quarteOverdueList();
+    
+    void quarteOverDueInfo()throws FintechException;
 }

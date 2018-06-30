@@ -135,7 +135,17 @@ public class AppConfig {
     private String WEIXIN_API_ACCESS_TOKEN_URL;
     @Value("${WEIXIN_API_SIGNATURE_URL}")
     private String WEIXIN_API_SIGNATURE_URL;
+    @Value("${WEIXIN_API_MEDIA_URL}")
+    private String WEIXIN_API_MEDIA_URL;
     
+    
+    public String getWEIXIN_API_MEDIA_URL() {
+        return WEIXIN_API_MEDIA_URL;
+    }
+
+    public void setWEIXIN_API_MEDIA_URL(String wEIXIN_API_MEDIA_URL) {
+        WEIXIN_API_MEDIA_URL = wEIXIN_API_MEDIA_URL;
+    }
 
     public String getWEIXIN_API_SIGNATURE_URL() {
         return WEIXIN_API_SIGNATURE_URL;
