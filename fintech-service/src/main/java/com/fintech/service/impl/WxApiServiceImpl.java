@@ -55,14 +55,14 @@ public class WxApiServiceImpl implements WxApiService {
         weixinMap.put("code", code);
         String result = HttpGetUtil.httpRequestToString("https://api.weixin.qq.com/sns/oauth2/access_token", weixinMap);
         JSONObject jsonObject = JSONObject.fromObject(result);
-        if (jsonObject.isNullObject()) {
-            throw new Exception(ConstantInterface.AppValidateConfig.OrderValidate.ORDER_200005.toString());
-        }
+//        if (jsonObject.isNullObject()) {
+//            throw new Exception(ConstantInterface.AppValidateConfig.OrderValidate.ORDER_200005.toString());
+//        }
         openid = jsonObject.get("openid").toString();
         // openid = "as65d4a65dw56ad48q6d4";
         parms.put("openId", openid);
         String token = redisService.get(openid);
-        logger.info("EK 微信授权 openid[{}]token[{}]操作时间[{}]", openid, token, DateUtils.getDateTime());
+        logger.info("EK 微信授权 openid[{}]token[{}]操作时间[{}]", openid, token==null?"第一次登陆 NULL":token, DateUtils.getDateTime());
         if (!StringUtil.isEmpty(token)) {
             loginFlag = true;
             logger.info("EK 微信授权 有 token[{}]操作时间[{}]", token, DateUtils.getDateTime());

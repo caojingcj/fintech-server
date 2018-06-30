@@ -48,7 +48,8 @@ public class LogHandlerInterceptor implements HandlerInterceptor {
 	    * @Description: TODO[ 无权限访问返回 ]
 	    * @throws 
 	    */
-	    private boolean redisIsNull(HttpServletRequest req,HttpServletResponse response) throws Exception{
+	    private boolean redisIsNull(HttpServletRequest request,HttpServletResponse response) throws Exception{
+	         logger.info("拦截器tokenIsNull>>>token[{}]",request.getParameter("token"));
 	        PrintWriter out = null;
 	        response.setContentType(ConstantInterface.Enum.CONTENT_TYPE.CONTENT_TYPE_APPLICATION_JSON.getValue());
 	        out = response.getWriter();
@@ -74,12 +75,12 @@ public class LogHandlerInterceptor implements HandlerInterceptor {
             if(urlList.contains(url)){
                 return true;
             }
-            if(StringUtil.isEmpty(request.getParameter("token"))) {
-                return redisIsNull(request, response);
-            }
-            if(StringUtil.isEmpty(request.getParameter("token").replace(" ", "").replace("null", ""))) {
-                return redisIsNull(request, response);
-            }
+//            if(StringUtil.isEmpty(request.getParameter("token"))) {
+//                return redisIsNull(request, response);
+//            }
+//            if(StringUtil.isEmpty(request.getParameter("token").replace(" ", "").replace("null", ""))) {
+//                return redisIsNull(request, response);
+//            }
 	        logger.info("----------------拦截器token[{}]-------------",request.getParameter("token").replace(" ", "").replace("null", ""));
 //	        Gson gson = new Gson();
 //		if(permOpen== 0){

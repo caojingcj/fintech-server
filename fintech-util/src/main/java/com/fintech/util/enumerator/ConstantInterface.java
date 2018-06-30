@@ -266,7 +266,7 @@ public interface ConstantInterface {
 	        enum ObjectNullValidate{
 	            OBJECT_NAME_99910(99910,"该属性不能为空"),
 	            OBJECT_MESSAGE_99911(99911,"属性传入错误，请检查属性是否正确"),
-	            OBJECT_REDIS_KEY_99912(99912,"Redis Key is null为空");
+	            OBJECT_REDIS_KEY_99912(99912,"非法请求，Token Key is null");
 	            private Integer key;
 	            private String value;
 	            /**
