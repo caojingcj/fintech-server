@@ -32,6 +32,7 @@ public class WiXinTest {
         String timestamp = String.valueOf(System.currentTimeMillis() / 1000);//时间戳
         String url="https://www.duodingfen.com";
         String str = "jsapi_ticket="+jsapi_ticket+"&noncestr="+noncestr+"&timestamp="+timestamp+"&url="+url;
+        System.out.println(str);
         String signature=ParamSignUtils.sign(str);
         System.out.println("appId：wx4e291d39c10f3c63\ntimestamp："+timestamp+"\nnonceStr："+noncestr+"\nsignature："+signature);
     }

@@ -10,4 +10,8 @@ public interface QuarteFintechService {
     * @throws 
     */
     void wxAuthentication() throws Exception;
+
+    void cancelOrder() throws Exception;
+
+    void quarteOverdueList();
 }

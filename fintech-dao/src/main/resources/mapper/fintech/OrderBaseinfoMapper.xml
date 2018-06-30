@@ -236,22 +236,12 @@ WHERE
     </set>
     where ORDER_ID = #{orderId,jdbcType=VARCHAR}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.fintech.model.OrderBaseinfo" >
-    update order_baseinfo
-    set CUST_CELLPHONE = #{custCellphone,jdbcType=CHAR},
-      CUST_REALNAME = #{custRealname,jdbcType=VARCHAR},
-      CUST_ID_CARD_NO = #{custIdCardNo,jdbcType=VARCHAR},
-      ORDER_STATUS = #{orderStatus,jdbcType=CHAR},
-      IS_ASSURE = #{isAssure,jdbcType=BIT},
-      COMPANY_ID = #{companyId,jdbcType=CHAR},
-      COMPANY_NAME = #{companyName,jdbcType=VARCHAR},
-      ITEM_CODE = #{itemCode,jdbcType=CHAR},
-      ITEM_NAME = #{itemName,jdbcType=VARCHAR},
-      TOTAL_PERIOD = #{totalPeriod,jdbcType=INTEGER},
-      ORDER_AMOUNT = #{orderAmount,jdbcType=DECIMAL},
-      CONTRACT_ID = #{contractId,jdbcType=VARCHAR},
-      CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
-      UPDATETIME = #{updatetime,jdbcType=TIMESTAMP}
-    where ORDER_ID = #{orderId,jdbcType=VARCHAR}
-  </update>
+  
+   <select id="selectQuarteCancelOrder" resultMap="BaseResultMap" >
+    select 
+    <include refid="Base_Column_List" />
+    from order_baseinfo where to_days(CREATE_TIME) = to_days(now()) and ORDER_STATUS=00;
+  </select>
+  
+  
 </mapper>

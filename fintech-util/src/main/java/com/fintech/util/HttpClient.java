@@ -215,11 +215,13 @@ public class HttpClient {
 	
 	public static String get(String fullUrl) {
 		try {
+		    logger.info("get请求地址[{}]",fullUrl);
 			CloseableHttpClient httpClient = HttpClients.createDefault();
 			HttpGet httpGet = new HttpGet(fullUrl);
 			httpGet.addHeader(HTTP.CONTENT_TYPE, APPLICATION_JSON);
 			CloseableHttpResponse response = httpClient.execute(httpGet);
 			String result = getResultStr(fullUrl, response);
+			logger.info("get请求返回[{}]",result);
 			if (result != null) return result;
 		} catch (Exception e) {
 			logger.error("HTTP请求异常",e);

@@ -97,13 +97,8 @@ public class WxApiServiceImpl implements WxApiService {
     * @see com.fintech.service.WxApiService#wxSignature() 
     */
     @Override
-    public Map<String, Object> wxJSSignature(){
-        String WEIXIN_API_ACCESS_TOKEN = HttpClient.get(appConfig.getWEIXIN_API_ACCESS_TOKEN_URL().replace("{appid}", appConfig.getWEIXIN_API_APPID()).replace("{secret}", appConfig.getWEIXIN_API_SECRET()));
-        JSONObject tokenJson= JSONObject.fromObject(WEIXIN_API_ACCESS_TOKEN);
-        String token=tokenJson.get("access_token").toString();
-        String WEIXIN_API_JSAPI = HttpClient.get(appConfig.getWEIXIN_API_ACCESS_JSAPI_URL().replace("{accessToken}", token));
-        JSONObject ticket= JSONObject.fromObject(WEIXIN_API_JSAPI);
-        String jsapi_ticket=ticket.get("ticket").toString();
+    public Map<String, Object> wxJSSignature() throws Exception{
+        String jsapi_ticket=redisService.get("WEIXIN_TICKET");
         String noncestr = UUID.randomUUID().toString().replace("-", "").substring(0, 16);//随机字符串
         String timestamp = String.valueOf(System.currentTimeMillis() / 1000);//时间戳
         String str = "jsapi_ticket="+jsapi_ticket+"&noncestr="+noncestr+"&timestamp="+timestamp+"&url="+appConfig.getWEIXIN_API_SIGNATURE_URL();
@@ -114,6 +109,8 @@ public class WxApiServiceImpl implements WxApiService {
         map.put("timestamp", timestamp);
         map.put("noncestr", noncestr);
         map.put("signature", signature);
+        map.put("str", str);
+        map.put("jsapi_ticket", jsapi_ticket);
         return map;
     }
 }
