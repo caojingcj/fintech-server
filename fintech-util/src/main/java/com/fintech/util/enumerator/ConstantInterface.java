@@ -1,8 +1,5 @@
 package com.fintech.util.enumerator;
 
-import java.util.HashMap;
-import java.util.Map;
-
 /**   
 * @Title: ConstantInterface.java 
 * @Package com.fintech.util.enumerator 
@@ -259,6 +256,59 @@ public interface ConstantInterface {
 		    }
 		}
 		
+		  /**   
+	        * @Title: ConstantInterface.java 
+	        * @Package com.fintech.util.enumerator 
+	        * @author qierkang xyqierkang@163.com   
+	        * @date 2018年6月12日 上午1:26:50  
+	        * @Description: TODO[ 通用返回值 ]
+	        */
+	        enum ObjectNullValidate{
+	            OBJECT_NAME_00010(00010,"该属性不能为空"),
+	            OBJECT_MESSAGE_00011(00011,"属性传入错误，请检查属性是否正确"),
+	            OBJECT_REDIS_KEY_00012(00012,"Redis Key is null为空");
+	            private Integer key;
+	            private String value;
+	            /**
+	             * @return the key
+	             */
+	            public Integer getKey() {
+	                return key;
+	            }
+	            /** 
+	            * @param key 要设置的 key 
+	            */
+	            public void setKey(Integer key) {
+	                this.key = key;
+	            }
+	            /**
+	             * @return the value
+	             */
+	            public String getValue() {
+	                return value;
+	            }
+	            /** 
+	            * @param value 要设置的 value 
+	            */
+	            public void setValue(String value) {
+	                this.value = value;
+	            }
+	            /** 
+	            * @Title: ConstantInterface.java 
+	            * @param @param key
+	            * @param @param value    设定文件 
+	            * @Description: TODO[ 这里用一句话描述这个方法的作用 ]
+	            * @throws 
+	            */
+	            private ObjectNullValidate(Integer key, String value) {
+	                this.key = key;
+	                this.value = value;
+	            }
+	            @Override
+	            public String toString() {
+	                return "[" + this.key + "]" + this.value;
+	            }
+	        }
 	}
 	public interface DruidDataConfig {
 	    /**
@@ -322,58 +372,11 @@ public interface ConstantInterface {
                 this.key = key;
                 this.value = value;
             }
+            @Override
+            public String toString() {
+                return "[" + this.key + "]" + this.value;
+            }
 	    }
-	   
-	    /**   
-	    * @Title: ConstantInterface.java 
-	    * @Package com.fintech.util.enumerator 
-	    * @author qierkang xyqierkang@163.com   
-	    * @date 2018年6月12日 上午1:26:50  
-	    * @Description: TODO[ 通用返回值 ]
-	    */
-	    enum ObjectNullValidate{
-	    	OBJECT_NAME_IS_NULL(00010,"该属性不能为空"),
-	    	OBJECT_MESSAGE_IS_NULL(00011,"属性传入错误，请检查属性是否正确");
-	    	private Integer key;
-	    	private String value;
-			/**
-			 * @return the key
-			 */
-			public Integer getKey() {
-				return key;
-			}
-			/** 
-			* @param key 要设置的 key 
-			*/
-			public void setKey(Integer key) {
-				this.key = key;
-			}
-			/**
-			 * @return the value
-			 */
-			public String getValue() {
-				return value;
-			}
-			/** 
-			* @param value 要设置的 value 
-			*/
-			public void setValue(String value) {
-				this.value = value;
-			}
-			/** 
-			* @Title: ConstantInterface.java 
-			* @param @param key
-			* @param @param value    设定文件 
-			* @Description: TODO[ 这里用一句话描述这个方法的作用 ]
-			* @throws 
-			*/
-			private ObjectNullValidate(Integer key, String value) {
-				this.key = key;
-				this.value = value;
-			}
-	    }
-	    
-	    
 	}
 	
 	/**   
@@ -424,7 +427,10 @@ public interface ConstantInterface {
 	            ORDER_200003(200203,"该客户已经认证！"),
 	            ORDER_200004(200204,"认证异常，图片格式或清晰度有问题"),
 	            ORDER_200005(200205,"null异常请求，请在公众号操作"),
-	            ORDER_200006(200206,"异常请求，无法获取微信认证");
+	            ORDER_200006(200206,"异常请求，无法获取微信认证"),
+	            ORDER_200007(200207,"认证异常，不能用身份证的复印件"),
+	            ORDER_200008(200208,"认证异常，手机或电脑屏幕翻拍的照片"),
+	            ORDER_200009(200209,"认证异常，身份证照片不能处理或者编辑");
 	            private Integer key;
 	            private String value;
 	            public Integer getKey() {

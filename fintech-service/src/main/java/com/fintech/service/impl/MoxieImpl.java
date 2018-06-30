@@ -35,6 +35,13 @@ public class MoxieImpl implements MoxieService {
     @Autowired
     private LogMozhanginfoMapper logMozhanginfoMapper;
 
+    /* (非 Javadoc) 
+    * <p>Title: insertSelective</p> 
+    * <p>Description: </p> 
+    * @param record 
+    * @see com.fintech.service.MoxieService#insertSelective(com.fintech.model.LogMoxieinfo) 
+    * 调用魔杖报告
+    */
     @Override
     public void insertSelective(LogMoxieinfo record) {
         String url = "";
@@ -72,6 +79,12 @@ public class MoxieImpl implements MoxieService {
         }
     }
 
+    /* (非 Javadoc) 
+    * <p>Title: backMoxieTaskSubmit</p> 
+    * <p>Description: </p> 
+    * @param submitVo 
+    * @see com.fintech.service.MoxieService#backMoxieTaskSubmit(com.fintech.model.vo.moxie.BackMoxieTaskSubmitVo) 
+    */
     @Override
     public void backMoxieTaskSubmit(BackMoxieTaskSubmitVo submitVo) {
         LogMoxieinfo record=new LogMoxieinfo();
@@ -86,6 +99,14 @@ public class MoxieImpl implements MoxieService {
         insertSelectiveMoZhang(submitVo);
     }
     
+    /** 
+    * @Title: MoxieImpl.java 
+    * @author qierkang xyqierkang@163.com   
+    * @date 2018年6月30日 上午3:20:48  
+    * @param @param submitVo    设定文件 
+    * @Description: TODO[ 调用魔杖报告 ]
+    * @throws 
+    */
     public void insertSelectiveMoZhang(BackMoxieTaskSubmitVo submitVo) {
         Map<String, Object>mzMap=new HashMap<>();
         mzMap.put("customer_id", appConfig.getMOZHANG_CUSTOMER_ID());

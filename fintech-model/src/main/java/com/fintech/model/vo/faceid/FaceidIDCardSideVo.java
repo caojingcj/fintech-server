@@ -13,35 +13,53 @@ public class FaceidIDCardSideVo {
     private String issued_by;
     private String side;
     private String request_id;
+    private Legality legality;
+
+    public Legality getLegality() {
+        return legality;
+    }
+
+    public void setLegality(Legality legality) {
+        this.legality = legality;
+    }
+
     public String getTime_used() {
         return time_used;
     }
+
     public void setTime_used(String time_used) {
         this.time_used = time_used;
     }
+
     public String getValid_date() {
         return valid_date;
     }
+
     public void setValid_date(String valid_date) {
         this.valid_date = valid_date;
     }
+
     public String getIssued_by() {
         return issued_by;
     }
+
     public void setIssued_by(String issued_by) {
         this.issued_by = issued_by;
     }
+
     public String getSide() {
         return side;
     }
+
     public void setSide(String side) {
         this.side = side;
     }
+
     public String getRequest_id() {
         return request_id;
     }
+
     public void setRequest_id(String request_id) {
         this.request_id = request_id;
     }
-
 }

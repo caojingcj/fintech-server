@@ -296,9 +296,11 @@ public class OrderBaseInfoController {
     @RequestMapping(value = "userReturnplans",method = RequestMethod.GET)
     public @ResponseBody Object userReturnplans(String token) {
         try {
-            redisService.tokenValidate(token);
+//            redisService.tokenValidate(token);
             logger.info("EK 客户订单列表[{}]方法名[{}]操作时间[{}]",token,Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
-            return ResultUtils.success(ResultUtils.SUCCESS_CODE_MSG,orderBaseinfoService.userReturnplans(token));
+//            return ResultUtils.success(ResultUtils.SUCCESS_CODE_MSG,orderBaseinfoService.userReturnplans(token));
+            orderBaseinfoService.testSaveOrder();
+            return ResultUtils.success(ResultUtils.SUCCESS_CODE_MSG);
         } catch (Exception e) {
             logger.error("ERROR EK参数[{}] 报错[{}] 方法名[{}]报错时间[{}]", token,e.getMessage(),
                     Thread.currentThread().getStackTrace()[1].getMethodName(), DateUtils.getDateTime());

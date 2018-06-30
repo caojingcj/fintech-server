@@ -50,13 +50,12 @@ public class WxApiController {
             response.setCharacterEncoding("UTF-8");
             request.setCharacterEncoding("UTF-8");
             // 这里要将你的授权回调地址处理一下，否则微信识别不了
-//            String redirect_uri = URLEncoder.encode("https://www.duodingfen.com/fintech-app/app/weixin/wxOpenId", "UTF-8");
+            String redirect_uri = URLEncoder.encode("https://www.duodingfen.com/fintech-app/app/weixin/wxOpenId", "UTF-8");
             // 简单获取openid的话参数response_type与scope与state参数固定写死即可
-//            StringBuffer url = new StringBuffer(
-//                    "https://open.weixin.qq.com/connect/oauth2/authorize?redirect_uri=" + redirect_uri + "&appid=wx4e291d39c10f3c63&response_type=code&scope=snsapi_base&state=1#wechat_redirect");
-            String url="localhost:8084/app/weixin/wxOpenId";
-//            response.sendRedirect(url.toString());// 这里请不要使用get请求单纯的将页面跳转到该url即可
-            response.sendRedirect("http://192.168.10.54:8084/app/weixin/wxOpenId");// 这里请不要使用get请求单纯的将页面跳转到该url即可
+            StringBuffer url = new StringBuffer(
+                    "https://open.weixin.qq.com/connect/oauth2/authorize?redirect_uri=" + redirect_uri + "&appid=wx4e291d39c10f3c63&response_type=code&scope=snsapi_base&state=1#wechat_redirect");
+            response.sendRedirect(url.toString());// 这里请不要使用get请求单纯的将页面跳转到该url即可
+//            response.sendRedirect("http://192.168.10.54:8084/app/weixin/wxOpenId");// 这里请不要使用get请求单纯的将页面跳转到该url即可
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -78,8 +77,8 @@ public class WxApiController {
             Gson gson=new Gson();
             String resMap=gson.toJson(parms);
             logger.info("EK 页面获取的参数[{}]方法名[{}]操作时间[{}]",resMap,Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
-//            response.sendRedirect("https://www.duodingfen.com/fintech-wechat/#/waiting?"+URLEncoder.encode(resMap, "UTF-8"));
-            response.sendRedirect("http://192.168.10.55:8020/fintech-wechath5/#/waiting?"+URLEncoder.encode(resMap, "UTF-8"));
+            response.sendRedirect("https://www.duodingfen.com/fintech-wechat/#/waiting?"+URLEncoder.encode(resMap, "UTF-8"));
+//            response.sendRedirect("http://192.168.10.55:8020/fintech-wechath5/#/waiting?"+URLEncoder.encode(resMap, "UTF-8"));
         } catch (Exception e) {
             e.printStackTrace();
             logger.error("ERROR EK 报错[{}] 方法名[{}]报错时间[{}]", e.getMessage(),

@@ -22,6 +22,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import com.fintech.common.properties.AppConfig;
 import com.fintech.util.DateUtils;
@@ -34,6 +35,7 @@ import com.fintech.util.DateUtils;
 * @Description: TODO[ boot入口启动类 ]
 */
 @Configuration
+@EnableTransactionManagement 
 @ComponentScan("com.fintech")
 //@MapperScan("com.fintech.dao.mapper")
 //@RequestMapping(value = {"/",""})

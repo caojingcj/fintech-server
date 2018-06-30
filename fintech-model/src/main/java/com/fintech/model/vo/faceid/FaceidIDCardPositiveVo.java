@@ -1,7 +1,5 @@
 package com.fintech.model.vo.faceid;
 
-import java.util.List;
-
 /**   
 * @Title: OcrFaceidVo.java 
 * @Package com.fintech.model.vo 
@@ -19,6 +17,15 @@ public class FaceidIDCardPositiveVo {
     private String request_id;
     private String id_card_number;
     private String side;
+    private Legality legality;
+
+    public Legality getLegality() {
+        return legality;
+    }
+
+    public void setLegality(Legality legality) {
+        this.legality = legality;
+    }
 
     public birthday getBirthday() {
         return birthday;
@@ -129,5 +136,4 @@ class birthday {
     public void setMonth(String month) {
         this.month = month;
     }
-
 }

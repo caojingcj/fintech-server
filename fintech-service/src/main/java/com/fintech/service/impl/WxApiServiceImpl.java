@@ -44,9 +44,9 @@ public class WxApiServiceImpl implements WxApiService {
         String userAgent = request.getHeader("user-agent").toLowerCase();
         String openid="";
         boolean loginFlag=false;
-//        if(userAgent.indexOf("micromessenger")==-1){//微信客户端
-//            throw new Exception(ConstantInterface.AppValidateConfig.OrderValidate.ORDER_200005.toString());
-//        }
+        if(userAgent.indexOf("micromessenger")==-1){//微信客户端
+            throw new Exception(ConstantInterface.AppValidateConfig.OrderValidate.ORDER_200005.toString());
+        }
         Map<String, Object>parms=new HashMap<>();
             response.setContentType(ConstantInterface.Enum.CONTENT_TYPE.CONTENT_TYPE_TEXTHTML.getValue());
             request.setCharacterEncoding(ConstantInterface.Enum.ENCODING.ENCODING_UTF8.getValue());
@@ -57,13 +57,13 @@ public class WxApiServiceImpl implements WxApiService {
             weixinMap.put("appid", appConfig.getWEIXIN_API_APPID());
             weixinMap.put("grant_type",appConfig.getWEIXIN_API_GRANT_TYPE());
             weixinMap.put("code", code);
-//            String result = HttpGetUtil.httpRequestToString("https://api.weixin.qq.com/sns/oauth2/access_token", weixinMap);
-//            JSONObject jsonObject = JSONObject.fromObject(result);
-//            if(jsonObject.isNullObject()) {
-//                throw new Exception(ConstantInterface.AppValidateConfig.OrderValidate.ORDER_200005.toString());
-//            }
-//            openid = jsonObject.get("openid").toString();
-            openid = "as65d4a65dw56ad48q6d4";
+            String result = HttpGetUtil.httpRequestToString("https://api.weixin.qq.com/sns/oauth2/access_token", weixinMap);
+            JSONObject jsonObject = JSONObject.fromObject(result);
+            if(jsonObject.isNullObject()) {
+                throw new Exception(ConstantInterface.AppValidateConfig.OrderValidate.ORDER_200005.toString());
+            }
+            openid = jsonObject.get("openid").toString();
+//            openid = "as65d4a65dw56ad48q6d4";
             parms.put("openId", openid);
             String token=redisService.get(openid);
             logger.info("EK 微信授权 openid[{}]token[{}]操作时间[{}]",openid,token,DateUtils.getDateTime());

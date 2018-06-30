@@ -8,11 +8,11 @@ import org.springframework.stereotype.Service;
 import com.fintech.dao.CustBaseinfoMapper;
 import com.fintech.dao.LogOrderMapper;
 import com.fintech.model.CustBaseinfo;
-import com.fintech.model.LogOrder;
 import com.fintech.model.vo.LogSmsMessageVo;
 import com.fintech.service.AppLoginService;
 import com.fintech.service.LogSmsMessageService;
 import com.fintech.service.RedisService;
+import com.fintech.util.FinTechException;
 import com.fintech.util.StringUtil;
 import com.fintech.util.enumerator.ConstantInterface;
 import com.fintech.util.sign.TokenUtil;
@@ -44,7 +44,7 @@ public class AppLoginImpl implements AppLoginService {
     public String appLoginVerification(String mobile,String openId, String code) throws Exception {
         String getCode=redisService.get(ConstantInterface.AppValidateConfig.ObjectRedisValidate.OBJECT_REDIS_CODE.getValue()+mobile); //放入redis 10分钟有效期
         if(StringUtil.isEmpty(getCode)||!getCode.equals(code)) {
-            throw new Exception(ConstantInterface.AppValidateConfig.LoginValidate.LOGIN_200301.toString());
+            throw new FinTechException(ConstantInterface.AppValidateConfig.LoginValidate.LOGIN_200301.toString());
         }
         String token=TokenUtil.getToken();
         redisService.set(token,mobile);

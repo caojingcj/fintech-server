@@ -25,23 +25,24 @@ public class ObjectEmptyUtil  {
     */
     public static void CompanyEmpty(CompanyBaseinfo companyBaseinfo) {
     		if (StringUtil.isEmpty(companyBaseinfo.getCompanyName())) {
-                throw new FinTechException(ConstantInterface.ValidateConfig.CompanyValidate.COMPANY_NAME_IS_NULL.getKey(),ConstantInterface.ValidateConfig.CompanyValidate.COMPANY_NAME_IS_NULL.getValue());
+                throw new FinTechException(ConstantInterface.ValidateConfig.CompanyValidate.COMPANY_NAME_IS_NULL.toString());
             }
             if (StringUtil.isEmpty(companyBaseinfo.getCompanyType())) {
-                throw new FinTechException(ConstantInterface.ValidateConfig.CompanyValidate.COMPANY_TYPE_IS_NULL.getKey(),ConstantInterface.ValidateConfig.CompanyValidate.COMPANY_TYPE_IS_NULL.getValue());
+                throw new FinTechException(ConstantInterface.ValidateConfig.CompanyValidate.COMPANY_TYPE_IS_NULL.toString());
             }
             if (StringUtil.isEmpty(companyBaseinfo.getCompanyStatus())) {
-                throw new FinTechException(ConstantInterface.ValidateConfig.CompanyValidate.COMPANY_STATUS_IS_NULL.getKey(),ConstantInterface.ValidateConfig.CompanyValidate.COMPANY_STATUS_IS_NULL.getValue());
+                throw new FinTechException(ConstantInterface.ValidateConfig.CompanyValidate.COMPANY_STATUS_IS_NULL.toString());
             }
             if (StringUtil.isEmpty(companyBaseinfo.getCompanyUscc())) {
-                throw new FinTechException(ConstantInterface.ValidateConfig.CompanyValidate.COMPANY_USCC_IS_NULL.getKey(),ConstantInterface.ValidateConfig.CompanyValidate.COMPANY_USCC_IS_NULL.getValue());
+                throw new FinTechException(ConstantInterface.ValidateConfig.CompanyValidate.COMPANY_USCC_IS_NULL.toString());
             }
             if (StringUtil.isEmpty(companyBaseinfo.getCompanyFullName())) {
-                throw new FinTechException(ConstantInterface.ValidateConfig.CompanyValidate.COMPANY_FULL_NAME_IS_NULL.getKey(),ConstantInterface.ValidateConfig.CompanyValidate.COMPANY_FULL_NAME_IS_NULL.getValue());
+                throw new FinTechException(ConstantInterface.ValidateConfig.CompanyValidate.COMPANY_FULL_NAME_IS_NULL.toString());
             }
     }
     
-    /** 
+    /**
+     * @throws Exception  
     * @Title: CompanyEmptyUtil.java 
     * @author qierkang xyqierkang@163.com   
     * @date 2018年6月12日 上午1:27:12  
@@ -62,18 +63,18 @@ public class ObjectEmptyUtil  {
 						Method method = o.getClass().getMethod(getter, new Class[] {});
 						 value = method.invoke(o, new Object[] {});
 					} catch (Exception e) {
-			            throw new FinTechException(ConstantInterface.ValidateConfig.ObjectNullValidate.OBJECT_MESSAGE_IS_NULL.getKey(),ConstantInterface.ValidateConfig.ObjectNullValidate.OBJECT_MESSAGE_IS_NULL.getValue()+"属性名："+fieldName);
+			            throw new FinTechException(ConstantInterface.Enum.ObjectNullValidate.OBJECT_MESSAGE_00011.toString()+"属性名："+fieldName);
 			        } 
         			 if(null==value) {
-        		            throw new FinTechException(ConstantInterface.ValidateConfig.ObjectNullValidate.OBJECT_NAME_IS_NULL.getKey(),ConstantInterface.ValidateConfig.ObjectNullValidate.OBJECT_NAME_IS_NULL.getValue()+"属性名："+fieldName);
+        		            throw new FinTechException(ConstantInterface.Enum.ObjectNullValidate.OBJECT_NAME_00010.toString()+"属性名："+fieldName);
         			 }
 				}
         	return value;
     }
     
-    public static  void isEmptyByName(Object o) {
+    public static  void isEmptyByName(Object o) throws Exception {
     	if(StringUtil.isEmpty(o.toString())) {
-			throw new FinTechException(ConstantInterface.ValidateConfig.ObjectNullValidate.OBJECT_NAME_IS_NULL.getKey(),ConstantInterface.ValidateConfig.ObjectNullValidate.OBJECT_NAME_IS_NULL.getValue());
+			throw new FinTechException(ConstantInterface.Enum.ObjectNullValidate.OBJECT_NAME_00010.toString());
     	}
     }
     

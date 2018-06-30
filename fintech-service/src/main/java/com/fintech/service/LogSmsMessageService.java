@@ -1,7 +1,9 @@
 package com.fintech.service;
 
-import com.fintech.model.vo.LogSmsMessageVo;
+import org.springframework.transaction.annotation.Transactional;
 
+import com.fintech.model.vo.LogSmsMessageVo;
+@Transactional(rollbackFor = Exception.class)
 public interface LogSmsMessageService {
     void sendSmsMessage(LogSmsMessageVo record)throws Exception;
     
