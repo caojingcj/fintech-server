@@ -20,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import com.fintech.service.RedisService;
+import com.fintech.util.FinTechException;
 import com.fintech.util.GsonUtil;
 import com.fintech.util.StringUtil;
 import com.fintech.util.enumerator.ConstantInterface;
@@ -38,7 +39,7 @@ public class RedisServiceImpl implements RedisService {
         
         @Override
         public boolean set(final String key, final String value) throws Exception {
-            Assert.hasText(key,"Key is not empty.");
+            Assert.hasText(key,ConstantInterface.Enum.ObjectNullValidate.OBJECT_REDIS_KEY_99912.toString());
             boolean result = redisTemplate.execute(new RedisCallback<Boolean>() {
                 @Override
                 public Boolean doInRedis(RedisConnection connection) throws DataAccessException {
@@ -63,14 +64,14 @@ public class RedisServiceImpl implements RedisService {
         */
         @Override
         public void setVal(final String key, final String value,final long timeout) throws Exception {
-//          MICROSECONDS    微秒   一百万分之一秒（就是毫秒/1000）
+//          MICROSECONDS    微秒   一百万分之一秒（就是毫秒/1999）
 //          MILLISECONDS    毫秒   千分之一秒    
-//          NANOSECONDS   毫微秒  十亿分之一秒（就是微秒/1000）
+//          NANOSECONDS   毫微秒  十亿分之一秒（就是微秒/1999）
 //          SECONDS          秒
 //          MINUTES     分钟
 //          HOURS      小时
 //          DAYS      天
-            Assert.hasText(key,"Key is not empty.");
+            Assert.hasText(key,ConstantInterface.Enum.ObjectNullValidate.OBJECT_REDIS_KEY_99912.toString());
             redisTemplate.opsForValue().set(key, value, timeout, TimeUnit.SECONDS);
         }
         
@@ -86,12 +87,12 @@ public class RedisServiceImpl implements RedisService {
         */
         @Override
         public String getVal(final String key) throws Exception {
-            Assert.hasText(key,"Key is not empty.");
+            Assert.hasText(key,ConstantInterface.Enum.ObjectNullValidate.OBJECT_REDIS_KEY_99912.toString());
             return redisTemplate.opsForValue().get(key).toString();
         }
 
         public String get(final String key) throws Exception {
-                Assert.hasText(key,"Key is not empty。");
+                Assert.hasText(key,ConstantInterface.Enum.ObjectNullValidate.OBJECT_REDIS_KEY_99912.toString());
                 String result = redisTemplate.execute(new RedisCallback<String>() {
                     @Override
                     public String doInRedis(RedisConnection connection) throws DataAccessException {
@@ -104,7 +105,7 @@ public class RedisServiceImpl implements RedisService {
         }
 
         public void del(final String key) throws Exception {
-            Assert.hasText(key,"Key is not empty.");
+            Assert.hasText(key,ConstantInterface.Enum.ObjectNullValidate.OBJECT_REDIS_KEY_99912.toString());
             redisTemplate.execute(new RedisCallback<Long>() {
                 @Override
                 public Long doInRedis(RedisConnection conn) throws DataAccessException {
@@ -123,16 +124,14 @@ public class RedisServiceImpl implements RedisService {
 
         @Override
         public <T> boolean setList(String key, List<T> list) throws Exception {
-            Assert.hasText(key,"Key is not empty.");
+            Assert.hasText(key,ConstantInterface.Enum.ObjectNullValidate.OBJECT_REDIS_KEY_99912.toString());
             String value = GsonUtil.getJsonString(list);
             return set(key,value);
         }
 
         @Override
         public <T> List<T> getList(String key,Class<T> clz)  throws Exception{
-
-            Assert.hasText(key,"Key is not empty.");
-
+            Assert.hasText(key,ConstantInterface.Enum.ObjectNullValidate.OBJECT_REDIS_KEY_99912.toString());
             String json = get(key);
             if(json!=null){
                 List<T> list = GsonUtil.readJson2Array(json,clz);
@@ -143,7 +142,7 @@ public class RedisServiceImpl implements RedisService {
 
         @Override
         public long lpush(final String key, Object obj)throws Exception {
-            Assert.hasText(key,"Key is not empty.");
+            Assert.hasText(key,ConstantInterface.Enum.ObjectNullValidate.OBJECT_REDIS_KEY_99912.toString());
 
             final String value = GsonUtil.getJsonString(obj);
             long result = redisTemplate.execute(new RedisCallback<Long>() {
@@ -159,7 +158,7 @@ public class RedisServiceImpl implements RedisService {
 
         @Override
         public long rpush(final String key, Object obj) throws Exception{
-            Assert.hasText(key,"Key is not empty.");
+            Assert.hasText(key,ConstantInterface.Enum.ObjectNullValidate.OBJECT_REDIS_KEY_99912.toString());
 
             final String value = GsonUtil.getJsonString(obj);
             long result = redisTemplate.execute(new RedisCallback<Long>() {
@@ -175,7 +174,7 @@ public class RedisServiceImpl implements RedisService {
 
         @Override
         public void hmset(String key, Object obj)  throws Exception{
-            Assert.hasText(key,"Key is not empty.");
+            Assert.hasText(key,ConstantInterface.Enum.ObjectNullValidate.OBJECT_REDIS_KEY_99912.toString());
             Map<byte[], byte[]> data=GsonUtil.readJsonByteMap(GsonUtil.getJsonString(obj));
             redisTemplate.execute(new RedisCallback<String>() {
                 @Override
@@ -260,7 +259,7 @@ public class RedisServiceImpl implements RedisService {
         @Override
         public void tokenValidate(String token) throws Exception {
             if (StringUtil.isEmpty(get(token))) {
-                throw new Exception(ConstantInterface.AppValidateConfig.LoginValidate.LOGIN_200300.toString());
+                throw new FinTechException(ConstantInterface.AppValidateConfig.LoginValidate.LOGIN_200300.toString());
             }
         }
 }

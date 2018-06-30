@@ -86,7 +86,7 @@ public class CompanyBaseinfoImpl implements CompanyBaseinfoService {
 	* 根据商户编号查询商户基本信息
 	*/
 	@Override
-	public List<CompanyBaseinfo> selectByPrimaryKey(Map<String, Object>parms) throws Exception {
+	public List<CompanyBaseinfo> selectByPrimaryKey(Map<String, Object>parms) {
 		return companyBaseinfoMapper.selectByPrimaryKey(parms);
 	}
 

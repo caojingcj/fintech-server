@@ -22,6 +22,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import com.fintech.common.properties.AppConfig;
 import com.fintech.util.DateUtils;
@@ -34,12 +36,14 @@ import com.fintech.util.DateUtils;
 * @Description: TODO[ boot入口启动类 ]
 */
 @Configuration
+@EnableTransactionManagement //开启事物
+@EnableScheduling //开启定时任务
+@ServletComponentScan //开启servlet注解ServletConfigure
 @ComponentScan("com.fintech")
 //@MapperScan("com.fintech.dao.mapper")
 //@RequestMapping(value = {"/",""})
 @EnableAutoConfiguration
 @PropertySource(value = {"classpath:jdbc.properties","classpath:serviceconfig.properties"}, ignoreResourceNotFound = true)
-@ServletComponentScan //注册servlet注解ServletConfigure
 public class Application extends SpringBootServletInitializer implements EmbeddedServletContainerCustomizer{
     private static Logger logger = LoggerFactory.getLogger(Application.class);
     

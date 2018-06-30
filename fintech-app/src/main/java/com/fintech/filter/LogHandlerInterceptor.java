@@ -13,8 +13,11 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.fintech.util.StringUtil;
+import com.fintech.util.enumerator.ConstantInterface;
 import com.fintech.util.result.ResultUtils;
-import com.google.gson.Gson;
+
+import net.sf.json.JSONObject;
 
 /**   
 * @Title: LogHandlerInterceptor.java 
@@ -30,7 +33,7 @@ public class LogHandlerInterceptor implements HandlerInterceptor {
 	/**
 	 * @Fields urls : TODO[ 设置白名单用户 ]
 	 */
-	private static String[] url = { "/user/login", "/user/loginOut", "/error" };
+	private static String[] url = { "/app/weixin/wxCode", "/app/appLogin/appLogin", "/app/appLogin/appLoginVerification","/app/weixin/wxOpenId", "/error" };
 	public List<String>    urlList = Arrays.asList(url);
 	
 	
@@ -45,34 +48,16 @@ public class LogHandlerInterceptor implements HandlerInterceptor {
 	    * @Description: TODO[ 无权限访问返回 ]
 	    * @throws 
 	    */
-	    private boolean responseNoPerm(HttpServletRequest req,HttpServletResponse response) throws Exception{
+	    private boolean redisIsNull(HttpServletRequest request,HttpServletResponse response) throws Exception{
+	         logger.info("拦截器tokenIsNull>>>token[{}]",request.getParameter("token"));
 	        PrintWriter out = null;
-	        response.setContentType("application/json;charset=UTF-8");
+	        response.setContentType(ConstantInterface.Enum.CONTENT_TYPE.CONTENT_TYPE_APPLICATION_JSON.getValue());
 	        out = response.getWriter();
-	        out.print(ResultUtils.error( ResultUtils.ERROR_NO_PERM_CODE, ResultUtils.ERROR_NO_PERM_CODE_MSG));
+	        out.print(JSONObject.fromObject(ResultUtils.error(ConstantInterface.Enum.ObjectNullValidate.OBJECT_REDIS_KEY_99912.toString())));
 	        out.flush();
 	        return false;
 	    }
 	    
-	    /** 
-	     * @Title: CommonInterceptor.java 
-	     * @author qierkang xyqierkang@163.com   
-	     * @date 2018年1月4日 下午7:44:41  
-	     * @param @param req
-	     * @param @param response
-	     * @param @return
-	     * @param @throws Exception    设定文件 
-	     * @Description: TODO[ 判断session是否失效 ]
-	     * @throws 
-	     */
-	     private boolean sessionIsNull(HttpServletRequest req,HttpServletResponse response) throws Exception{
-	         PrintWriter out = null;
-	         response.setContentType("application/json;charset=UTF-8");
-	         out = response.getWriter();
-	         out.print(ResultUtils.error(ResultUtils.LOGIN_OUT_TIME, ResultUtils.LOGIN_OUT_TIME_MSG));
-	         out.flush();
-	         return false;
-	     }
 	    
 	/**
 	 **
@@ -81,31 +66,27 @@ public class LogHandlerInterceptor implements HandlerInterceptor {
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
-		 if(request.getHeader("Origin") == null){
-	            response.setHeader("Access-Control-Allow-Origin", "*");
-	        }else if(request.getHeader("Origin").contains("16fenqi.com")||request.getHeader("Origin").contains("localhost")) {
-	            response.setHeader("Access-Control-Allow-Origin", request.getHeader("Origin"));
-	        }else{
-	            response.setHeader("Access-Control-Allow-Origin", request.getHeader("Origin"));
-	        }
-	        response.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE");
-	        response.setHeader("Access-Control-Max-Age", "3600");
-	        response.setHeader("Access-Control-Allow-Credentials", "true");
-	        response.setHeader("Access-Control-Allow-Headers", "Content-Type,Access-Token,x-requested-with");
-//		logger.info("----------------进入拦截器-------------");
-		Gson gson = new Gson();
+    	    String requestUri = request.getRequestURI();
+            String contextPath = request.getContextPath();
+            String url = requestUri.substring(contextPath.length()).indexOf(";") > -1
+                    ? requestUri.substring(contextPath.length()).substring(0,
+                    requestUri.substring(contextPath.length()).indexOf(";"))
+                    : requestUri.substring(contextPath.length());
+            if(urlList.contains(url)){
+                return true;
+            }
+//            if(StringUtil.isEmpty(request.getParameter("token"))) {
+//                return redisIsNull(request, response);
+//            }
+//            if(StringUtil.isEmpty(request.getParameter("token").replace(" ", "").replace("null", ""))) {
+//                return redisIsNull(request, response);
+//            }
+            //前后台分离 request 后面会拿不到参数 需要研究下
+	        logger.info("----------------拦截器token-------------");
+//	        Gson gson = new Gson();
 //		if(permOpen== 0){
 //			return true;
 //		}else if(permOpen== 1){
-//            String requestUri = request.getRequestURI();
-//            String contextPath = request.getContextPath();
-//            String url = requestUri.substring(contextPath.length()).indexOf(";") > -1
-//                    ? requestUri.substring(contextPath.length()).substring(0,
-//                    requestUri.substring(contextPath.length()).indexOf(";"))
-//                    : requestUri.substring(contextPath.length());
-//            if(urlList.contains(url)){
-//                return true;
-//            }
 //            List<String> list = gson.fromJson(redisService.get("mer_url"),new TypeToken<List<String>>() {}.getType());
 //            if(list == null || list.size()<=0){
 //                return this.responseNoPerm(request,response);
@@ -118,7 +99,7 @@ public class LogHandlerInterceptor implements HandlerInterceptor {
 //        }
 //		System.out.println("------preHandle执行之前调用-----");
 //		return this.responseNoPerm(request,response);
-		return true;
+	    return true;
 	}
 
 	/**

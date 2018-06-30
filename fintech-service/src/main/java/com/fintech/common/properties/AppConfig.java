@@ -129,6 +129,37 @@ public class AppConfig {
     private String MOZHANG_TOKEN_URL;
     @Value("${MOZHANG_REPORT_URL}")
     private String MOZHANG_REPORT_URL;
+    @Value("${WEIXIN_API_ACCESS_JSAPI_URL}")
+    private String WEIXIN_API_ACCESS_JSAPI_URL;
+    @Value("${WEIXIN_API_ACCESS_TOKEN_URL}")
+    private String WEIXIN_API_ACCESS_TOKEN_URL;
+    @Value("${WEIXIN_API_SIGNATURE_URL}")
+    private String WEIXIN_API_SIGNATURE_URL;
+    
+
+    public String getWEIXIN_API_SIGNATURE_URL() {
+        return WEIXIN_API_SIGNATURE_URL;
+    }
+
+    public void setWEIXIN_API_SIGNATURE_URL(String wEIXIN_API_SIGNATURE_URL) {
+        WEIXIN_API_SIGNATURE_URL = wEIXIN_API_SIGNATURE_URL;
+    }
+
+    public String getWEIXIN_API_ACCESS_JSAPI_URL() {
+        return WEIXIN_API_ACCESS_JSAPI_URL;
+    }
+
+    public void setWEIXIN_API_ACCESS_JSAPI_URL(String wEIXIN_API_ACCESS_JSAPI_URL) {
+        WEIXIN_API_ACCESS_JSAPI_URL = wEIXIN_API_ACCESS_JSAPI_URL;
+    }
+
+    public String getWEIXIN_API_ACCESS_TOKEN_URL() {
+        return WEIXIN_API_ACCESS_TOKEN_URL;
+    }
+
+    public void setWEIXIN_API_ACCESS_TOKEN_URL(String wEIXIN_API_ACCESS_TOKEN_URL) {
+        WEIXIN_API_ACCESS_TOKEN_URL = wEIXIN_API_ACCESS_TOKEN_URL;
+    }
 
     public String getMOZHANG_SECRET() {
         return MOZHANG_SECRET;

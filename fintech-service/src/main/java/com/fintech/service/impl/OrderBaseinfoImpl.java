@@ -25,6 +25,7 @@ import com.fintech.dao.CompanyChannelMapper;
 import com.fintech.dao.CompanyItemMapper;
 import com.fintech.dao.CompanyPeriodFeeMapper;
 import com.fintech.dao.CustBaseinfoMapper;
+import com.fintech.dao.LogOcridcardMapper;
 import com.fintech.dao.LogOrderMapper;
 import com.fintech.dao.OrderAttachmentMapper;
 import com.fintech.dao.OrderBaseinfoMapper;
@@ -38,6 +39,7 @@ import com.fintech.model.CompanyBaseinfo;
 import com.fintech.model.CompanyChannel;
 import com.fintech.model.CompanyPeriodFee;
 import com.fintech.model.CustBaseinfo;
+import com.fintech.model.LogOcridcard;
 import com.fintech.model.LogOrder;
 import com.fintech.model.OrderAttachment;
 import com.fintech.model.OrderBaseinfo;
@@ -51,6 +53,7 @@ import com.fintech.model.vo.OrderDetailinfoVo;
 import com.fintech.model.vo.ProjectVo;
 import com.fintech.model.vo.faceid.FaceidIDCardPositiveVo;
 import com.fintech.model.vo.faceid.FaceidIDCardSideVo;
+import com.fintech.model.vo.faceid.Legality;
 import com.fintech.service.OrderBaseinfoService;
 import com.fintech.service.RedisService;
 import com.fintech.service.ReturnPlanService;
@@ -64,7 +67,6 @@ import com.fintech.util.enumerator.ConstantInterface;
 import com.fintech.xcpt.FintechException;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.qiyuesuo.pdf.text.M;
 
 import net.sf.json.JSONObject;
 
@@ -107,6 +109,8 @@ public class OrderBaseinfoImpl implements OrderBaseinfoService {
     private UserReturnplanMapper userReturnplanMapper;
     @Autowired
     private CompanyAccountinfoMapper companyAccountinfoMapper;
+    @Autowired
+    private LogOcridcardMapper logOcridcardMapper;
     /*
      * (非 Javadoc) <p>Title: insertSelective</p> <p>Description: </p>
      * 
@@ -162,7 +166,7 @@ public class OrderBaseinfoImpl implements OrderBaseinfoService {
     public Map<String, Object> scanPiece(String companyId,String mobile) throws Exception {
         CompanyBaseinfo baseinfo = companyBaseinfoMapper.selectByPrimaryKeyInfo(companyId);
         if (baseinfo.getCompanyStatus().equals(ConstantInterface.Enum.ConstantNumber.ZERO.getKey().toString())) {
-            throw new Exception(ConstantInterface.AppValidateConfig.CompanyValidate.COMPANY_200101.toString());
+            throw new FinTechException(ConstantInterface.AppValidateConfig.CompanyValidate.COMPANY_200101.toString());
         }
         Map<String, Object> parms = new HashMap<>();
         parms.put("companyId", companyId);
@@ -208,7 +212,7 @@ public class OrderBaseinfoImpl implements OrderBaseinfoService {
         // 总在还款额不超过50w，分期还款中的笔数不超过3笔；
         Map<String, Object> amount = orderBaseinfoMapper.selectByOrderAmountJudge(redisService.get(projectVo.getToken()));
         if (Integer.parseInt(amount.get("amount").toString()) > 1 || Integer.parseInt(amount.get("statusCount").toString()) > 3) {
-            throw new Exception(ConstantInterface.AppValidateConfig.OrderValidate.ORDER_200001.toString());
+            throw new FinTechException(ConstantInterface.AppValidateConfig.OrderValidate.ORDER_200001.toString());
         }
         OrderBaseinfo record=new OrderBaseinfo();
         record.setItemCode(projectVo.getItemCode());
@@ -235,20 +239,28 @@ public class OrderBaseinfoImpl implements OrderBaseinfoService {
     * 个人信息填写
     */
     @Override
-    public void saveDetailinfo(OrderDetailinfoVo orderDetailinfo) throws Exception {
+    public void saveDetailinfo(OrderDetailinfoVo orderDetailinfo) {
         OrderDetailinfo detailinfo=new OrderDetailinfo();
         BeanUtils.copyProperties(orderDetailinfo, detailinfo);
         orderDetailinfoMapper.updateByPrimaryKeySelective(detailinfo);
         logOrderMapper.insertSelective(new LogOrder(orderDetailinfo.getOrderId(),ConstantInterface.Enum.OrderLogStatus.ORDER_STATUS04.getKey(), ConstantInterface.Enum.OrderStatus.ORDER_STATUS00.getKey(), null));
     }
 
+    /* (非 Javadoc) 
+    * <p>Title: saveOrderAttachment</p> 
+    * <p>Description: </p> 
+    * @param vo
+    * @param multipartHttpServletRequest
+    * @return 
+    * @see com.fintech.service.OrderBaseinfoService#saveOrderAttachment(com.fintech.model.vo.OrderAttachmentVo, org.springframework.web.multipart.MultipartHttpServletRequest) 
+    */
     @Override
     public String saveOrderAttachment(OrderAttachmentVo vo, MultipartHttpServletRequest multipartHttpServletRequest) {
         try {
             MultipartFile multipartFile=multipartHttpServletRequest.getFile("file");
             InputStream is= multipartFile.getInputStream();
             if(is.available()==0){
-                throw new Exception(ConstantInterface.AppValidateConfig.OrderValidate.ORDER_200002.toString());
+                throw new FinTechException(ConstantInterface.AppValidateConfig.OrderValidate.ORDER_200002.toString());
             }
             File convFile=null;
             String fileName,path = "";
@@ -266,6 +278,13 @@ public class OrderBaseinfoImpl implements OrderBaseinfoService {
             BeanUtils.copyProperties(vo, attachment);
             attachment.setAtthPath(oss.getUrl());
             orderAttachmentMapper.insertSelective(attachment);
+//            OrderBaseinfo baseinfo= orderBaseinfoMapper.selectByPrimaryKey(vo.getOrderId());
+//            baseinfo.setOrderId(vo.getOrderId());
+//            baseinfo.setOrderStatus(vo.getToken());
+//            orderBaseinfoMapper.updateByPrimaryKeySelective(baseinfo);
+            
+            
+            
             logOrderMapper.insertSelective(new LogOrder(vo.getOrderId(),ConstantInterface.Enum.OrderLogStatus.ORDER_STATUS05.getKey(), ConstantInterface.Enum.OrderStatus.ORDER_STATUS01.getKey(), null));
             return oss.getUrl();
         } catch (IOException e) {
@@ -290,7 +309,7 @@ public class OrderBaseinfoImpl implements OrderBaseinfoService {
     public String remoteSignCaOrder(OrderBaseinfoVo vo) throws Exception {
         OrderBaseinfo orderBaseinfo=orderBaseinfoMapper.selectByPrimaryKey(vo.getOrderId());
         if(orderBaseinfo.getOrderStatus().equals(ConstantInterface.Enum.OrderStatus.ORDER_STATUS05.getKey())) {
-            throw new Exception(ConstantInterface.AppValidateConfig.OrderValidate.ORDER_200002.toString());
+            throw new FinTechException(ConstantInterface.AppValidateConfig.OrderValidate.ORDER_200002.toString());
         }
         OSSEntity oss=null;
         Map<String, String>qysParams=resultCaMap(orderBaseinfo);
@@ -313,7 +332,7 @@ public class OrderBaseinfoImpl implements OrderBaseinfoService {
     * 用户签署协议预览
     */
     @Override
-    public Map<String, String> previewCaOrder(String orderId) throws Exception {
+    public Map<String, String> previewCaOrder(String orderId) {
         OrderBaseinfo orderBaseinfo=orderBaseinfoMapper.selectByPrimaryKey(orderId);
         return  resultCaMap(orderBaseinfo);
     }
@@ -386,7 +405,7 @@ public class OrderBaseinfoImpl implements OrderBaseinfoService {
     * 订单详情
     */
     @Override
-    public Map<String, Object> orderBaseinfoDetail(String orderId) throws Exception{
+    public Map<String, Object> orderBaseinfoDetail(String orderId){
         Map<String, Object>parms=new HashMap<>();
         parms.put("orderId", orderId);
         Map<String, Object>map=new HashMap<>();
@@ -427,17 +446,18 @@ public class OrderBaseinfoImpl implements OrderBaseinfoService {
         MultipartFile multipartFile=multipartHttpServletRequest.getFile("file");
         InputStream is= multipartFile.getInputStream();
         if(is.available()==0){
-            throw new Exception(ConstantInterface.AppValidateConfig.OrderValidate.ORDER_200002.toString());
+            throw new FinTechException(ConstantInterface.AppValidateConfig.OrderValidate.ORDER_200002.toString());
         }
         File convFile = new File(multipartFile.getOriginalFilename());
         Map<String, Object>parms=new HashMap<>();
         parms.put("api_key", appConfig.getOCR_API_KEY());
         parms.put("api_secret", appConfig.getOCR_API_SECRET());
+        parms.put("legality", ConstantInterface.Enum.ConstantNumber.ONE.getKey());
         parms.put("multi_oriented_detection", ConstantInterface.Enum.ConstantNumber.ONE.getKey());
         JSONObject result=HttpClient.postFileUrl(appConfig.getOCR_API_URL(), parms, multipartFile);
         FaceidIDCardPositiveVo faceidVo=gson.fromJson(result.toString(),new TypeToken<FaceidIDCardPositiveVo>() {}.getType());
         if(StringUtil.isEmpty(faceidVo.getId_card_number())) {
-            throw new Exception(ConstantInterface.AppValidateConfig.OrderValidate.ORDER_200004.toString());
+            throw new FinTechException(ConstantInterface.AppValidateConfig.OrderValidate.ORDER_200004.toString());
         }
         String fileName,path = "";
         OSSEntity oss=null;
@@ -461,12 +481,23 @@ public class OrderBaseinfoImpl implements OrderBaseinfoService {
         custBaseinfo.setIdentityTime(date);
         custBaseinfo.setIsEnabled(true);
         custBaseinfo.setCustDeviceCode("wx");
-        custBaseinfoMapper.updateByPrimaryKeySelective(custBaseinfo);
+        LogOcridcard ocridcard=new LogOcridcard();
+        ocridcard.setOcrIdCard(custBaseinfo.getCustIdCardNo());
+        ocridcard.setOcrLegality(gson.toJson(faceidVo.getLegality()));
+        ocridcard.setOcrContent(result.toString());
+        ocridcard.setOcrMobile(custBaseinfo.getCustCellphone());
+        ocridcard.setOcrName(custBaseinfo.getCustRealname());
+        ocridcard.setOcrRequestId(faceidVo.getRequest_id());
+        ocridcard.setOcrSide(faceidVo.getSide());
+        ocridcard.setOrderId(custBaseinfoVo.getOrderId());
         OrderBaseinfo orderBaseinfo=orderBaseinfoMapper.selectByPrimaryKey(custBaseinfoVo.getOrderId());
         orderBaseinfo.setCustRealname(faceidVo.getName());
         orderBaseinfo.setCustCellphone(custBaseinfo.getCustCellphone());
         orderBaseinfo.setCustIdCardNo(faceidVo.getId_card_number());
+        logOcridcardMapper.insertSelective(ocridcard);
+        custBaseinfoMapper.updateByPrimaryKeySelective(custBaseinfo);
         orderBaseinfoMapper.updateByPrimaryKeySelective(orderBaseinfo);
+        LegalityVerification(faceidVo.getLegality());
         return custBaseinfo;
     }
     
@@ -486,12 +517,13 @@ public class OrderBaseinfoImpl implements OrderBaseinfoService {
         MultipartFile multipartFile=multipartHttpServletRequest.getFile("file");
         InputStream is= multipartFile.getInputStream();
         if(is.available()==0){
-            throw new Exception(ConstantInterface.AppValidateConfig.OrderValidate.ORDER_200004.toString());
+            throw new FinTechException(ConstantInterface.AppValidateConfig.OrderValidate.ORDER_200004.toString());
         }
         File convFile = new File(multipartFile.getOriginalFilename());
         Map<String, Object>parms=new HashMap<>();
         parms.put("api_key", appConfig.getOCR_API_KEY());
         parms.put("api_secret", appConfig.getOCR_API_SECRET());
+        parms.put("legality", ConstantInterface.Enum.ConstantNumber.ONE.getKey());
         parms.put("multi_oriented_detection", ConstantInterface.Enum.ConstantNumber.ONE.getKey());//对image参数启用图片旋转检测功能。当image参数中传入的图片未检测到人脸时，是否对图片尝试旋转90度、180度、270度后再检测人脸。本参数取值只能是 “1” 或 "0" （缺省值为“0”）:
         JSONObject result=HttpClient.postFileUrl(appConfig.getOCR_API_URL(), parms, multipartFile);
         FaceidIDCardSideVo faceidVo = gson.fromJson(result.toString(),new TypeToken<FaceidIDCardSideVo>() {}.getType());
@@ -513,13 +545,50 @@ public class OrderBaseinfoImpl implements OrderBaseinfoService {
         custBaseinfo.setCustIdCardValEnd(DateUtils.parse(idTime[1].replace(".", "-")));
         custBaseinfo.setCustIdCardBack(oss.getUrl());
         custBaseinfo.setIdentityTime(date);
-         custBaseinfoMapper.updateByPrimaryKeySelective(custBaseinfo);
         OrderBaseinfo orderBaseinfo=orderBaseinfoMapper.selectByPrimaryKey(custBaseinfoVo.getOrderId());
-        orderBaseinfo.setCustRealname(custBaseinfo.getCustRealname());
-        orderBaseinfo.setCustCellphone(custBaseinfo.getCustCellphone());
-        orderBaseinfo.setCustIdCardNo(custBaseinfo.getCustIdCardNo());
+        LogOcridcard ocridcard=new LogOcridcard();
+        ocridcard.setOcrIdCard(orderBaseinfo.getCustIdCardNo());
+        ocridcard.setOcrLegality(gson.toJson(faceidVo.getLegality()));
+        ocridcard.setOcrContent(result.toString());
+        ocridcard.setOcrMobile(orderBaseinfo.getCustCellphone());
+        ocridcard.setOcrName(orderBaseinfo.getCustRealname());
+        ocridcard.setOcrRequestId(faceidVo.getRequest_id());
+        ocridcard.setOcrSide(faceidVo.getSide());
+        ocridcard.setOrderId(orderBaseinfo.getOrderId());
+        logOcridcardMapper.insertSelective(ocridcard);
+        custBaseinfoMapper.updateByPrimaryKeySelective(custBaseinfo);
         orderBaseinfoMapper.updateByPrimaryKeySelective(orderBaseinfo);
+        LegalityVerification(faceidVo.getLegality());
         return custBaseinfo;
+    }
+    
+    /** 
+    * @Title: OrderBaseinfoImpl.java 
+    * @author qierkang xyqierkang@163.com   
+    * @date 2018年6月30日 下午1:36:29  
+    * @param @param legality
+    * @param @return    设定文件 
+    * @Description: TODO[ ocr 身份证校验结果 ]
+    * @throws 
+    */
+    public void LegalityVerification(Legality legality) {
+        if(legality.getPhotocopy().equals(ConstantInterface.Enum.ConstantNumber.ONE.getKey().toString())) {
+            throw new FinTechException(ConstantInterface.AppValidateConfig.OrderValidate.ORDER_200007.toString());
+        }
+        if(legality.getScreen().equals(ConstantInterface.Enum.ConstantNumber.ONE.getKey().toString())) {
+            throw new FinTechException(ConstantInterface.AppValidateConfig.OrderValidate.ORDER_200008.toString());
+        }
+        if(legality.getEdited().equals(ConstantInterface.Enum.ConstantNumber.ONE.getKey().toString())) {
+            throw new FinTechException(ConstantInterface.AppValidateConfig.OrderValidate.ORDER_200009.toString());
+        }
+    }
+
+    @Override
+    public void testSaveOrder() throws FinTechException {
+            logOrderMapper.insertSelective(new LogOrder("123", "2", "11", "22"));
+            logOrderMapper.insertSelective(new LogOrder("123", "2", "11", "22"));
+            logOrderMapper.insertSelective(new LogOrder("123", "2", "11", "22"));
+            throw new FinTechException("asdasd");
     }
 
 }

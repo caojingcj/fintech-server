@@ -2,8 +2,8 @@ package com.fintech.controller.weixin;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -14,9 +14,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.fintech.service.RedisService;
 import com.fintech.service.WxApiService;
 import com.fintech.util.DateUtils;
+import com.fintech.util.result.ResultUtils;
+import com.fintech.util.sign.ParamSignUtils;
 import com.google.gson.Gson;
 
 /**   
@@ -33,6 +37,8 @@ public class WxApiController {
 
     @Autowired
     private WxApiService wxApiService;
+    @Autowired
+    private RedisService redisService;
     /** 
     * @Title: WxApiController.java 
     * @author qierkang xyqierkang@163.com   
@@ -50,13 +56,12 @@ public class WxApiController {
             response.setCharacterEncoding("UTF-8");
             request.setCharacterEncoding("UTF-8");
             // 这里要将你的授权回调地址处理一下，否则微信识别不了
-//            String redirect_uri = URLEncoder.encode("https://www.duodingfen.com/fintech-app/app/weixin/wxOpenId", "UTF-8");
+            String redirect_uri = URLEncoder.encode("https://www.duodingfen.com/fintech-app/app/weixin/wxOpenId", "UTF-8");
             // 简单获取openid的话参数response_type与scope与state参数固定写死即可
-//            StringBuffer url = new StringBuffer(
-//                    "https://open.weixin.qq.com/connect/oauth2/authorize?redirect_uri=" + redirect_uri + "&appid=wx4e291d39c10f3c63&response_type=code&scope=snsapi_base&state=1#wechat_redirect");
-            String url="localhost:8084/app/weixin/wxOpenId";
-//            response.sendRedirect(url.toString());// 这里请不要使用get请求单纯的将页面跳转到该url即可
-            response.sendRedirect("http://192.168.10.54:8084/app/weixin/wxOpenId");// 这里请不要使用get请求单纯的将页面跳转到该url即可
+            StringBuffer url = new StringBuffer(
+                    "https://open.weixin.qq.com/connect/oauth2/authorize?redirect_uri=" + redirect_uri + "&appid=wx4e291d39c10f3c63&response_type=code&scope=snsapi_base&state=1#wechat_redirect");
+            response.sendRedirect(url.toString());// 这里请不要使用get请求单纯的将页面跳转到该url即可
+//            response.sendRedirect("http://192.168.10.54:8084/app/weixin/wxOpenId");// 这里请不要使用get请求单纯的将页面跳转到该url即可
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -78,8 +83,8 @@ public class WxApiController {
             Gson gson=new Gson();
             String resMap=gson.toJson(parms);
             logger.info("EK 页面获取的参数[{}]方法名[{}]操作时间[{}]",resMap,Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
-//            response.sendRedirect("https://www.duodingfen.com/fintech-wechat/#/waiting?"+URLEncoder.encode(resMap, "UTF-8"));
-            response.sendRedirect("http://192.168.10.55:8020/fintech-wechath5/#/waiting?"+URLEncoder.encode(resMap, "UTF-8"));
+            response.sendRedirect("https://www.duodingfen.com/fintech-wechat/#/waiting?"+URLEncoder.encode(resMap, "UTF-8"));
+//            response.sendRedirect("http://192.168.10.55:8020/fintech-wechath5/#/waiting?"+URLEncoder.encode(resMap, "UTF-8"));
         } catch (Exception e) {
             e.printStackTrace();
             logger.error("ERROR EK 报错[{}] 方法名[{}]报错时间[{}]", e.getMessage(),
@@ -87,10 +92,39 @@ public class WxApiController {
         }
     }
     
-    public static void main(String[] args) throws UnsupportedEncodingException {
-        Gson gson=new Gson();
-        Map<String, Object>map=new HashMap<>();
-        map.put("dddd", "13213");
-        System.out.println(URLEncoder.encode(gson.toJson(map).toString(), "UTF-8"));
+
+    @RequestMapping(value = "wxJsTicket",method = RequestMethod.GET)
+    public @ResponseBody Object wxJsTicket(String token) {
+        try {
+            redisService.tokenValidate(token);
+            logger.info("EK 客户订单列表[token{}]方法名[{}]操作时间[{}]",token,Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
+            return ResultUtils.success(ResultUtils.SUCCESS_CODE_MSG,redisService.get("WEIXIN_API_JSAPI"));
+        } catch (Exception e) {
+            logger.error("ERROR EK参数[{}] 报错[{}] 方法名[{}]报错时间[{}]", token,e.getMessage(),
+                    Thread.currentThread().getStackTrace()[1].getMethodName(), DateUtils.getDateTime());
+            return ResultUtils.error(ResultUtils.ERROR_CODE, e.getMessage());
+        }
+    }
+    
+    /** 
+    * @Title: WxApiController.java 
+    * @author qierkang xyqierkang@163.com   
+    * @date 2018年7月1日 上午12:31:19  
+    * @param @param token
+    * @param @return    设定文件 
+    * @Description: TODO[ 获取JS-SDK使用权限签名算法 ]
+    * @throws 
+    */
+    @RequestMapping(value = "wxJSSignature",method = RequestMethod.GET)
+    public @ResponseBody Object wxJSSignature(String token) {
+        logger.info("EK 微信授权 获取JS-SDK使用权限签名算法方法名[{}]操作时间[{}]",token,Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
+        try {
+            redisService.tokenValidate(token);
+            return ResultUtils.success(ResultUtils.SUCCESS_CODE_MSG,wxApiService.wxJSSignature());
+        } catch (Exception e) {
+            logger.error("ERROR EK参数[{}] 报错[{}] 方法名[{}]报错时间[{}]", token,e.getMessage(),
+                    Thread.currentThread().getStackTrace()[1].getMethodName(), DateUtils.getDateTime());
+            return ResultUtils.error(ResultUtils.ERROR_CODE, e.getMessage());
+        }
     }
 }

@@ -3,6 +3,7 @@ package com.fintech.service;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.fintech.model.CustBaseinfo;
@@ -14,6 +15,8 @@ import com.fintech.model.vo.OrderDetailinfoVo;
 import com.fintech.model.vo.ProjectVo;
 import com.fintech.xcpt.FintechException;
 
+@Transactional(rollbackFor = Exception.class)
+
 public interface OrderBaseinfoService {
 
     void insertSelective(OrderBaseinfo record) throws FintechException;
@@ -23,8 +26,8 @@ public interface OrderBaseinfoService {
     Map<String, Object> scanPiece(String companyId, String mobile) throws Exception;
 
     void saveProject(ProjectVo projectVo) throws Exception;
-    
-    void saveDetailinfo(OrderDetailinfoVo orderDetailinfo) throws Exception;
+
+    void saveDetailinfo(OrderDetailinfoVo orderDetailinfo);
 
     String saveOrderAttachment(OrderAttachmentVo vo, MultipartHttpServletRequest multipartHttpServletRequest);
 
@@ -37,11 +40,14 @@ public interface OrderBaseinfoService {
     Map<String, Object> orderBaseinfoDetail(String orderId) throws Exception;
 
     Map<String, Object> userReturnplans(String token) throws Exception;
-    
-    CustBaseinfo saveIdentityPositive(CustBaseinfoVo custBaseinfoVo,MultipartHttpServletRequest multipartHttpServletRequest) throws Exception;
-    
-    CustBaseinfo saveIdentitySide(CustBaseinfoVo custBaseinfoVo,MultipartHttpServletRequest multipartHttpServletRequest) throws Exception;
-    
-//    Map<String, Object>myOrderEntry(String openId);
-    
+
+    @Transactional(noRollbackFor = { RuntimeException.class, Exception.class })
+    CustBaseinfo saveIdentityPositive(CustBaseinfoVo custBaseinfoVo,
+            MultipartHttpServletRequest multipartHttpServletRequest) throws Exception;
+
+    @Transactional(noRollbackFor = { RuntimeException.class, Exception.class })
+    CustBaseinfo saveIdentitySide(CustBaseinfoVo custBaseinfoVo,
+            MultipartHttpServletRequest multipartHttpServletRequest) throws Exception;
+    @Transactional(noRollbackFor = { RuntimeException.class, Exception.class })
+    void testSaveOrder() throws Exception;
 }
