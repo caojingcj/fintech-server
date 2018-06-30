@@ -278,10 +278,10 @@ public class OrderBaseinfoImpl implements OrderBaseinfoService {
             BeanUtils.copyProperties(vo, attachment);
             attachment.setAtthPath(oss.getUrl());
             orderAttachmentMapper.insertSelective(attachment);
-            OrderBaseinfo baseinfo= orderBaseinfoMapper.selectByPrimaryKey(vo.getOrderId());
-            baseinfo.setOrderId(vo.getOrderId());
-            baseinfo.setOrderStatus(vo.getToken());
-            orderBaseinfoMapper.updateByPrimaryKeySelective(baseinfo);
+//            OrderBaseinfo baseinfo= orderBaseinfoMapper.selectByPrimaryKey(vo.getOrderId());
+//            baseinfo.setOrderId(vo.getOrderId());
+//            baseinfo.setOrderStatus(vo.getToken());
+//            orderBaseinfoMapper.updateByPrimaryKeySelective(baseinfo);
             
             
             
