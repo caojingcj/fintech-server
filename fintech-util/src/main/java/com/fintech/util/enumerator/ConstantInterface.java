@@ -234,7 +234,7 @@ public interface ConstantInterface {
 		    /** 
 		    * @Fields CONTENT_TYPE_APPLICATION_JSON : TODO[ 用一句话描述这个变量表示什么 ] 
 		    */ 
-		    CONTENT_TYPE_APPLICATION_JSON("application/json"),
+		    CONTENT_TYPE_APPLICATION_JSON("application/json;charset=UTF-8"),
 		    /** 
 		    * @Fields CONTENT_TYPE_MULTIPART_FORM_DATA : TODO[ 
 		    * 使用表单上传文件时，必须让 form 的 enctyped 等于这个值。 
@@ -264,9 +264,9 @@ public interface ConstantInterface {
 	        * @Description: TODO[ 通用返回值 ]
 	        */
 	        enum ObjectNullValidate{
-	            OBJECT_NAME_00010(00010,"该属性不能为空"),
-	            OBJECT_MESSAGE_00011(00011,"属性传入错误，请检查属性是否正确"),
-	            OBJECT_REDIS_KEY_00012(00012,"Redis Key is null为空");
+	            OBJECT_NAME_99910(99910,"该属性不能为空"),
+	            OBJECT_MESSAGE_99911(99911,"属性传入错误，请检查属性是否正确"),
+	            OBJECT_REDIS_KEY_99912(99912,"Redis Key is null为空");
 	            private Integer key;
 	            private String value;
 	            /**

@@ -63,10 +63,10 @@ public class ObjectEmptyUtil  {
 						Method method = o.getClass().getMethod(getter, new Class[] {});
 						 value = method.invoke(o, new Object[] {});
 					} catch (Exception e) {
-			            throw new FinTechException(ConstantInterface.Enum.ObjectNullValidate.OBJECT_MESSAGE_00011.toString()+"属性名："+fieldName);
+			            throw new FinTechException(ConstantInterface.Enum.ObjectNullValidate.OBJECT_MESSAGE_99911.toString()+"属性名："+fieldName);
 			        } 
         			 if(null==value) {
-        		            throw new FinTechException(ConstantInterface.Enum.ObjectNullValidate.OBJECT_NAME_00010.toString()+"属性名："+fieldName);
+        		            throw new FinTechException(ConstantInterface.Enum.ObjectNullValidate.OBJECT_NAME_99910.toString()+"属性名："+fieldName);
         			 }
 				}
         	return value;
@@ -74,7 +74,7 @@ public class ObjectEmptyUtil  {
     
     public static  void isEmptyByName(Object o) throws Exception {
     	if(StringUtil.isEmpty(o.toString())) {
-			throw new FinTechException(ConstantInterface.Enum.ObjectNullValidate.OBJECT_NAME_00010.toString());
+			throw new FinTechException(ConstantInterface.Enum.ObjectNullValidate.OBJECT_NAME_99910.toString());
     	}
     }
     

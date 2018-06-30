@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import com.fintech.common.properties.AppConfig;
@@ -19,10 +20,10 @@ import com.fintech.model.OrderBaseinfo;
 import com.fintech.service.RedisService;
 import com.fintech.service.WxApiService;
 import com.fintech.util.DateUtils;
+import com.fintech.util.HttpClient;
 import com.fintech.util.HttpGetUtil;
 import com.fintech.util.StringUtil;
 import com.fintech.util.enumerator.ConstantInterface;
-import com.google.gson.Gson;
 
 import net.sf.json.JSONObject;
 
@@ -42,54 +43,59 @@ public class WxApiServiceImpl implements WxApiService {
     @Override
     public Map<String, Object> wxOpenId(HttpServletRequest request, HttpServletResponse response) throws Exception {
         String userAgent = request.getHeader("user-agent").toLowerCase();
-        String openid="";
-        boolean loginFlag=false;
-        if(userAgent.indexOf("micromessenger")==-1){//微信客户端
+        String openid = "";
+        boolean loginFlag = false;
+        Map<String, Object> parms = new HashMap<>();
+        response.setContentType(ConstantInterface.Enum.CONTENT_TYPE.CONTENT_TYPE_TEXTHTML.getValue());
+        request.setCharacterEncoding(ConstantInterface.Enum.ENCODING.ENCODING_UTF8.getValue());
+        response.setCharacterEncoding(ConstantInterface.Enum.ENCODING.ENCODING_UTF8.getValue());
+        String code = request.getParameter("code");// 获取code
+        Map<String, String> weixinMap = new HashMap<>();
+        weixinMap.put("secret", appConfig.getWEIXIN_API_SECRET());
+        weixinMap.put("appid", appConfig.getWEIXIN_API_APPID());
+        weixinMap.put("grant_type", appConfig.getWEIXIN_API_GRANT_TYPE());
+        weixinMap.put("code", code);
+        String result = HttpGetUtil.httpRequestToString("https://api.weixin.qq.com/sns/oauth2/access_token", weixinMap);
+        JSONObject jsonObject = JSONObject.fromObject(result);
+        if (jsonObject.isNullObject()) {
             throw new Exception(ConstantInterface.AppValidateConfig.OrderValidate.ORDER_200005.toString());
         }
-        Map<String, Object>parms=new HashMap<>();
-            response.setContentType(ConstantInterface.Enum.CONTENT_TYPE.CONTENT_TYPE_TEXTHTML.getValue());
-            request.setCharacterEncoding(ConstantInterface.Enum.ENCODING.ENCODING_UTF8.getValue());
-            response.setCharacterEncoding(ConstantInterface.Enum.ENCODING.ENCODING_UTF8.getValue());
-            String code = request.getParameter("code");// 获取code
-            Map<String, String> weixinMap = new HashMap<>();
-            weixinMap.put("secret", appConfig.getWEIXIN_API_SECRET());
-            weixinMap.put("appid", appConfig.getWEIXIN_API_APPID());
-            weixinMap.put("grant_type",appConfig.getWEIXIN_API_GRANT_TYPE());
-            weixinMap.put("code", code);
-            String result = HttpGetUtil.httpRequestToString("https://api.weixin.qq.com/sns/oauth2/access_token", weixinMap);
-            JSONObject jsonObject = JSONObject.fromObject(result);
-            if(jsonObject.isNullObject()) {
-                throw new Exception(ConstantInterface.AppValidateConfig.OrderValidate.ORDER_200005.toString());
-            }
-            openid = jsonObject.get("openid").toString();
-//            openid = "as65d4a65dw56ad48q6d4";
-            parms.put("openId", openid);
-            String token=redisService.get(openid);
-            logger.info("EK 微信授权 openid[{}]token[{}]操作时间[{}]",openid,token,DateUtils.getDateTime());
-            if(!StringUtil.isEmpty(token)) {
-                loginFlag=true;
-                logger.info("EK 微信授权 有 token[{}]操作时间[{}]",token,DateUtils.getDateTime());
-                parms.put("token", token);
-                String mobile= redisService.get(token);
-                if(!StringUtil.isEmpty(mobile)) {
-                    logger.info("EK 微信授权 有 mobile[{}]操作时间[{}]",mobile,DateUtils.getDateTime());
-                    parms.put("mobile", mobile);
-                    Map<String, Object>mapOrder=new HashMap<>();
-                    mapOrder.put("custCellphone", mobile);
-                    mapOrder.put("orderStatus", ConstantInterface.Enum.OrderStatus.ORDER_STATUS00.getKey());
-                    OrderBaseinfo baseinfo=orderBaseinfoMapper.selectByPrimaryKeySelective(mapOrder);
-                    if(baseinfo!=null) {
-                        logger.info("EK 有录入定单 baseinfo[{}]操作时间[{}]",baseinfo,DateUtils.getDateTime());
-                        LogOrder logOrder= logOrderMapper.selectByPrimaryKeyStatus(baseinfo.getOrderId());
-                        parms.put("orderStatus", logOrder.getOrderStatus());
-                        parms.put("orderOperation", logOrder.getOrderOperation());
-                    }
+        openid = jsonObject.get("openid").toString();
+        // openid = "as65d4a65dw56ad48q6d4";
+        parms.put("openId", openid);
+        String token = redisService.get(openid);
+        logger.info("EK 微信授权 openid[{}]token[{}]操作时间[{}]", openid, token, DateUtils.getDateTime());
+        if (!StringUtil.isEmpty(token)) {
+            loginFlag = true;
+            logger.info("EK 微信授权 有 token[{}]操作时间[{}]", token, DateUtils.getDateTime());
+            parms.put("token", token);
+            String mobile = redisService.get(token);
+            if (!StringUtil.isEmpty(mobile)) {
+                logger.info("EK 微信授权 有 mobile[{}]操作时间[{}]", mobile, DateUtils.getDateTime());
+                parms.put("mobile", mobile);
+                Map<String, Object> mapOrder = new HashMap<>();
+                mapOrder.put("custCellphone", mobile);
+                mapOrder.put("orderStatus", ConstantInterface.Enum.OrderStatus.ORDER_STATUS00.getKey());
+                OrderBaseinfo baseinfo = orderBaseinfoMapper.selectByPrimaryKeySelective(mapOrder);
+                if (baseinfo != null) {
+                    logger.info("EK 有录入定单 baseinfo[{}]操作时间[{}]", baseinfo, DateUtils.getDateTime());
+                    LogOrder logOrder = logOrderMapper.selectByPrimaryKeyStatus(baseinfo.getOrderId());
+                    parms.put("orderStatus", logOrder.getOrderStatus());
+                    parms.put("orderOperation", logOrder.getOrderOperation());
                 }
             }
-            parms.put("loginFlag", loginFlag);
+        }
+        parms.put("loginFlag", loginFlag);
         return parms;
     }
 
+    @Scheduled(fixedRate = 1000 * 60 * 59 * 2) // 服务器启动时执行一次，之后每隔一个小时59分执行一次。
+    private void wxAuthentication() throws Exception {
+        String WEIXIN_API_ACCESS_TOKEN=HttpClient.get(appConfig.getWEIXIN_API_ACCESS_TOKEN_URL().replace("{token}", appConfig.getWEIXIN_API_APPID()).replace("{secret}", appConfig.getWEIXIN_API_SECRET()));
+        String WEIXIN_API_JSAPI=HttpClient.get(appConfig.getWEIXIN_API_ACCESS_TOKEN_URL().replace("{accessToken}", WEIXIN_API_ACCESS_TOKEN));
+        logger.info("EK 启动定时任务，每隔一个小时59分执行一次 获取微信token[{}]jsapi[{}]操作时间[{}]", WEIXIN_API_ACCESS_TOKEN, WEIXIN_API_JSAPI, DateUtils.getDateTime());
+        redisService.set("WEIXIN_API_ACCESS_TOKEN", WEIXIN_API_ACCESS_TOKEN);
+        redisService.set("WEIXIN_API_JSAPI", WEIXIN_API_JSAPI);
+    }
 
 }

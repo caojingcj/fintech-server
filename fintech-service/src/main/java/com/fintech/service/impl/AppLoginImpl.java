@@ -42,14 +42,14 @@ public class AppLoginImpl implements AppLoginService {
     */
     @Override
     public String appLoginVerification(String mobile,String openId, String code) throws Exception {
-        String getCode=redisService.get(ConstantInterface.AppValidateConfig.ObjectRedisValidate.OBJECT_REDIS_CODE.getValue()+mobile); //放入redis 10分钟有效期
+        String getCode=redisService.get(ConstantInterface.AppValidateConfig.ObjectRedisValidate.OBJECT_REDIS_CODE.getValue()+mobile);
         if(StringUtil.isEmpty(getCode)||!getCode.equals(code)) {
             throw new FinTechException(ConstantInterface.AppValidateConfig.LoginValidate.LOGIN_200301.toString());
         }
         String token=TokenUtil.getToken();
+        logger.info("mobile[{}]openId[{}]token[{}]",mobile,openId,token);
         redisService.set(token,mobile);
         redisService.set(openId,token);
-        logger.info("mobile[{}]openId[{}]token[{}]",mobile,openId,token);
         if(custBaseinfoMapper.selectByPrimaryKey(mobile)==null) {
             CustBaseinfo custBaseinfo=new CustBaseinfo();
             custBaseinfo.setCustCellphone(mobile);
