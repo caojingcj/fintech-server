@@ -305,18 +305,4 @@ public class OrderBaseInfoController {
             return ResultUtils.error(ResultUtils.ERROR_CODE, e.getMessage());
         }
     }
-
-    @RequestMapping(value = "wxJsTicket",method = RequestMethod.GET)
-    public @ResponseBody Object wxJsTicket(String token) {
-        try {
-            redisService.tokenValidate(token);
-            logger.info("EK 客户订单列表[token{}]方法名[{}]操作时间[{}]",token,Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
-            return ResultUtils.success(ResultUtils.SUCCESS_CODE_MSG,redisService.get("WEIXIN_API_JSAPI"));
-        } catch (Exception e) {
-            logger.error("ERROR EK参数[{}] 报错[{}] 方法名[{}]报错时间[{}]", token,e.getMessage(),
-                    Thread.currentThread().getStackTrace()[1].getMethodName(), DateUtils.getDateTime());
-            return ResultUtils.error(ResultUtils.ERROR_CODE, e.getMessage());
-        }
-    }
-    
 }

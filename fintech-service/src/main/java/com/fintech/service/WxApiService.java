@@ -6,5 +6,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 public interface WxApiService {
-    Map<String, Object>  wxOpenId(HttpServletRequest request, HttpServletResponse response)throws Exception;
+    Map<String, Object> wxOpenId(HttpServletRequest request, HttpServletResponse response) throws Exception;
+
+    Map<String, Object>wxJSSignature();
 }
