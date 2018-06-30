@@ -81,7 +81,8 @@ public class LogHandlerInterceptor implements HandlerInterceptor {
 //            if(StringUtil.isEmpty(request.getParameter("token").replace(" ", "").replace("null", ""))) {
 //                return redisIsNull(request, response);
 //            }
-	        logger.info("----------------拦截器token[{}]-------------",request.getParameter("token").replace(" ", "").replace("null", ""));
+            //前后台分离 request 后面会拿不到参数 需要研究下
+	        logger.info("----------------拦截器token-------------");
 //	        Gson gson = new Gson();
 //		if(permOpen== 0){
 //			return true;

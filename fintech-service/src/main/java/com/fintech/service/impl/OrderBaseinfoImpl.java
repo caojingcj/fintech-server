@@ -572,13 +572,13 @@ public class OrderBaseinfoImpl implements OrderBaseinfoService {
     * @throws 
     */
     public void LegalityVerification(Legality legality) {
-        if(legality.getPhotocopy()==ConstantInterface.Enum.ConstantNumber.ONE.getKey()) {
+        if(legality.getPhotocopy().equals(ConstantInterface.Enum.ConstantNumber.ONE.getKey().toString())) {
             throw new FinTechException(ConstantInterface.AppValidateConfig.OrderValidate.ORDER_200007.toString());
         }
-        if(legality.getScreen()==ConstantInterface.Enum.ConstantNumber.ONE.getKey()) {
+        if(legality.getScreen().equals(ConstantInterface.Enum.ConstantNumber.ONE.getKey().toString())) {
             throw new FinTechException(ConstantInterface.AppValidateConfig.OrderValidate.ORDER_200008.toString());
         }
-        if(legality.getEdited()==ConstantInterface.Enum.ConstantNumber.ONE.getKey()) {
+        if(legality.getEdited().equals(ConstantInterface.Enum.ConstantNumber.ONE.getKey().toString())) {
             throw new FinTechException(ConstantInterface.AppValidateConfig.OrderValidate.ORDER_200009.toString());
         }
     }

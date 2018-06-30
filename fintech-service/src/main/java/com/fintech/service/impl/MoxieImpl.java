@@ -123,7 +123,9 @@ public class MoxieImpl implements MoxieService {
             logMozhanginfo.setMozhangMobile(submitVo.getMobile());
             logMozhanginfo.setMozhangTaskId(submitVo.getTask_id());
             logMozhanginfo.setMozhangContent(result);
-            logMozhanginfo.setReportTime(DateUtils.parse(jsonObject.getString("update_date")));
+            if(jsonObject.has("update_date")) {
+                logMozhanginfo.setReportTime(DateUtils.parse(jsonObject.getString("update_date")));
+            }
             logMozhanginfo.setOrderId(submitVo.getUser_id());
             LogMozhanginfo mozhanginfo= logMozhanginfoMapper.selectByPrimaryKey(submitVo.getTask_id());
             if(mozhanginfo==null) {

@@ -80,6 +80,7 @@ public class WxApiServiceImpl implements WxApiService {
                     LogOrder logOrder = logOrderMapper.selectByPrimaryKeyStatus(baseinfo.getOrderId());
                     parms.put("orderStatus", logOrder.getOrderStatus());
                     parms.put("orderOperation", logOrder.getOrderOperation());
+                    parms.put("orderId", baseinfo.getOrderId());
                 }
             }
         }

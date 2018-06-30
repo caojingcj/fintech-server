@@ -14,52 +14,41 @@ Screen （手机或电脑屏幕翻拍的照片）
 Edited （用工具合成或者编辑过的身份证图片）
 */
 public class Legality {
-    private Integer Edited;
-    private Integer Photocopy;
-    private Integer IDPhoto;
-    private Integer Screen;
-    private Integer TemporaryIDPhoto;
-
-    public Integer getEdited() {
+    private String Edited;
+    private String Photocopy;
+    private String IDPhoto;
+    private String Screen;
+    private String TemporaryIDPhoto;
+    public String getEdited() {
         return Edited;
     }
-
-    public void setEdited(Integer edited) {
+    public void setEdited(String edited) {
         Edited = edited;
     }
-
-    public Integer getPhotocopy() {
+    public String getPhotocopy() {
         return Photocopy;
     }
-
-    public void setPhotocopy(Integer photocopy) {
+    public void setPhotocopy(String photocopy) {
         Photocopy = photocopy;
     }
-
-    public Integer getIDPhoto() {
+    public String getIDPhoto() {
         return IDPhoto;
     }
-
-    public void setIDPhoto(Integer iDPhoto) {
+    public void setIDPhoto(String iDPhoto) {
         IDPhoto = iDPhoto;
     }
-
-    public Integer getScreen() {
+    public String getScreen() {
         return Screen;
     }
-
-    public void setScreen(Integer screen) {
+    public void setScreen(String screen) {
         Screen = screen;
     }
-
-    public Integer getTemporaryIDPhoto() {
+    public String getTemporaryIDPhoto() {
         return TemporaryIDPhoto;
     }
-
-    public void setTemporaryIDPhoto(Integer temporaryIDPhoto) {
+    public void setTemporaryIDPhoto(String temporaryIDPhoto) {
         TemporaryIDPhoto = temporaryIDPhoto;
     }
-
     @Override
     public String toString() {
         return "Legality [Edited=" + Edited + ", Photocopy=" + Photocopy + ", IDPhoto=" + IDPhoto + ", Screen=" + Screen
