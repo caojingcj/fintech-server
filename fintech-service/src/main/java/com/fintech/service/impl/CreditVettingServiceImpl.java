@@ -75,34 +75,42 @@ public class CreditVettingServiceImpl implements CreditVettingService {
         }
         // 拒绝 - 同一申请人申请超过3笔
         // 拒绝 - 同一申请人借款金额高于50w
-        // 拒绝 - face++低于默认分 - 默认分
-        // 拒绝 - 黑名单库（自有）- 是
-        // 拒绝 - 魔蝎黑名单 - 是
+        // 拒绝 - 魔蝎运营商报告  黑名单信息   黑中介分数   <=40分       直接拒绝
+        // 拒绝 - 魔蝎运营商报告  1.5风险分析摘要-魔蝎变量  申请人姓名+身份证号码是否出现在法院黑名单   是
+        // 拒绝 - 魔蝎运营商报告  1.5风险分析摘要-魔蝎变量  申请人姓名+身份证号码是否出现在金融机构黑名单 是
+        // 拒绝 - 魔蝎运营商报告  1.5风险分析摘要-魔蝎变量  申请人姓名+手机号码是否出现在金融机构黑名单  是
+        // 拒绝 - 魔蝎运营商报告  1.5风险分析摘要-魔蝎变量  号码类别--催收公司  近3个月通话次数    >=10次
+        // 拒绝 - 魔蝎运营商报告  1.6活跃分析摘要   通话活跃天数  近3个月-通话活跃天数 <=30天
         // 拒绝 - 手机报告、通讯录都无效(两者都无效)
         // 拒绝 - 联系人联系电话不在手机报告或通讯录中
-        // 拒绝 - 支付定金,且定金比例 < 申请金额的30%
-        // 拒绝 - 咨询师黑名单(根据医院名单设置)
         // 通过(且) - 近三月通话号码>=10
         // 通过(且) - 近三月互通电话>=3
         // 通过(且) - 互通定义，主叫和被叫都有记录
         // 通过(且) - 通讯录号码>=10
+        logOrder(orderId, CreditVettingResultEnum.拒绝.getValue(), "拒绝 - 其它原因");
         return CreditVettingResultEnum.拒绝;
     }
     
     private void logOrder(String orderId, String result, String note) {
         // 新增订单操作日志
         LogOrder log = new LogOrder();
+        // 订单基本信息
+        OrderBaseinfo order = new OrderBaseinfo();
+        order.setOrderId(orderId);
         log.setOrderId(orderId);
         log.setOrderOperation(OrderOperationEnum.审批.getValue());
         if (result.equals(CreditVettingResultEnum.通过.getValue())) {
             log.setOrderStatus(OrderStatusEnum.分期还款中.getValue());
+            order.setOrderStatus(OrderStatusEnum.待用户签署.getValue());
         }
         if (result.equals(CreditVettingResultEnum.拒绝.getValue())) {
             log.setOrderNote(note);
             log.setOrderStatus(OrderStatusEnum.审批拒绝.getValue());
+            order.setOrderStatus(OrderStatusEnum.审批拒绝.getValue());
         }
         log.setCreateTime(new Date());
         logOrderMapper.insert(log);
+        orderBaseinfoMapper.updateByPrimaryKeySelective(order);
     }
 
 }
