@@ -1,8 +1,12 @@
 package com.fintech.controller.moxie;
 
+import java.io.IOException;
 import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,11 +16,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.ModelAndView;
 
 import com.fintech.common.properties.AppConfig;
+import com.fintech.dao.OrderBaseinfoMapper;
 import com.fintech.model.LogMoxieinfo;
 import com.fintech.model.LogOrder;
+import com.fintech.model.OrderBaseinfo;
 import com.fintech.model.vo.moxie.BackMoxieTaskSubmitVo;
 import com.fintech.service.LogOrderService;
 import com.fintech.service.MoxieService;
@@ -25,6 +30,9 @@ import com.fintech.util.DateUtils;
 import com.fintech.util.enumerator.ConstantInterface;
 import com.fintech.util.result.BaseResult;
 import com.fintech.util.result.ResultUtils;
+import com.google.gson.Gson;
+
+import net.sf.json.JSONObject;
 
 
 /**   
@@ -47,6 +55,8 @@ public class MoxieController {
 	private LogOrderService logOrderService;
 	@Autowired
 	private RedisService redisService;
+	@Autowired
+	private OrderBaseinfoMapper orderBaseinfoMapper;
 
     /** 
     * @Title: MoxieController.java 
@@ -60,31 +70,20 @@ public class MoxieController {
     * @throws 
     */
 	@RequestMapping(value = "toMoxieCarrierH5",method = RequestMethod.GET)
-    public @ResponseBody Object toMoxieCarrierH5(String orderId,String mobile,String idCard,String name,String token) {
-        ModelAndView mav = new ModelAndView();
+    public @ResponseBody Object toMoxieCarrierH5(String orderId,String token) {
         try {
-        	redisService.tokenValidate(token);
-        	mav.addObject("mobile", mobile);
-        	mav.addObject("name", name);
-        	mav.addObject("idCard", idCard);
-            logger.info("EK魔蝎日志 H5参数【定单号[{}]姓名[{}]手机号[{}]身份证[{}]】>方法名[{}]操作时间[{}]",orderId,name,mobile,idCard,Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
-            String loginParams = URLEncoder.encode("{\"phone\":\"" + mobile + "\",\"name\":\"" +
-                            name + "\",\"idcard\":\"" + idCard + "\"}", "UTF-8");
-            String moxieUrl="https://api.51datakey.com/h5/importV3/index.html#/carrier?apiKey="+appConfig.getMOXIE_APIKEY()+"&userId="+orderId+"&quitOnLoginDone=YES&backUrl="+appConfig.getMOXIE_BACKURL()+"&themeColor=2196F3&cacheDisable=YES&loginParams="+loginParams;
-            logOrderService.insertSelective(new LogOrder(orderId, ConstantInterface.Enum.OrderLogStatus.ORDER_STATUS03.getKey(), ConstantInterface.Enum.OrderStatus.ORDER_STATUS00.getKey(), null));
-//                    mav.setViewName("redirect:https://api.51datakey.com/h5/importV3/index.html#/carrier" +
-//                            "?apiKey=" + appConfig.getMOXIE_APIKEY() +//魔蝎分配给合作机构的Key
-//                            "&userId=" + mobile +//接入方业务系统的标识用户的ID
-//                            "&quitOnLoginDone=YES" +//登录成功时跳转到backUrl
-//                            "&backUrl=" + appConfig.getMOXIE_BACKURL() +//任务成功后的回调地址
-//                            "&themeColor=2196F3" +//主题颜色
-//                            "&cacheDisable=YES" +//传递该参数为'YES'时，禁止缓存读取和写入。默认不传则会使用缓存
-//                            "&loginParams=" + loginParams);
-                    return ResultUtils.success(ResultUtils.SUCCESS_CODE_MSG,moxieUrl);
+            redisService.tokenValidate(token);
+            redisService.set(orderId,"999999");
+            OrderBaseinfo baseinfo=orderBaseinfoMapper.selectByPrimaryKey(orderId);
+            logger.info("EK魔蝎日志 H5参数【定单号[{}]token[{}]】>方法名[{}]操作时间[{}]",orderId,token,Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
+            String loginParams = URLEncoder.encode("{\"phone\":\"" + baseinfo.getCustCellphone() + "\",\"name\":\"" +
+                    baseinfo.getCustRealname() + "\",\"idcard\":\"" + baseinfo.getCustIdCardNo() + "\"}", "UTF-8");
+            String moxieUrl="https://api.51datakey.com/h5/importV3/index.html#/carrier?apiKey="+appConfig.getMOXIE_APIKEY()+"&userId="+orderId+"&quitOnLoginDone=YES&goBackEnable=YES&backUrl="+appConfig.getMOXIE_BACKURL()+"&themeColor=2196F3&cacheDisable=YES&loginParams="+loginParams;
+            return ResultUtils.success(ResultUtils.SUCCESS_CODE_MSG,moxieUrl);
         } catch (Exception e) {
-            logger.error("EK ERROR [{}]魔蝎日志 H5参数【定单号[{}]姓名[{}手机号[{}]身份证[{}]]】>方法名[{}]操作时间[{}]",e.getMessage(),orderId,name,mobile,idCard,Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
+            logger.error("EK ERROR [{}]魔蝎日志 H5参数【定单号[{}]]】>方法名[{}]操作时间[{}]",e.getMessage(),orderId,Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
+            return ResultUtils.error(ResultUtils.ERROR_CODE,e.getMessage());
         }
-        return mav;
     }
     
     /** 
@@ -109,7 +108,7 @@ public class MoxieController {
     
     @RequestMapping(value = "backMoxieTaskSubmit",method = RequestMethod.POST)
     public @ResponseBody Object backMoxieTaskSubmit(@RequestBody BackMoxieTaskSubmitVo vo) {
-        logger.info("EK 接到魔蝎回调：任务创建通知[{}]方法名[{}]操作时间[{}]",vo,Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
+        logger.info("EK 接到魔蝎回调任务创建通知 参数[{}]方法名[{}]操作时间[{}]",vo,Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
         try {
             moxieService.backMoxieTaskSubmit(vo);
             return ResultUtils.success(ResultUtils.SUCCESS_CODE_MSG);
@@ -120,16 +119,18 @@ public class MoxieController {
     }
     
     @RequestMapping(value = "resultMoxie",method = RequestMethod.GET)
-    public @ResponseBody BaseResult resultMoxie(String userId,String account) {
-        logger.info("EK 获取魔蝎报告返回成功[{}]方法名[{}]操作时间[{}]",userId,account,Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
+    public @ResponseBody Object resultMoxie(HttpServletRequest request) {
+        logger.info("EK 获取魔蝎报告返回成功[userId[{}]]方法名[{}]操作时间[{}]",request.getParameter("userId"),Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
         try {
-            Map<String, Object>res=new HashMap<>();
-            res.put("orderId", userId);
-            res.put("mobile", account);
-            return ResultUtils.success(ResultUtils.SUCCESS_CODE_MSG,res);
-        } catch (Exception e) {
-            logger.error("ERROR EK参数[{}] 报错[{}] 方法名[{}]报错时间[{}]",userId,account,e.getMessage(),Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
-            return ResultUtils.error(ResultUtils.ERROR_CODE,e.getMessage());
-        }
+            String orderId=request.getParameter("userId");
+            if(orderId!=null) {
+                moxieService.resultMoxie(orderId);
+            }
+            return ResultUtils.success(ResultUtils.SUCCESS_CODE_MSG,redisService.get(orderId));
+            } catch (Exception e) {
+                e.printStackTrace();
+                logger.error("ERROR EK 魔蝎报告报错[{}] 方法名[{}]报错时间[{}]", e.getMessage(),Thread.currentThread().getStackTrace()[1].getMethodName(), DateUtils.getDateTime());
+                return ResultUtils.error(ResultUtils.ERROR_CODE,e.getMessage());
+            }
     }
 }

@@ -1,5 +1,7 @@
 package com.fintech.dao;
 
+import java.util.Map;
+
 import com.fintech.model.LogMozhanginfo;
 
 public interface LogMozhanginfoMapper {
@@ -10,6 +12,8 @@ public interface LogMozhanginfoMapper {
     int insertSelective(LogMozhanginfo record);
 
     LogMozhanginfo selectByPrimaryKey(String mozhangTaskId);
+    
+    LogMozhanginfo selectByPrimaryKeySelective(Map<String, Object>parms);
 
     int updateByPrimaryKeySelective(LogMozhanginfo record);
 

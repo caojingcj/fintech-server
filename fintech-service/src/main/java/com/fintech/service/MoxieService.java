@@ -9,4 +9,6 @@ public interface MoxieService {
     boolean insertSelective(LogMoxieinfo record);
     
     void backMoxieTaskSubmit(BackMoxieTaskSubmitVo submitVo);
+    
+    String resultMoxie(String orderId)throws Exception;
 }

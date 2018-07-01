@@ -23,6 +23,20 @@
     from log_mozhanginfo
     where MOZHANG_TASK_ID = #{mozhangTaskId}
   </select>
+  
+  <select id="selectByPrimaryKeySelective" resultMap="BaseResultMap" parameterType="java.util.Map" >
+    select 
+    <include refid="Base_Column_List" />
+    from log_mozhanginfo
+    where 1=1
+    <if test="mozhangTaskId != null and mozhangTaskId !=''">
+    	and MOZHANG_TASK_ID = #{mozhangTaskId}
+    </if>
+      <if test="orderId != null and orderId !=''">
+    	and ORDER_ID = #{orderId}
+    </if>
+  </select>
+  
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
     delete from log_mozhanginfo
     where ID = #{id,jdbcType=BIGINT}

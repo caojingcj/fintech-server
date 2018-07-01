@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -29,6 +30,8 @@ import com.fintech.dao.CompanyChannelMapper;
 import com.fintech.dao.CompanyItemMapper;
 import com.fintech.dao.CompanyPeriodFeeMapper;
 import com.fintech.dao.CustBaseinfoMapper;
+import com.fintech.dao.LogMoxieinfoMapper;
+import com.fintech.dao.LogMozhanginfoMapper;
 import com.fintech.dao.LogOcridcardMapper;
 import com.fintech.dao.LogOrderMapper;
 import com.fintech.dao.OrderAttachmentMapper;
@@ -38,11 +41,14 @@ import com.fintech.dao.UserContractMapper;
 import com.fintech.dao.UserReturnplanMapper;
 import com.fintech.dao.procedure.ContractProcedureMapper;
 import com.fintech.dao.procedure.OrderProcedureMapper;
+import com.fintech.enm.CreditVettingResultEnum;
 import com.fintech.model.CompanyAccountinfo;
 import com.fintech.model.CompanyBaseinfo;
 import com.fintech.model.CompanyChannel;
 import com.fintech.model.CompanyPeriodFee;
 import com.fintech.model.CustBaseinfo;
+import com.fintech.model.LogMoxieinfo;
+import com.fintech.model.LogMozhanginfo;
 import com.fintech.model.LogOcridcard;
 import com.fintech.model.LogOrder;
 import com.fintech.model.OrderAttachment;
@@ -58,6 +64,7 @@ import com.fintech.model.vo.ProjectVo;
 import com.fintech.model.vo.faceid.FaceidIDCardPositiveVo;
 import com.fintech.model.vo.faceid.FaceidIDCardSideVo;
 import com.fintech.model.vo.faceid.Legality;
+import com.fintech.service.CreditVettingService;
 import com.fintech.service.OrderBaseinfoService;
 import com.fintech.service.RedisService;
 import com.fintech.service.ReturnPlanService;
@@ -115,6 +122,12 @@ public class OrderBaseinfoImpl implements OrderBaseinfoService {
     private CompanyAccountinfoMapper companyAccountinfoMapper;
     @Autowired
     private LogOcridcardMapper logOcridcardMapper;
+    @Autowired
+    private LogMoxieinfoMapper logMoxieinfoMapper;
+    @Autowired
+    private LogMozhanginfoMapper logMozhanginfoMapper;
+    @Autowired
+    private CreditVettingService creditVettingService;
     /*
      * (非 Javadoc) <p>Title: insertSelective</p> <p>Description: </p>
      * 
@@ -159,11 +172,6 @@ public class OrderBaseinfoImpl implements OrderBaseinfoService {
         orderBaseinfoMapper.updateByPrimaryKeySelective(record);
         logOrderMapper.insertSelective(new LogOrder(record.getOrderId(),
                 ConstantInterface.Enum.ConstantNumber.ONE.getKey().toString(), ConstantInterface.Enum.OrderStatus.ORDER_STATUS00.getKey(), null));
-    }
-
-    public static void main(String[] args) {
-        String ss = "1";
-        System.out.println(ss.equals(String.valueOf(ConstantInterface.Enum.ConstantNumber.ZERO.getKey())));
     }
 
     @Override
@@ -259,9 +267,11 @@ public class OrderBaseinfoImpl implements OrderBaseinfoService {
     * @param multipartHttpServletRequest
     * @return 
     * @see com.fintech.service.OrderBaseinfoService#saveOrderAttachment(com.fintech.model.vo.OrderAttachmentVo, org.springframework.web.multipart.MultipartHttpServletRequest) 
+    * 订单附件上传
     */
     @Override
-    public String saveOrderAttachment(String serverId,String token,String attchType,String orderId) {
+    public Map<String, Object> saveOrderAttachment(String serverId,String token,String attchType,String orderId) {
+        Map<String, Object> resultMap=new HashMap<>();
         try {
             String accessToken=redisService.get("WEIXIN_ACCESS_TOKEN");
             String requestUrl=appConfig.getWEIXIN_API_MEDIA_URL().replace("{accessToken}", accessToken).replace("{mediaId}", serverId);
@@ -275,19 +285,38 @@ public class OrderBaseinfoImpl implements OrderBaseinfoService {
             path = appConfig.getOSS_ORDER_ATTACMENT_PATH() + folder + fileName;
             oss = new OSSEntity();
             oss=sample.uploadFile(input, path);
+            OrderAttachment orderAttachment= orderAttachmentMapper.selectByPrimaryKey(orderId);
             OrderAttachment attachment=new OrderAttachment();
             attachment.setOrderId(orderId);
             attachment.setAtthType(attchType);
             attachment.setAtthPath(oss.getUrl());
-            orderAttachmentMapper.insertSelective(attachment);
+            if(orderAttachment==null) {
+                orderAttachmentMapper.insertSelective(attachment);
+            }else {
+                orderAttachmentMapper.updateByPrimaryKeySelective(attachment);
+            }
+            OrderBaseinfo baseinfo=new OrderBaseinfo();
+            baseinfo.setOrderId(orderId);
+            baseinfo.setOrderStatus(ConstantInterface.Enum.OrderStatus.ORDER_STATUS01.getKey());
+            orderBaseinfoMapper.updateByPrimaryKeySelective(baseinfo);
             logOrderMapper.insertSelective(new LogOrder(orderId,ConstantInterface.Enum.OrderLogStatus.ORDER_STATUS05.getKey(), ConstantInterface.Enum.OrderStatus.ORDER_STATUS01.getKey(), null));
-            return oss.getUrl();
+            Map<String, Object>parms=new HashMap<>();
+            parms.put("orderId", orderId);
+            LogMozhanginfo logMozhanginfo= logMozhanginfoMapper.selectByPrimaryKeySelective(parms);
+            if(logMozhanginfo!=null) {
+                //調用信审服务
+                creditVettingService.creditVetting(orderId);
+            }
+            OrderBaseinfo orderBaseinfo=orderBaseinfoMapper.selectByPrimaryKey(orderId);
+            resultMap.put("orderStatus", orderBaseinfo.getOrderStatus());
+            resultMap.put("url", oss.getUrl());
+            return resultMap;
         } catch (IOException e) {
             e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return null;
+        return resultMap;
     }
     
     
@@ -442,15 +471,9 @@ public class OrderBaseinfoImpl implements OrderBaseinfoService {
         String requestUrl=appConfig.getWEIXIN_API_MEDIA_URL().replace("{accessToken}", accessToken).replace("{mediaId}", serverId);
         HttpURLConnection conn =HttpClient.netWorkImage(requestUrl);
         InputStream input = conn.getInputStream();
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        byte[] buffer = new byte[1024];
-        int len;
-        while ((len = input.read(buffer)) > -1 ) {
-            baos.write(buffer, 0, len);
-        }
-        baos.flush();
-        InputStream faceStream = new ByteArrayInputStream(baos.toByteArray());
-        InputStream ossStream = new ByteArrayInputStream(baos.toByteArray());
+        byte[] buffer = IOUtils.toByteArray(input);
+        InputStream faceStream = new ByteArrayInputStream(buffer);
+        InputStream ossStream = new ByteArrayInputStream(buffer);
         Map<String, Object>parms=new HashMap<>();
         parms.put("api_key", appConfig.getOCR_API_KEY());
         parms.put("api_secret", appConfig.getOCR_API_SECRET());
@@ -458,9 +481,6 @@ public class OrderBaseinfoImpl implements OrderBaseinfoService {
         parms.put("multi_oriented_detection", ConstantInterface.Enum.ConstantNumber.ONE.getKey());
         JSONObject result=HttpClient.postFileInputStream(appConfig.getOCR_API_URL(), parms,faceStream,"");
         FaceidIDCardPositiveVo faceidVo=gson.fromJson(result.toString(),new TypeToken<FaceidIDCardPositiveVo>() {}.getType());
-        if(StringUtil.isEmpty(faceidVo.getId_card_number())) {
-            throw new FinTechException(ConstantInterface.AppValidateConfig.OrderValidate.ORDER_200004.toString());
-        }
         String fileName,path = "";
         OSSEntity oss=null;
         String folder = CommonUtil.getStringTime(date, "yyyyMMdd") + "/";
@@ -508,58 +528,42 @@ public class OrderBaseinfoImpl implements OrderBaseinfoService {
         String requestUrl=appConfig.getWEIXIN_API_MEDIA_URL().replace("{accessToken}", accessToken).replace("{mediaId}", serverId);
         HttpURLConnection conn =HttpClient.netWorkImage(requestUrl);
         InputStream input = conn.getInputStream();
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        byte[] buffer = new byte[1024];
-        int len;
-        while ((len = input.read(buffer)) > -1 ) {
-            baos.write(buffer, 0, len);
-        }
-        baos.flush();
-        InputStream faceStream = new ByteArrayInputStream(baos.toByteArray());
-        InputStream ossStream = new ByteArrayInputStream(baos.toByteArray());
+        byte[] buffer = IOUtils.toByteArray(input);
+        InputStream faceStream = new ByteArrayInputStream(buffer);
+        InputStream ossStream = new ByteArrayInputStream(buffer);
         Map<String, Object>parms=new HashMap<>();
         parms.put("api_key", appConfig.getOCR_API_KEY());
         parms.put("api_secret", appConfig.getOCR_API_SECRET());
         parms.put("legality", ConstantInterface.Enum.ConstantNumber.ONE.getKey());
         parms.put("multi_oriented_detection", ConstantInterface.Enum.ConstantNumber.ONE.getKey());
         JSONObject result=HttpClient.postFileInputStream(appConfig.getOCR_API_URL(), parms,faceStream,"");
-        FaceidIDCardPositiveVo faceidVo=gson.fromJson(result.toString(),new TypeToken<FaceidIDCardPositiveVo>() {}.getType());
-        if(StringUtil.isEmpty(faceidVo.getId_card_number())) {
-            throw new FinTechException(ConstantInterface.AppValidateConfig.OrderValidate.ORDER_200004.toString());
-        }
+        FaceidIDCardSideVo faceidVo = gson.fromJson(result.toString(),new TypeToken<FaceidIDCardSideVo>() {}.getType());
         String fileName,path = "";
         OSSEntity oss=null;
         String folder = CommonUtil.getStringTime(date, "yyyyMMdd") + "/";
         FileUploadSample sample = new FileUploadSample();
         String mobile=redisService.get(token);
-        fileName =mobile+"-" +UUID.randomUUID()+".jpg";
+        fileName = mobile+ "-" + UUID.randomUUID() + ".jpg";
         path = appConfig.getOSS_ORDER_OCR_PATH() + folder + fileName;
         oss = new OSSEntity();
         oss=sample.uploadFile(ossStream, path);
         CustBaseinfo custBaseinfo=new CustBaseinfo();
-        custBaseinfo.setCustRealname(faceidVo.getName());
-        custBaseinfo.setCustIdCardNo(faceidVo.getId_card_number());
+        String [] idTime=faceidVo.getValid_date().split("-");
         custBaseinfo.setCustCellphone(mobile);
-        custBaseinfo.setIdentityStatus(String.valueOf(1));
-        custBaseinfo.setCustNation(faceidVo.getRace());
-        custBaseinfo.setCustAddress(faceidVo.getAddress());
-        custBaseinfo.setCustIdCardFront(oss.getUrl());
+        custBaseinfo.setCustIdCardValBegin(DateUtils.parse(idTime[0].replace(".", "-")));
+        custBaseinfo.setCustIdCardValEnd(DateUtils.parse(idTime[1].replace(".", "-")));
+        custBaseinfo.setCustIdCardBack(oss.getUrl());
         custBaseinfo.setIdentityTime(date);
-        custBaseinfo.setIsEnabled(true);
-        custBaseinfo.setCustDeviceCode("wx");
+        OrderBaseinfo orderBaseinfo=orderBaseinfoMapper.selectByPrimaryKey(orderId);
         LogOcridcard ocridcard=new LogOcridcard();
-        ocridcard.setOcrIdCard(custBaseinfo.getCustIdCardNo());
+        ocridcard.setOcrIdCard(orderBaseinfo.getCustIdCardNo());
         ocridcard.setOcrLegality(gson.toJson(faceidVo.getLegality()));
         ocridcard.setOcrContent(result.toString());
-        ocridcard.setOcrMobile(custBaseinfo.getCustCellphone());
-        ocridcard.setOcrName(custBaseinfo.getCustRealname());
+        ocridcard.setOcrMobile(orderBaseinfo.getCustCellphone());
+        ocridcard.setOcrName(orderBaseinfo.getCustRealname());
         ocridcard.setOcrRequestId(faceidVo.getRequest_id());
         ocridcard.setOcrSide(faceidVo.getSide());
-        ocridcard.setOrderId(orderId);
-        OrderBaseinfo orderBaseinfo=orderBaseinfoMapper.selectByPrimaryKey(orderId);
-        orderBaseinfo.setCustRealname(faceidVo.getName());
-        orderBaseinfo.setCustCellphone(custBaseinfo.getCustCellphone());
-        orderBaseinfo.setCustIdCardNo(faceidVo.getId_card_number());
+        ocridcard.setOrderId(orderBaseinfo.getOrderId());
         logOcridcardMapper.insertSelective(ocridcard);
         custBaseinfoMapper.updateByPrimaryKeySelective(custBaseinfo);
         orderBaseinfoMapper.updateByPrimaryKeySelective(orderBaseinfo);
