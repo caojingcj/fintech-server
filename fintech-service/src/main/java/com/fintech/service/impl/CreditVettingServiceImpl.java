@@ -1,38 +1,52 @@
 package com.fintech.service.impl;
 
+import java.math.BigDecimal;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-import com.alibaba.dubbo.config.annotation.Service;
+import com.fintech.dao.CompanyPeriodFeeMapper;
 import com.fintech.dao.CustBaseinfoMapper;
 import com.fintech.dao.LogOrderMapper;
 import com.fintech.dao.OrderBaseinfoMapper;
 import com.fintech.dao.OrderDetailinfoMapper;
+import com.fintech.dao.UserContractMapper;
+import com.fintech.dao.UserReturnplanMapper;
 import com.fintech.enm.CreditVettingResultEnum;
 import com.fintech.enm.EducationStatusEnum;
 import com.fintech.enm.GenderEnum;
 import com.fintech.enm.IdentityStatusEnum;
 import com.fintech.enm.OrderOperationEnum;
 import com.fintech.enm.OrderStatusEnum;
+import com.fintech.enm.ReturnStatusEnum;
+import com.fintech.model.CompanyPeriodFee;
 import com.fintech.model.CustBaseinfo;
 import com.fintech.model.LogOrder;
 import com.fintech.model.OrderBaseinfo;
 import com.fintech.model.OrderDetailinfo;
+import com.fintech.model.UserContract;
+import com.fintech.model.UserReturnplan;
+import com.fintech.service.ReturnPlanService;
 import com.fintech.service.CreditVettingService;
+import com.fintech.util.DateUtils;
 import com.fintech.util.IDCardUtil;
+import com.fintech.xcpt.FintechException;
+
 @Service
 public class CreditVettingServiceImpl implements CreditVettingService {
-    
+
     @Autowired
     private OrderBaseinfoMapper orderBaseinfoMapper;
-    
+
     @Autowired
     private OrderDetailinfoMapper orderDetailinfoMapper;
-    
+
     @Autowired
     private CustBaseinfoMapper custBaseinfoMapper;
-    
+
     @Autowired
     private LogOrderMapper logOrderMapper;
 
@@ -53,7 +67,8 @@ public class CreditVettingServiceImpl implements CreditVettingService {
         }
         // 拒绝 - 身份证有效期失效
         CustBaseinfo custBaseInfo = custBaseinfoMapper.selectByPrimaryKey(orderBaseInfo.getCustCellphone());
-        if (custBaseInfo.getIdentityStatus().equals(IdentityStatusEnum.未认证.getValue()) || custBaseInfo.getIdentityStatus().equals(IdentityStatusEnum.已过期.getValue())) {
+        if (custBaseInfo.getIdentityStatus().equals(IdentityStatusEnum.未认证.getValue())
+                || custBaseInfo.getIdentityStatus().equals(IdentityStatusEnum.已过期.getValue())) {
             logOrder(orderId, CreditVettingResultEnum.拒绝.getValue(), "拒绝 - 身份证有效期失效");
             return CreditVettingResultEnum.拒绝;
         }
@@ -70,7 +85,11 @@ public class CreditVettingServiceImpl implements CreditVettingService {
         // 拒绝 - 学生（年龄18-21岁；学历 专科/本科/硕士及以上）
         OrderDetailinfo orderDetailinfo = orderDetailinfoMapper.selectByPrimaryKey(orderId);
         String educationStatus = orderDetailinfo.getEducationalStatus();
-        if (age >= 18 && age <= 21 && (educationStatus.equals(EducationStatusEnum.专科.getValue()) || educationStatus.equals(EducationStatusEnum.本科.getValue()) || educationStatus.equals(EducationStatusEnum.硕士.getValue()) || educationStatus.equals(EducationStatusEnum.博士.getValue()))) {
+        if (age >= 18 && age <= 21
+                && (educationStatus.equals(EducationStatusEnum.专科.getValue())
+                        || educationStatus.equals(EducationStatusEnum.本科.getValue())
+                        || educationStatus.equals(EducationStatusEnum.硕士.getValue())
+                        || educationStatus.equals(EducationStatusEnum.博士.getValue()))) {
             logOrder(orderId, CreditVettingResultEnum.拒绝.getValue(), "拒绝 - 学生（年龄18-21岁；学历 专科/本科/硕士及以上）");
             return CreditVettingResultEnum.拒绝;
         }
@@ -89,7 +108,7 @@ public class CreditVettingServiceImpl implements CreditVettingService {
         // 通过(且) - 通讯录号码>=10
         return CreditVettingResultEnum.拒绝;
     }
-    
+
     private void logOrder(String orderId, String result, String note) {
         // 新增订单操作日志
         LogOrder log = new LogOrder();
@@ -105,5 +124,4 @@ public class CreditVettingServiceImpl implements CreditVettingService {
         log.setCreateTime(new Date());
         logOrderMapper.insert(log);
     }
-
 }

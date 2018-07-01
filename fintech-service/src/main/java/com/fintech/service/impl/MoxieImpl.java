@@ -19,6 +19,7 @@ import com.fintech.model.LogMozhanginfo;
 import com.fintech.model.LogOrder;
 import com.fintech.model.OrderBaseinfo;
 import com.fintech.model.vo.moxie.BackMoxieTaskSubmitVo;
+import com.fintech.service.CreditVettingService;
 import com.fintech.service.LogOrderService;
 import com.fintech.service.MoxieService;
 import com.fintech.service.RedisService;
@@ -50,8 +51,8 @@ public class MoxieImpl implements MoxieService {
     private RedisService redisService;
     @Autowired
     private LogOrderService logOrderService;
-//    @Autowired
-//    private CreditVettingService creditVettingService;
+    @Autowired
+    private CreditVettingService creditVettingService;
     /* (非 Javadoc) 
     * <p>Title: insertSelective</p> 
     * <p>Description: </p> 
@@ -127,7 +128,7 @@ public class MoxieImpl implements MoxieService {
             if(logMozhanginfo!=null) {
                 OrderBaseinfo baseinfo=orderBaseinfoMapper.selectByPrimaryKey(record.getOrderId());
                 if(baseinfo.getOrderStatus().equals(String.valueOf(ConstantInterface.Enum.OrderStatus.ORDER_STATUS01.getKey()))) {
-//                    creditVettingService.creditVetting(record.getOrderId());
+                    creditVettingService.creditVetting(record.getOrderId());
                 }
             }
         }
