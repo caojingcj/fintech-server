@@ -65,6 +65,7 @@ import com.fintech.model.vo.faceid.FaceidIDCardPositiveVo;
 import com.fintech.model.vo.faceid.FaceidIDCardSideVo;
 import com.fintech.model.vo.faceid.Legality;
 import com.fintech.service.CreditVettingService;
+import com.fintech.service.LogOrderService;
 import com.fintech.service.OrderBaseinfoService;
 import com.fintech.service.RedisService;
 import com.fintech.service.ReturnPlanService;
@@ -569,6 +570,7 @@ public class OrderBaseinfoImpl implements OrderBaseinfoService {
         custBaseinfoMapper.updateByPrimaryKeySelective(custBaseinfo);
         orderBaseinfoMapper.updateByPrimaryKeySelective(orderBaseinfo);
         LegalityVerification(faceidVo.getLegality());
+        logOrderMapper.insertSelective(new LogOrder(orderId, ConstantInterface.Enum.OrderLogStatus.ORDER_STATUS02.getKey(), ConstantInterface.Enum.OrderStatus.ORDER_STATUS00.getKey(), null));
         return custBaseinfo;
     }
     

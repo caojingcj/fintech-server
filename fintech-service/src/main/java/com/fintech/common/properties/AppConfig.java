@@ -137,8 +137,27 @@ public class AppConfig {
     private String WEIXIN_API_SIGNATURE_URL;
     @Value("${WEIXIN_API_MEDIA_URL}")
     private String WEIXIN_API_MEDIA_URL;
-    
-    
+    @Value("${WEIXIN_API_HTML_URL}")
+    private String WEIXIN_API_HTML_URL;
+    @Value("${WEIXIN_API_REDIRECT_URL}")
+    private String WEIXIN_API_REDIRECT_URL;
+
+    public String getWEIXIN_API_REDIRECT_URL() {
+        return WEIXIN_API_REDIRECT_URL;
+    }
+
+    public void setWEIXIN_API_REDIRECT_URL(String wEIXIN_API_REDIRECT_URL) {
+        WEIXIN_API_REDIRECT_URL = wEIXIN_API_REDIRECT_URL;
+    }
+
+    public String getWEIXIN_API_HTML_URL() {
+        return WEIXIN_API_HTML_URL;
+    }
+
+    public void setWEIXIN_API_HTML_URL(String wEIXIN_API_HTML_URL) {
+        WEIXIN_API_HTML_URL = wEIXIN_API_HTML_URL;
+    }
+
     public String getWEIXIN_API_MEDIA_URL() {
         return WEIXIN_API_MEDIA_URL;
     }

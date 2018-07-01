@@ -62,11 +62,9 @@ public class QysRemoteSignHandler {
 	 static SealService sealService;
 	@Autowired
 	public AppConfig appConfig;// 配置文件
- 	private Long platformSealId;
- 	private Long QYES_CA_DOCID;
- 	private String QYES_CA_STAMP;
- 	
- 	
+	public Long platformSealId;// 配置文件
+	public Long qyesCaDocid;// 配置文件
+	public String qyesCaStamp;// 配置文件
  	
 	@PostConstruct
 	private void init() {
@@ -79,9 +77,9 @@ public class QysRemoteSignHandler {
 			localSignService = new LocalSignServiceImpl(sdkClient);
 			remoteSignService = new RemoteSignServiceImpl(sdkClient);
 			sealService = new SealServiceImpl(sdkClient);
+			qyesCaDocid=Long.parseLong(appConfig.getQYES_CA_DOCID());
 			platformSealId=Long.parseLong(appConfig.getQYES_CA_SEALID());
-			QYES_CA_DOCID=Long.parseLong(appConfig.getQYES_CA_DOCID());
-			QYES_CA_STAMP=appConfig.getQYES_CA_STAMP();
+			qyesCaStamp=appConfig.getQYES_CA_STAMP();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -224,7 +222,7 @@ public class QysRemoteSignHandler {
           logger.info("EK>用户签约授权书>商户编号：[{}]方法名[{}]操作时间[{}]",contractId,Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
             try {
                 /**** qys用户签署 ***/
-                OSSEntity oss = QYS_SignCA.signCommit(contractId, QYES_CA_DOCID, platformSealId, qysParams, QYES_CA_STAMP, null);
+                OSSEntity oss = QYS_SignCA.signCommit(contractId,qyesCaDocid, platformSealId, qysParams,qyesCaStamp, null);
                 return oss;
             } catch (Exception e) {
                 logger.info("EK>QYS ERROR>商户编号：[{}]方法名[{}]操作时间[{}]error:[{}]",contractId,Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime(),e.getMessage());

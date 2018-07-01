@@ -223,6 +223,7 @@ public class OrderBaseInfoController {
         } catch (Exception e) {
             logger.error("ERROR EK参数[{}] 报错[{}] 方法名[{}]报错时间[{}]", vo.toString(),e.getMessage(),
                     Thread.currentThread().getStackTrace()[1].getMethodName(), DateUtils.getDateTime());
+            e.printStackTrace();
             return ResultUtils.error(ResultUtils.ERROR_CODE, e.getMessage());
         }
     }

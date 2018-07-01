@@ -63,7 +63,6 @@ public class MoxieImpl implements MoxieService {
     @Override
     public boolean insertSelective(LogMoxieinfo record) {
         String url = "";
-        boolean flag=false;
         switch (record.getMoxieType()) {
         case "mxdataex":
             url = appConfig.getMOXIE_TYPE_MXDATAEX();
@@ -90,17 +89,15 @@ public class MoxieImpl implements MoxieService {
                 record.setReportTime(DateUtils.parse(jsonObject.get("last_modify_time").toString()));
                 if(logMoxieinfo==null) {
                     logMoxieinfoMapper.insertSelective(record);
-                    flag=true;
                 }else {
                     record.setUpdateTime(new Date());
                     logMoxieinfoMapper.updateByPrimaryKeySelective(record);
-                    flag=true;
                 }
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return flag;
+        return true;
     }
 
     /* (非 Javadoc) 
@@ -121,16 +118,15 @@ public class MoxieImpl implements MoxieService {
         record.setMoxieTaskId(submitVo.getTask_id());
         record.setOrderId(submitVo.getUser_id());
         if(insertSelective(record)) {
-//            insertSelectiveMoZhang(submitVo);
-            Map<String, Object>map=new HashMap<>();
-            map.put("orderId", record.getOrderId());
-            LogMozhanginfo logMozhanginfo= logMozhanginfoMapper.selectByPrimaryKeySelective(map);
-            if(logMozhanginfo!=null) {
+            insertSelectiveMoZhang(submitVo);
                 OrderBaseinfo baseinfo=orderBaseinfoMapper.selectByPrimaryKey(record.getOrderId());
                 if(baseinfo.getOrderStatus().equals(String.valueOf(ConstantInterface.Enum.OrderStatus.ORDER_STATUS01.getKey()))) {
-                    creditVettingService.creditVetting(record.getOrderId());
+                    logger.info("EK 魔蝎日志 调用信审 方法名[orderId{}]操作时间[{}]",record.getOrderId(),Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
+                   LogMozhanginfo mozhanginfo= logMozhanginfoMapper.selectByPrimaryKey(submitVo.getTask_id());
+                    if(mozhanginfo!=null) {
+                        creditVettingService.creditVetting(record.getOrderId());
+                    }
                 }
-            }
         }
     }
     
@@ -143,43 +139,38 @@ public class MoxieImpl implements MoxieService {
     * @throws 
     */
     public void insertSelectiveMoZhang(BackMoxieTaskSubmitVo submitVo) {
+        logger.info("EK 魔蝎日志 执行魔杖插入[taskId{}]操作时间[{}]",submitVo.getTask_id(),Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
         Map<String, Object>mzMap=new HashMap<>();
         mzMap.put("customer_id", appConfig.getMOZHANG_CUSTOMER_ID());
         mzMap.put("secret", appConfig.getMOZHANG_SECRET());
         try {
-            String mzReslt=MoxieUtil.doPostWithApikey(appConfig.getMOZHANG_TOKEN_URL().replace("{task_id}", submitVo.getTask_id()), JSONObject.fromObject(mzMap),appConfig.getMOXIE_TOKEN());
-            JSONObject mzJson = JSONObject.fromObject(mzReslt);
-            String mzToken=mzJson.getString("token");
-            String result=MoxieUtil.doGetWithToken(appConfig.getMOZHANG_REPORT_URL().replace("{task_id}", submitVo.getTask_id()),mzToken);
-            JSONObject jsonObject = JSONObject.fromObject(result);
-            LogMozhanginfo logMozhanginfo=new LogMozhanginfo();
-            logMozhanginfo.setMozhangIdcard(submitVo.getIdcard());
-            logMozhanginfo.setMozhangName(submitVo.getName());
-            logMozhanginfo.setMozhangMobile(submitVo.getMobile());
-            logMozhanginfo.setMozhangTaskId(submitVo.getTask_id());
-            logMozhanginfo.setMozhangContent(result);
-            if(jsonObject.has("update_date")) {
-                logMozhanginfo.setReportTime(DateUtils.parse(jsonObject.getString("update_date")));
-            }
-            logMozhanginfo.setOrderId(submitVo.getUser_id());
-            LogMozhanginfo mozhanginfo= logMozhanginfoMapper.selectByPrimaryKey(submitVo.getTask_id());
-            if(mozhanginfo==null) {
-                logMozhanginfoMapper.insertSelective(logMozhanginfo);
-            }else {
-                logMozhanginfo.setUpdateTime(new Date());
-                logMozhanginfoMapper.updateByPrimaryKeySelective(logMozhanginfo);
+            LogMoxieinfo moxieinfo=logMoxieinfoMapper.selectByPrimaryKey(submitVo.getTask_id());
+            if(moxieinfo!=null) {
+                String mzReslt=MoxieUtil.doPostWithApikey(appConfig.getMOZHANG_TOKEN_URL().replace("{task_id}", submitVo.getTask_id()), JSONObject.fromObject(mzMap),appConfig.getMOXIE_TOKEN());
+                JSONObject mzJson = JSONObject.fromObject(mzReslt);
+                String mzToken=mzJson.getString("token");
+                String result=MoxieUtil.doGetWithToken(appConfig.getMOZHANG_REPORT_URL().replace("{task_id}", submitVo.getTask_id()),mzToken);
+                JSONObject jsonObject = JSONObject.fromObject(result);
+                LogMozhanginfo logMozhanginfo=new LogMozhanginfo();
+                logMozhanginfo.setMozhangIdcard(submitVo.getIdcard());
+                logMozhanginfo.setMozhangName(submitVo.getName());
+                logMozhanginfo.setMozhangMobile(submitVo.getMobile());
+                logMozhanginfo.setMozhangTaskId(submitVo.getTask_id());
+                logMozhanginfo.setMozhangContent(result);
+                if(jsonObject.has("update_date")) {
+                    logMozhanginfo.setReportTime(DateUtils.parse(jsonObject.getString("update_date")));
+                }
+                logMozhanginfo.setOrderId(submitVo.getUser_id());
+                LogMozhanginfo mozhanginfo= logMozhanginfoMapper.selectByPrimaryKey(submitVo.getTask_id());
+                if(mozhanginfo==null) {
+                    logMozhanginfoMapper.insertSelective(logMozhanginfo);
+                }else {
+                    logMozhanginfo.setUpdateTime(new Date());
+                    logMozhanginfoMapper.updateByPrimaryKeySelective(logMozhanginfo);
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-
-    @Override
-    public String resultMoxie(String orderId) throws Exception {
-            redisService.tokenValidate(orderId);
-            redisService.setVal(orderId,"000000", 60*60L);
-            logOrderService.insertSelective(new LogOrder(orderId, ConstantInterface.Enum.OrderLogStatus.ORDER_STATUS03.getKey(), ConstantInterface.Enum.OrderStatus.ORDER_STATUS00.getKey(), null));
-            return orderId;
-    }
-
 }

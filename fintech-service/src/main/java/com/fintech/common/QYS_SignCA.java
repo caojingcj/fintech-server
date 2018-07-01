@@ -65,23 +65,35 @@ public class QYS_SignCA {
     @Autowired
     public AppConfig appConfig;
     
+    private static String serverUrl="https://openapi.qiyuesuo.com/";
+    private static String accessKey="zrs58RyUQm";
+    private static String accessSecret="s5RPPtYsEYuOSswatJ8eZ5n1PiELWi";
+//    private static String serverUrl="https://openapi.qiyuesuo.com/";
+//    private static String accessKey="yxAIiAwH3L";
+//    private static String accessSecret="Bbvgf57uLlOJqzhz2Jiea4g7J5YEMs";
     
-    @PostConstruct
-    private void init() {
-        try {
-            logger.info("EK>初始化QYS_SignCA契约锁方法名Init[{}]操作时间[{}]",Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
-            String serverUrl = appConfig.getQYS_SERVER_URL();
-            String accessKey = appConfig.getQYS_ACCESS_KEY();
-            String accessSecret = appConfig.getQYES_ACCESS_SECRET();
-            sdkClient = new SDKClient(serverUrl, accessKey, accessSecret);
-            localSignService = new LocalSignServiceImpl(sdkClient);
-            remoteSignService = new RemoteSignServiceImpl(sdkClient);
-            sealService = new SealServiceImpl(sdkClient);
-            log =new ThreadLocal<ArrayList<String>>();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    static  {
+        logger.info("初始化CA,{}===》{}==>{}",serverUrl, accessKey, accessSecret);
+        sdkClient = new SDKClient(serverUrl, accessKey, accessSecret);
+        log = new ThreadLocal<ArrayList<String>>();
     }
+    
+//    @PostConstruct
+//    private void init() {
+//        try {
+//            logger.info("EK>初始化QYS_SignCA契约锁方法名Init[{}]操作时间[{}]",Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
+//            String serverUrl = appConfig.getQYS_SERVER_URL();
+//            String accessKey = appConfig.getQYS_ACCESS_KEY();
+//            String accessSecret = appConfig.getQYES_ACCESS_SECRET();
+//            sdkClient = new SDKClient(serverUrl, accessKey, accessSecret);
+//            localSignService = new LocalSignServiceImpl(sdkClient);
+//            remoteSignService = new RemoteSignServiceImpl(sdkClient);
+//            sealService = new SealServiceImpl(sdkClient);
+//            log =new ThreadLocal<ArrayList<String>>();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//    }
     
     private QYS_SignCA() {
         
@@ -462,8 +474,7 @@ public class QYS_SignCA {
         logger.info("EK>before---用模板创建合同>方法名[{}]操作时间[{}]",
             Thread.currentThread().getStackTrace()[1].getMethodName(),
             DateUtils.getDateTime());
-        long contractDocId = QYS_SignCA
-            .createContractWithTemplate(templateDocId, params, contractId);
+        long contractDocId = QYS_SignCA.createContractWithTemplate(templateDocId, params, contractId);
         logger.info("EK>Done--用模板创建合同>Success, contractDocId[{}]方法名[{}]操作时间[{}]",
             contractDocId,
             Thread.currentThread().getStackTrace()[1].getMethodName(),

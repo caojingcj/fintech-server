@@ -75,10 +75,12 @@ public class MoxieController {
             redisService.tokenValidate(token);
             redisService.set(orderId,"999999");
             OrderBaseinfo baseinfo=orderBaseinfoMapper.selectByPrimaryKey(orderId);
-            logger.info("EK魔蝎日志 H5参数【定单号[{}]token[{}]】>方法名[{}]操作时间[{}]",orderId,token,Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
+            logger.info("EK魔蝎日志 H5参数【订单号[{}]token[{}]】>方法名[{}]操作时间[{}]",orderId,token,Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
             String loginParams = URLEncoder.encode("{\"phone\":\"" + baseinfo.getCustCellphone() + "\",\"name\":\"" +
                     baseinfo.getCustRealname() + "\",\"idcard\":\"" + baseinfo.getCustIdCardNo() + "\"}", "UTF-8");
             String moxieUrl="https://api.51datakey.com/h5/importV3/index.html#/carrier?apiKey="+appConfig.getMOXIE_APIKEY()+"&userId="+orderId+"&quitOnLoginDone=YES&goBackEnable=YES&backUrl="+appConfig.getMOXIE_BACKURL()+"&themeColor=2196F3&cacheDisable=YES&loginParams="+loginParams;
+            logger.info("EK魔蝎日志 魔蝎H5完整地址[{}]",moxieUrl);
+            logOrderService.insertSelective(new LogOrder(orderId, ConstantInterface.Enum.OrderLogStatus.ORDER_STATUS03.getKey(), ConstantInterface.Enum.OrderStatus.ORDER_STATUS00.getKey(), null));
             return ResultUtils.success(ResultUtils.SUCCESS_CODE_MSG,moxieUrl);
         } catch (Exception e) {
             logger.error("EK ERROR [{}]魔蝎日志 H5参数【定单号[{}]]】>方法名[{}]操作时间[{}]",e.getMessage(),orderId,Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
@@ -108,7 +110,7 @@ public class MoxieController {
     
     @RequestMapping(value = "backMoxieTaskSubmit",method = RequestMethod.POST)
     public @ResponseBody Object backMoxieTaskSubmit(@RequestBody BackMoxieTaskSubmitVo vo) {
-        logger.info("EK 接到魔蝎回调任务创建通知 参数[{}]方法名[{}]操作时间[{}]",vo,Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
+        logger.info("EK 接到魔蝎回调任务TaskSubmit 参数[{}]方法名[{}]操作时间[{}]",vo,Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
         try {
             moxieService.backMoxieTaskSubmit(vo);
             return ResultUtils.success(ResultUtils.SUCCESS_CODE_MSG);
@@ -118,15 +120,38 @@ public class MoxieController {
         }
     }
     
+    @RequestMapping(value = "backMoxieTask",method = RequestMethod.POST)
+    public @ResponseBody Object backMoxieTask(@RequestBody String body,HttpServletRequest request,HttpServletResponse response) {
+        logger.info("EK 接到魔蝎回调任务Task 参数[{}]方法名[{}]操作时间[{}]",body,Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
+        try {
+            return ResultUtils.success(ResultUtils.SUCCESS_CODE_MSG);
+        } catch (Exception e) {
+            logger.error("ERROR EK报错[{}] 方法名[{}]报错时间[{}]",e.getMessage(),Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
+            return ResultUtils.error(ResultUtils.ERROR_CODE,e.getMessage());
+        }
+    }
+    
+    @RequestMapping(value = "backMoxieReport",method = RequestMethod.POST)
+    public @ResponseBody Object backMoxieReport(@RequestBody String body,HttpServletRequest request,HttpServletResponse response) {
+        logger.info("EK 接到魔蝎回调任务Report 参数[{}]方法名[{}]操作时间[{}]",body,Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
+        try {
+            return ResultUtils.success(ResultUtils.SUCCESS_CODE_MSG);
+        } catch (Exception e) {
+            logger.error("ERROR EK报错[{}] 方法名[{}]报错时间[{}]",e.getMessage(),Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
+            return ResultUtils.error(ResultUtils.ERROR_CODE,e.getMessage());
+        }
+    }
+    
     @RequestMapping(value = "resultMoxie",method = RequestMethod.GET)
     public @ResponseBody Object resultMoxie(HttpServletRequest request) {
-        logger.info("EK 获取魔蝎报告返回成功[userId[{}]]方法名[{}]操作时间[{}]",request.getParameter("userId"),Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
+        logger.info("EK 获取魔蝎报告返回成功[userId[{}]]方法名[{}]操作时间[{}]",request.getParameter("userId"),request.getParameter("orderId"),Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
         try {
-            String orderId=request.getParameter("userId");
-            if(orderId!=null) {
-                moxieService.resultMoxie(orderId);
+            String userId=request.getParameter("userId");
+            String orderId=request.getParameter("orderId");
+            if(userId!=null) {
+                redisService.setVal(userId,"000000", 60*60L);
             }
-            return ResultUtils.success(ResultUtils.SUCCESS_CODE_MSG,redisService.get(orderId));
+            return ResultUtils.success(ResultUtils.SUCCESS_CODE_MSG,redisService.get(orderId==null?userId:orderId));
             } catch (Exception e) {
                 e.printStackTrace();
                 logger.error("ERROR EK 魔蝎报告报错[{}] 方法名[{}]报错时间[{}]", e.getMessage(),Thread.currentThread().getStackTrace()[1].getMethodName(), DateUtils.getDateTime());

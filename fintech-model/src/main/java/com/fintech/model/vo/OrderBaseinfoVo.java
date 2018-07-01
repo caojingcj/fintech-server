@@ -153,4 +153,13 @@ public class OrderBaseinfoVo extends BaseVO {
     public void setUpdatetime(Date updatetime) {
         this.updatetime = updatetime;
     }
+
+    @Override
+    public String toString() {
+        return "OrderBaseinfoVo [orderId=" + orderId + ", custCellphone=" + custCellphone + ", custRealname="
+                + custRealname + ", custIdCardNo=" + custIdCardNo + ", orderStatus=" + orderStatus + ", isAssure="
+                + isAssure + ", companyId=" + companyId + ", companyName=" + companyName + ", itemCode=" + itemCode
+                + ", itemName=" + itemName + ", totalPeriod=" + totalPeriod + ", orderAmount=" + orderAmount
+                + ", contractId=" + contractId + ", createTime=" + createTime + ", updatetime=" + updatetime + "]";
+    }
 }

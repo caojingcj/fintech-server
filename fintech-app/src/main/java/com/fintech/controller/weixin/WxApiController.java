@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.fintech.common.properties.AppConfig;
 import com.fintech.service.RedisService;
 import com.fintech.service.WxApiService;
 import com.fintech.util.DateUtils;
@@ -39,6 +40,8 @@ public class WxApiController {
     private WxApiService wxApiService;
     @Autowired
     private RedisService redisService;
+    @Autowired
+    private AppConfig appConfig;
     /** 
     * @Title: WxApiController.java 
     * @author qierkang xyqierkang@163.com   
@@ -58,8 +61,7 @@ public class WxApiController {
             // 这里要将你的授权回调地址处理一下，否则微信识别不了
             String redirect_uri = URLEncoder.encode("https://www.duodingfen.com/fintech-app/app/weixin/wxOpenId", "UTF-8");
             // 简单获取openid的话参数response_type与scope与state参数固定写死即可
-            StringBuffer url = new StringBuffer(
-                    "https://open.weixin.qq.com/connect/oauth2/authorize?redirect_uri=" + redirect_uri + "&appid=wx4e291d39c10f3c63&response_type=code&scope=snsapi_base&state=1#wechat_redirect");
+            StringBuffer url = new StringBuffer(appConfig.getWEIXIN_API_REDIRECT_URL().replace("{redirect_uri}", redirect_uri));
             response.sendRedirect(url.toString());// 这里请不要使用get请求单纯的将页面跳转到该url即可
 //            response.sendRedirect("http://192.168.10.54:8084/app/weixin/wxOpenId");// 这里请不要使用get请求单纯的将页面跳转到该url即可
         } catch (Exception e) {
@@ -83,7 +85,39 @@ public class WxApiController {
             Gson gson=new Gson();
             String resMap=gson.toJson(parms);
             logger.info("EK 页面获取的参数[{}]方法名[{}]操作时间[{}]",resMap,Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
-            response.sendRedirect("https://www.duodingfen.com/fintech-wechat/#/waiting?"+URLEncoder.encode(resMap, "UTF-8"));
+            response.sendRedirect(appConfig.getWEIXIN_API_HTML_URL().replace("{resMap}", URLEncoder.encode(resMap, "UTF-8")));
+//            response.sendRedirect("http://192.168.10.55:8020/fintech-wechath5/#/waiting?"+URLEncoder.encode(resMap, "UTF-8"));
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.error("ERROR EK 报错[{}] 方法名[{}]报错时间[{}]", e.getMessage(),
+                    Thread.currentThread().getStackTrace()[1].getMethodName(), DateUtils.getDateTime());
+        }
+    }
+    
+    @RequestMapping(value = "wxOrderList",method = RequestMethod.GET)
+    public void wxOrderList(HttpServletRequest request, HttpServletResponse response) {
+        try {
+            Map<String, Object> parms=wxApiService.wxOpenId(request, response);
+            Gson gson=new Gson();
+            String resMap=gson.toJson(parms);
+            logger.info("EK 页面获取的参数[{}]方法名[{}]操作时间[{}]",resMap,Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
+            response.sendRedirect(appConfig.getWEIXIN_API_HTML_URL().replace("{resMap}", URLEncoder.encode(resMap, "UTF-8")));
+//            response.sendRedirect("http://192.168.10.55:8020/fintech-wechath5/#/waiting?"+URLEncoder.encode(resMap, "UTF-8"));
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.error("ERROR EK 报错[{}] 方法名[{}]报错时间[{}]", e.getMessage(),
+                    Thread.currentThread().getStackTrace()[1].getMethodName(), DateUtils.getDateTime());
+        }
+    }
+    
+    @RequestMapping(value = "wxOrderReturn",method = RequestMethod.GET)
+    public void wxOrderReturn(HttpServletRequest request, HttpServletResponse response) {
+        try {
+            Map<String, Object> parms=wxApiService.wxOpenId(request, response);
+            Gson gson=new Gson();
+            String resMap=gson.toJson(parms);
+            logger.info("EK 页面获取的参数[{}]方法名[{}]操作时间[{}]",resMap,Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
+            response.sendRedirect(appConfig.getWEIXIN_API_HTML_URL().replace("{resMap}", URLEncoder.encode(resMap, "UTF-8")));
 //            response.sendRedirect("http://192.168.10.55:8020/fintech-wechath5/#/waiting?"+URLEncoder.encode(resMap, "UTF-8"));
         } catch (Exception e) {
             e.printStackTrace();

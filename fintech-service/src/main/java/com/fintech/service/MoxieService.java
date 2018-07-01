@@ -10,5 +10,4 @@ public interface MoxieService {
     
     void backMoxieTaskSubmit(BackMoxieTaskSubmitVo submitVo);
     
-    String resultMoxie(String orderId)throws Exception;
 }
