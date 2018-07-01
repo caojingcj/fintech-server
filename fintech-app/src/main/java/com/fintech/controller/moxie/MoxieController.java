@@ -1,6 +1,8 @@
 package com.fintech.controller.moxie;
 
 import java.net.URLEncoder;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -113,6 +115,20 @@ public class MoxieController {
             return ResultUtils.success(ResultUtils.SUCCESS_CODE_MSG);
         } catch (Exception e) {
             logger.error("ERROR EK参数[{}] 报错[{}] 方法名[{}]报错时间[{}]",vo,e.getMessage(),Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
+            return ResultUtils.error(ResultUtils.ERROR_CODE,e.getMessage());
+        }
+    }
+    
+    @RequestMapping(value = "resultMoxie",method = RequestMethod.GET)
+    public @ResponseBody BaseResult resultMoxie(String userId,String account) {
+        logger.info("EK 获取魔蝎报告返回成功[{}]方法名[{}]操作时间[{}]",userId,account,Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
+        try {
+            Map<String, Object>res=new HashMap<>();
+            res.put("orderId", userId);
+            res.put("mobile", account);
+            return ResultUtils.success(ResultUtils.SUCCESS_CODE_MSG,res);
+        } catch (Exception e) {
+            logger.error("ERROR EK参数[{}] 报错[{}] 方法名[{}]报错时间[{}]",userId,account,e.getMessage(),Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
             return ResultUtils.error(ResultUtils.ERROR_CODE,e.getMessage());
         }
     }

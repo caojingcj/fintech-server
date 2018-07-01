@@ -3,8 +3,10 @@ package com.fintech.util;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.nio.charset.Charset;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -33,7 +35,6 @@ import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 import net.sf.json.JSONObject;
 
@@ -215,11 +216,13 @@ public class HttpClient {
 	
 	public static String get(String fullUrl) {
 		try {
+		    logger.info("get请求地址[{}]",fullUrl);
 			CloseableHttpClient httpClient = HttpClients.createDefault();
 			HttpGet httpGet = new HttpGet(fullUrl);
 			httpGet.addHeader(HTTP.CONTENT_TYPE, APPLICATION_JSON);
 			CloseableHttpResponse response = httpClient.execute(httpGet);
 			String result = getResultStr(fullUrl, response);
+			logger.info("get请求返回[{}]",result);
 			if (result != null) return result;
 		} catch (Exception e) {
 			logger.error("HTTP请求异常",e);
@@ -363,5 +366,67 @@ public class HttpClient {
                     }
                 }
         	    return null;
+        	}
+        	
+        	public static JSONObject postFileInputStream(String url,Map<String, Object>parms,InputStream inputStream,String fileName) {
+                CloseableHttpClient httpClient = HttpClientBuilder.create().build();
+                CloseableHttpResponse httpResponse = null;
+                try {
+                    HttpPost httpPost = new HttpPost(url);
+                    MultipartEntityBuilder multipartEntityBuilder = MultipartEntityBuilder.create();
+                    multipartEntityBuilder.addBinaryBody("image",inputStream,ContentType.MULTIPART_FORM_DATA, fileName);
+                    for (Entry<String,Object> map : parms.entrySet()) {
+                        multipartEntityBuilder.addTextBody(map.getKey(), map.getValue().toString());
+                    }
+                    HttpEntity httpEntity = multipartEntityBuilder.build();
+                    httpPost.setEntity(httpEntity);
+                    logger.info("EK http post 文件上传 【地址[{}]参数[{}]文件[{}]】>方法名[{}]操作时间[{}]",url,parms,inputStream,Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
+                    httpResponse = httpClient.execute(httpPost);
+                     JSONObject JSONObject = handleResponse(httpResponse);
+                     System.out.println(JSONObject);
+                     logger.info("EK http post 文件上传 返回[{}]操作时间[{}]",JSONObject,DateUtils.getDateTime());
+                    return JSONObject;
+                } catch (ClientProtocolException e) {
+                    logger.error("EK ERROR ClientProtocolException [{}] http post 文件上传 【地址[{}]参数[{}]文件[{}]】>方法名[{}]操作时间[{}]",e.getMessage(),url,parms,inputStream,Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
+                } catch (IOException e) {
+                    logger.error("EK ERROR IOException [{}] http post 文件上传 【地址[{}]参数[{}]文件[{}]】>方法名[{}]操作时间[{}]",e.getMessage(),url,parms,inputStream,Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
+                }finally {
+                    try {
+                        httpClient.close();
+                        httpResponse.close();
+                    } catch (IOException e) {
+                        logger.error("EK ERROR 关闭IOException出错！ [{}] http post 文件上传 【地址[{}]参数[{}]文件[{}]】>方法名[{}]操作时间[{}]",e.getMessage(),url,parms,inputStream,Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
+                    }
+                }
+                return null;
+            }
+        	
+        	/** 
+        	* @Title: HttpClient.java 
+        	* @author qierkang xyqierkang@163.com   
+        	* @date 2018年7月1日 上午6:42:27  
+        	* @param @param url
+        	* @param @return    设定文件 
+        	* @Description: TODO[ 这里用一句话描述这个方法的作用 ]
+        	* @throws 
+        	*/
+        	public static HttpURLConnection netWorkImage(String url) {
+                try {
+                    URL u = new URL(url);
+                    HttpURLConnection conn = (HttpURLConnection) u.openConnection();
+                    conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+                    conn.setRequestProperty("Accept-Charset", "UTF-8");
+                    conn.setRequestProperty("contentType", "utf-8");
+                    conn.setConnectTimeout(50000);
+                    conn.setReadTimeout(50000);
+                    conn.setDoInput(true);
+                    // 设置请求方式，默认为GET
+                    conn.setRequestMethod("GET");
+                    return conn;
+                } catch (Exception e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+                return null;
         	}
 }

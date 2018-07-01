@@ -4,6 +4,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,6 +30,8 @@ import net.sf.json.JSONObject;
 */
 @Service
 public class MoxieImpl implements MoxieService {
+    private static final Logger logger = LoggerFactory.getLogger(MoxieImpl.class);
+
     @Autowired
     private LogMoxieinfoMapper logMoxieinfoMapper;
     @Autowired
@@ -43,8 +47,9 @@ public class MoxieImpl implements MoxieService {
     * 调用魔杖报告
     */
     @Override
-    public void insertSelective(LogMoxieinfo record) {
+    public boolean insertSelective(LogMoxieinfo record) {
         String url = "";
+        boolean flag=false;
         switch (record.getMoxieType()) {
         case "mxdataex":
             url = appConfig.getMOXIE_TYPE_MXDATAEX();
@@ -65,18 +70,23 @@ public class MoxieImpl implements MoxieService {
         try {
             String result=MoxieUtil.doGetWithToken(url.replace("{task_id}", record.getMoxieTaskId()).replace("{mobile}", record.getMoxieMobile()),appConfig.getMOXIE_TOKEN());
             JSONObject jsonObject = JSONObject.fromObject(result);
-            LogMoxieinfo logMoxieinfo=logMoxieinfoMapper.selectByPrimaryKey(record.getMoxieTaskId());
-            record.setMoxieContent(result);
-            record.setReportTime(DateUtils.parse(jsonObject.get("last_modify_time").toString()));
-            if(logMoxieinfo==null) {
-                logMoxieinfoMapper.insertSelective(record);
-            }else {
-                record.setUpdateTime(new Date());
-                logMoxieinfoMapper.updateByPrimaryKeySelective(record);
+            if(jsonObject.has("last_modify_time")) {
+                LogMoxieinfo logMoxieinfo=logMoxieinfoMapper.selectByPrimaryKey(record.getMoxieTaskId());
+                record.setMoxieContent(result);
+                record.setReportTime(DateUtils.parse(jsonObject.get("last_modify_time").toString()));
+                if(logMoxieinfo==null) {
+                    logMoxieinfoMapper.insertSelective(record);
+                    flag=true;
+                }else {
+                    record.setUpdateTime(new Date());
+                    logMoxieinfoMapper.updateByPrimaryKeySelective(record);
+                    flag=true;
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return flag;
     }
 
     /* (非 Javadoc) 
@@ -95,8 +105,9 @@ public class MoxieImpl implements MoxieService {
         record.setReportTime(DateUtils.stampToDateTime(submitVo.getTimestamp()));
         record.setMoxieTaskId(submitVo.getTask_id());
         record.setOrderId(submitVo.getUser_id());
-        insertSelective(record);
-        insertSelectiveMoZhang(submitVo);
+        if(insertSelective(record)) {
+            insertSelectiveMoZhang(submitVo);
+        }
     }
     
     /** 

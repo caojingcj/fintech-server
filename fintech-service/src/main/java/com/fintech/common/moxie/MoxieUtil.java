@@ -130,15 +130,10 @@ public class MoxieUtil {
             //创建httpGet
             httpGet = new HttpGet(url);
             httpGet.setHeader("Authorization", token);
-//            httpGet.setHeader("Authorization", "token db401c3ba5694a7b91205f8749d993f3");
             response = httpClient.execute(httpGet);
             entity = response.getEntity();
-            if (entity != null) {
-                result = EntityUtils.toString(entity);
-                LOGGER.debug("[moxie] doGetWithToken() finish!");
-            } else {
-                LOGGER.error("[moxie] doGetWithToken() response.getEntity() is null !");
-            }
+            result = EntityUtils.toString(entity);
+            LOGGER.debug("[moxie] doGetWithToken() OK");
         } catch (Exception e) {
             LOGGER.error("[moxie] doGetWithToken() exception! ", e);
         }

@@ -198,22 +198,9 @@
     </set>
     where CUST_CELLPHONE = #{custCellphone,jdbcType=CHAR}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.fintech.model.CustBaseinfo" >
-    update cust_baseinfo
-    set IDENTITY_STATUS = #{identityStatus,jdbcType=CHAR},
-      CUST_REALNAME = #{custRealname,jdbcType=VARCHAR},
-      CUST_ID_CARD_NO = #{custIdCardNo,jdbcType=VARCHAR},
-      CUST_NATION = #{custNation,jdbcType=VARCHAR},
-      CUST_ADDRESS = #{custAddress,jdbcType=VARCHAR},
-      CUST_ID_CARD_VAL_BEGIN = #{custIdCardValBegin,jdbcType=DATE},
-      CUST_ID_CARD_VAL_END = #{custIdCardValEnd,jdbcType=DATE},
-      CUST_ID_CARD_FRONT = #{custIdCardFront,jdbcType=VARCHAR},
-      CUST_ID_CARD_BACK = #{custIdCardBack,jdbcType=VARCHAR},
-      IDENTITY_TIME = #{identityTime,jdbcType=TIMESTAMP},
-      IS_ENABLED = #{isEnabled,jdbcType=BIT},
-      CUST_DEVICE_CODE = #{custDeviceCode,jdbcType=VARCHAR},
-      CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
-      UPDATETIME = #{updatetime,jdbcType=TIMESTAMP}
-    where CUST_CELLPHONE = #{custCellphone,jdbcType=CHAR}
-  </update>
+   <select id="quarteOverdueList" resultMap="BaseResultMap"  >
+    select 
+    <include refid="Base_Column_List" />
+    from cust_baseinfo where to_days(CUST_ID_CARD_VAL_END) <![CDATA[  <  ]]> to_days(now()) and IDENTITY_STATUS <![CDATA[  <>  ]]> 2
+    </select>
 </mapper>

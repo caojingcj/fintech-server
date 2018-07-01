@@ -118,29 +118,29 @@ public class OrderBaseInfoController {
     * @Description: TODO[ 客户身份认证 ]
     * @throws 
     */
-    @RequestMapping(value = "saveIdentityPositive",method = RequestMethod.POST)
-    public @ResponseBody Object saveIdentityPositive(CustBaseinfoVo custBaseinfoVo,MultipartHttpServletRequest multipartHttpServletRequest) {
+    @RequestMapping(value = "saveIdentityPositive",method = RequestMethod.GET)
+    public @ResponseBody Object saveIdentityPositive(String serverId,String token,String orderId) {
         try {
-            redisService.tokenValidate(custBaseinfoVo.getToken());
-            logger.info("EK 客户身份认证[[{}]方法名[{}]操作时间[{}]",custBaseinfoVo,Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
-            return ResultUtils.success(ResultUtils.SUCCESS_CODE_MSG,orderBaseinfoService.saveIdentityPositive(custBaseinfoVo, multipartHttpServletRequest));
+            redisService.tokenValidate(token);
+            logger.info("EK 客户身份认证serverId[[{}]orderId[[{}]方法名[{}]操作时间[{}]",serverId,orderId,Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
+            return ResultUtils.success(ResultUtils.SUCCESS_CODE_MSG,orderBaseinfoService.saveIdentityPositive(serverId, token, orderId));
         } catch (Exception e) {
             e.printStackTrace();
-            logger.error("ERROR EK参数[{}] 报错[{}] 方法名[{}]报错时间[{}]", custBaseinfoVo,e.getMessage(),
+            logger.error("ERROR EK参数[{}] 报错[{}] 方法名[{}]报错时间[{}]", serverId,orderId,e.getMessage(),
                     Thread.currentThread().getStackTrace()[1].getMethodName(), DateUtils.getDateTime());
             return ResultUtils.error(ResultUtils.ERROR_CODE, e.getMessage());
         }
     }
     
-    @RequestMapping(value = "saveIdentitySide",method = RequestMethod.POST)
-    public @ResponseBody Object saveIdentitySide(CustBaseinfoVo custBaseinfoVo,MultipartHttpServletRequest multipartHttpServletRequest) {
+    @RequestMapping(value = "saveIdentitySide",method = RequestMethod.GET)
+    public @ResponseBody Object saveIdentitySide(String serverId,String token,String orderId) {
         try {
-            redisService.tokenValidate(custBaseinfoVo.getToken());
-            logger.info("EK 客户身份认证[[{}]方法名[{}]操作时间[{}]",custBaseinfoVo,Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
-            return ResultUtils.success(ResultUtils.SUCCESS_CODE_MSG,orderBaseinfoService.saveIdentitySide(custBaseinfoVo, multipartHttpServletRequest));
+            redisService.tokenValidate(token);
+            logger.info("EK 客户身份认证[serverId[{}orderId[{}]方法名[{}]操作时间[{}]",serverId,orderId,Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
+            return ResultUtils.success(ResultUtils.SUCCESS_CODE_MSG,orderBaseinfoService.saveIdentitySide(serverId, token, orderId));
         } catch (Exception e) {
             e.printStackTrace();
-            logger.error("ERROR EK参数[{}] 报错[{}] 方法名[{}]报错时间[{}]", custBaseinfoVo,e.getMessage(),
+            logger.error("ERROR EK参数[serverId{}orderId{}] 报错[{}] 方法名[{}]报错时间[{}]", serverId,orderId,e.getMessage(),
                     Thread.currentThread().getStackTrace()[1].getMethodName(), DateUtils.getDateTime());
             return ResultUtils.error(ResultUtils.ERROR_CODE, e.getMessage());
         }
@@ -179,15 +179,15 @@ public class OrderBaseInfoController {
     * @Description: TODO[ 客户附件上传 ]
     * @throws 
     */
-    @RequestMapping(value = "saveOrderAttachment",method = RequestMethod.POST)
-    public @ResponseBody Object saveOrderAttachment(OrderAttachmentVo vo,MultipartHttpServletRequest multipartHttpServletRequest) {
+    @RequestMapping(value = "saveOrderAttachment",method = RequestMethod.GET)
+    public @ResponseBody Object saveOrderAttachment(String serverId,String token,String attchType,String orderId) {
         try {
-            redisService.tokenValidate(vo.getToken());
-            logger.info("EK 客户附件上传[{}]方法名[{}]操作时间[{}]",vo,Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
-            String url=orderBaseinfoService.saveOrderAttachment(vo, multipartHttpServletRequest);
+            redisService.tokenValidate(token);
+            logger.info("EK 客户附件上传[serverId{}attchType{}orderId{}]方法名[{}]操作时间[{}]",serverId,attchType,orderId,Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
+            String url=orderBaseinfoService.saveOrderAttachment(serverId, token, attchType, orderId);
             return ResultUtils.success(ResultUtils.SUCCESS_CODE_MSG,url);
         } catch (Exception e) {
-            logger.error("ERROR EK参数[{}] 报错[{}] 方法名[{}]报错时间[{}]", vo.toString(),e.getMessage(),
+            logger.error("ERROR EK参数[serverId{}attchType{}orderId{}] 报错[{}] 方法名[{}]报错时间[{}]", serverId,attchType,orderId,e.getMessage(),
                     Thread.currentThread().getStackTrace()[1].getMethodName(), DateUtils.getDateTime());
             return ResultUtils.error(ResultUtils.ERROR_CODE, e.getMessage());
         }

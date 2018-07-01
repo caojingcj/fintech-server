@@ -26,4 +26,6 @@ public interface OrderBaseinfoMapper {
     
     Map<String, Object> selectByOrderAmountJudge(@Param("custCellphone")String custCellphone);
     
+    List<OrderBaseinfo> selectQuarteCancelOrder();
+    
 }

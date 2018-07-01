@@ -29,7 +29,7 @@ public interface OrderBaseinfoService {
 
     void saveDetailinfo(OrderDetailinfoVo orderDetailinfo);
 
-    String saveOrderAttachment(OrderAttachmentVo vo, MultipartHttpServletRequest multipartHttpServletRequest);
+    String saveOrderAttachment(String serverId,String token,String attchType,String orderId);
 
     String remoteSignCaOrder(OrderBaseinfoVo vo) throws Exception;
 
@@ -42,12 +42,11 @@ public interface OrderBaseinfoService {
     Map<String, Object> userReturnplans(String token) throws Exception;
 
     @Transactional(noRollbackFor = { RuntimeException.class, Exception.class })
-    CustBaseinfo saveIdentityPositive(CustBaseinfoVo custBaseinfoVo,
-            MultipartHttpServletRequest multipartHttpServletRequest) throws Exception;
+    CustBaseinfo saveIdentityPositive(String serverId, String token, String orderId) throws Exception;
 
     @Transactional(noRollbackFor = { RuntimeException.class, Exception.class })
-    CustBaseinfo saveIdentitySide(CustBaseinfoVo custBaseinfoVo,
-            MultipartHttpServletRequest multipartHttpServletRequest) throws Exception;
+    CustBaseinfo saveIdentitySide(String serverId, String token, String orderId) throws Exception;
+
     @Transactional(noRollbackFor = { RuntimeException.class, Exception.class })
     void testSaveOrder() throws Exception;
 }
