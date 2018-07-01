@@ -1,39 +1,26 @@
 package com.fintech.service.impl;
 
-import java.math.BigDecimal;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.fintech.dao.CompanyPeriodFeeMapper;
 import com.fintech.dao.CustBaseinfoMapper;
 import com.fintech.dao.LogOrderMapper;
 import com.fintech.dao.OrderBaseinfoMapper;
 import com.fintech.dao.OrderDetailinfoMapper;
-import com.fintech.dao.UserContractMapper;
-import com.fintech.dao.UserReturnplanMapper;
 import com.fintech.enm.CreditVettingResultEnum;
 import com.fintech.enm.EducationStatusEnum;
 import com.fintech.enm.GenderEnum;
 import com.fintech.enm.IdentityStatusEnum;
 import com.fintech.enm.OrderOperationEnum;
 import com.fintech.enm.OrderStatusEnum;
-import com.fintech.enm.ReturnStatusEnum;
-import com.fintech.model.CompanyPeriodFee;
 import com.fintech.model.CustBaseinfo;
 import com.fintech.model.LogOrder;
 import com.fintech.model.OrderBaseinfo;
 import com.fintech.model.OrderDetailinfo;
-import com.fintech.model.UserContract;
-import com.fintech.model.UserReturnplan;
-import com.fintech.service.ReturnPlanService;
 import com.fintech.service.CreditVettingService;
-import com.fintech.util.DateUtils;
 import com.fintech.util.IDCardUtil;
-import com.fintech.xcpt.FintechException;
 
 @Service
 public class CreditVettingServiceImpl implements CreditVettingService {
@@ -107,8 +94,10 @@ public class CreditVettingServiceImpl implements CreditVettingService {
         // 通过(且) - 近三月互通电话>=3
         // 通过(且) - 互通定义，主叫和被叫都有记录
         // 通过(且) - 通讯录号码>=10 
-        logOrder(orderId, CreditVettingResultEnum.拒绝.getValue(), "拒绝 - 其它原因");
-        return CreditVettingResultEnum.拒绝;
+//        logOrder(orderId, CreditVettingResultEnum.拒绝.getValue(), "拒绝 - 其它原因");
+//        return CreditVettingResultEnum.拒绝;
+        logOrder(orderId, CreditVettingResultEnum.通过.getValue(), "");
+        return CreditVettingResultEnum.通过;
     }
 
     private void logOrder(String orderId, String result, String note) {
@@ -120,7 +109,7 @@ public class CreditVettingServiceImpl implements CreditVettingService {
         log.setOrderId(orderId);
         log.setOrderOperation(OrderOperationEnum.审批.getValue());
         if (result.equals(CreditVettingResultEnum.通过.getValue())) {
-            log.setOrderStatus(OrderStatusEnum.分期还款中.getValue());
+            log.setOrderStatus(OrderStatusEnum.待用户签署.getValue());
             order.setOrderStatus(OrderStatusEnum.待用户签署.getValue());
         }
         if (result.equals(CreditVettingResultEnum.拒绝.getValue())) {
