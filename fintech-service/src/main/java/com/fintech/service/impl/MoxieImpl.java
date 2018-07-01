@@ -13,11 +13,17 @@ import com.fintech.common.moxie.MoxieUtil;
 import com.fintech.common.properties.AppConfig;
 import com.fintech.dao.LogMoxieinfoMapper;
 import com.fintech.dao.LogMozhanginfoMapper;
+import com.fintech.dao.OrderBaseinfoMapper;
 import com.fintech.model.LogMoxieinfo;
 import com.fintech.model.LogMozhanginfo;
+import com.fintech.model.LogOrder;
+import com.fintech.model.OrderBaseinfo;
 import com.fintech.model.vo.moxie.BackMoxieTaskSubmitVo;
+import com.fintech.service.LogOrderService;
 import com.fintech.service.MoxieService;
+import com.fintech.service.RedisService;
 import com.fintech.util.DateUtils;
+import com.fintech.util.enumerator.ConstantInterface;
 
 import net.sf.json.JSONObject;
 
@@ -38,7 +44,14 @@ public class MoxieImpl implements MoxieService {
     private AppConfig appConfig;
     @Autowired
     private LogMozhanginfoMapper logMozhanginfoMapper;
-
+    @Autowired
+    private OrderBaseinfoMapper orderBaseinfoMapper;
+    @Autowired
+    private RedisService redisService;
+    @Autowired
+    private LogOrderService logOrderService;
+//    @Autowired
+//    private CreditVettingService creditVettingService;
     /* (非 Javadoc) 
     * <p>Title: insertSelective</p> 
     * <p>Description: </p> 
@@ -97,6 +110,7 @@ public class MoxieImpl implements MoxieService {
     */
     @Override
     public void backMoxieTaskSubmit(BackMoxieTaskSubmitVo submitVo) {
+        logger.info("魔蝎回调参数[{}]",submitVo.toString());
         LogMoxieinfo record=new LogMoxieinfo();
         record.setMoxieType("mxdataex");
         record.setMoxieIdcard(submitVo.getIdcard());
@@ -106,7 +120,16 @@ public class MoxieImpl implements MoxieService {
         record.setMoxieTaskId(submitVo.getTask_id());
         record.setOrderId(submitVo.getUser_id());
         if(insertSelective(record)) {
-            insertSelectiveMoZhang(submitVo);
+//            insertSelectiveMoZhang(submitVo);
+            Map<String, Object>map=new HashMap<>();
+            map.put("orderId", record.getOrderId());
+            LogMozhanginfo logMozhanginfo= logMozhanginfoMapper.selectByPrimaryKeySelective(map);
+            if(logMozhanginfo!=null) {
+                OrderBaseinfo baseinfo=orderBaseinfoMapper.selectByPrimaryKey(record.getOrderId());
+                if(baseinfo.getOrderStatus().equals(String.valueOf(ConstantInterface.Enum.OrderStatus.ORDER_STATUS01.getKey()))) {
+//                    creditVettingService.creditVetting(record.getOrderId());
+                }
+            }
         }
     }
     
@@ -148,6 +171,14 @@ public class MoxieImpl implements MoxieService {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public String resultMoxie(String orderId) throws Exception {
+            redisService.tokenValidate(orderId);
+            redisService.setVal(orderId,"000000", 60*60L);
+            logOrderService.insertSelective(new LogOrder(orderId, ConstantInterface.Enum.OrderLogStatus.ORDER_STATUS03.getKey(), ConstantInterface.Enum.OrderStatus.ORDER_STATUS00.getKey(), null));
+            return orderId;
     }
 
 }

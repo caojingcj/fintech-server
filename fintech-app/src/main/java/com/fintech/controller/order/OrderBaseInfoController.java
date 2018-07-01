@@ -115,14 +115,14 @@ public class OrderBaseInfoController {
     * @date 2018年6月27日 上午5:11:28  
     * @param @param custBaseinfoVo
     * @param @return    设定文件 
-    * @Description: TODO[ 客户身份认证 ]
+    * @Description: TODO[ 客户身份认证 正面]
     * @throws 
     */
     @RequestMapping(value = "saveIdentityPositive",method = RequestMethod.GET)
     public @ResponseBody Object saveIdentityPositive(String serverId,String token,String orderId) {
+        logger.info("EK 客户身份认证[serverId[{}]token[{}]orderId[{}]方法名[{}]操作时间[{}]",serverId,token,orderId,Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
         try {
             redisService.tokenValidate(token);
-            logger.info("EK 客户身份认证serverId[[{}]orderId[[{}]方法名[{}]操作时间[{}]",serverId,orderId,Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
             return ResultUtils.success(ResultUtils.SUCCESS_CODE_MSG,orderBaseinfoService.saveIdentityPositive(serverId, token, orderId));
         } catch (Exception e) {
             e.printStackTrace();
@@ -132,11 +132,22 @@ public class OrderBaseInfoController {
         }
     }
     
+    /** 
+    * @Title: OrderBaseInfoController.java 
+    * @author qierkang xyqierkang@163.com   
+    * @date 2018年7月1日 下午2:55:16  
+    * @param @param serverId
+    * @param @param token
+    * @param @param orderId
+    * @param @return    设定文件 
+    * @Description: TODO[ 客户身份认证反面 ]
+    * @throws 
+    */
     @RequestMapping(value = "saveIdentitySide",method = RequestMethod.GET)
     public @ResponseBody Object saveIdentitySide(String serverId,String token,String orderId) {
+        logger.info("EK 客户身份认证[serverId[{}]token[{}]orderId[{}]方法名[{}]操作时间[{}]",serverId,token,orderId,Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
         try {
             redisService.tokenValidate(token);
-            logger.info("EK 客户身份认证[serverId[{}orderId[{}]方法名[{}]操作时间[{}]",serverId,orderId,Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
             return ResultUtils.success(ResultUtils.SUCCESS_CODE_MSG,orderBaseinfoService.saveIdentitySide(serverId, token, orderId));
         } catch (Exception e) {
             e.printStackTrace();
@@ -181,11 +192,11 @@ public class OrderBaseInfoController {
     */
     @RequestMapping(value = "saveOrderAttachment",method = RequestMethod.GET)
     public @ResponseBody Object saveOrderAttachment(String serverId,String token,String attchType,String orderId) {
+        logger.info("EK 客户附件上传[serverId{}attchType{}orderId{}]方法名[{}]操作时间[{}]",serverId,attchType,orderId,Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
         try {
             redisService.tokenValidate(token);
-            logger.info("EK 客户附件上传[serverId{}attchType{}orderId{}]方法名[{}]操作时间[{}]",serverId,attchType,orderId,Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
-            String url=orderBaseinfoService.saveOrderAttachment(serverId, token, attchType, orderId);
-            return ResultUtils.success(ResultUtils.SUCCESS_CODE_MSG,url);
+            Map<String, Object>res=orderBaseinfoService.saveOrderAttachment(serverId, token, attchType, orderId);
+            return ResultUtils.success(ResultUtils.SUCCESS_CODE_MSG,res);
         } catch (Exception e) {
             logger.error("ERROR EK参数[serverId{}attchType{}orderId{}] 报错[{}] 方法名[{}]报错时间[{}]", serverId,attchType,orderId,e.getMessage(),
                     Thread.currentThread().getStackTrace()[1].getMethodName(), DateUtils.getDateTime());

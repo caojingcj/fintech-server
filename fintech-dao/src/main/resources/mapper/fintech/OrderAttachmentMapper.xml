@@ -12,12 +12,23 @@
   <sql id="Base_Column_List" >
     ID, ORDER_ID, ATTH_TYPE, ATTH_PATH, CREATE_TIME, UPDATE_TIME
   </sql>
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
     <include refid="Base_Column_List" />
     from order_attachment
-    where ID = #{id,jdbcType=INTEGER}
+    where ORDER_ID = #{orderId}
   </select>
+  
+  <select id="selectByPrimaryKeySelective" resultMap="BaseResultMap" parameterType="java.util.Map" >
+    select 
+    <include refid="Base_Column_List" />
+    from order_attachment
+    where 1=1
+      <if test="orderId != null and orderId !=''">
+    	and ORDER_ID = #{orderId}
+    </if>
+  </select>
+  
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from order_attachment
     where ID = #{id,jdbcType=INTEGER}

@@ -4,6 +4,7 @@ import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.alibaba.dubbo.config.annotation.Service;
 import com.fintech.dao.CustBaseinfoMapper;
 import com.fintech.dao.LogOrderMapper;
 import com.fintech.dao.OrderBaseinfoMapper;
@@ -20,7 +21,7 @@ import com.fintech.model.OrderBaseinfo;
 import com.fintech.model.OrderDetailinfo;
 import com.fintech.service.CreditVettingService;
 import com.fintech.util.IDCardUtil;
-
+@Service
 public class CreditVettingServiceImpl implements CreditVettingService {
     
     @Autowired

@@ -1,5 +1,7 @@
 package com.fintech.dao;
 
+import java.util.Map;
+
 import com.fintech.model.OrderAttachment;
 
 public interface OrderAttachmentMapper {
@@ -9,9 +11,11 @@ public interface OrderAttachmentMapper {
 
     int insertSelective(OrderAttachment record);
 
-    OrderAttachment selectByPrimaryKey(Integer id);
+    OrderAttachment selectByPrimaryKey(String orderId);
 
     int updateByPrimaryKeySelective(OrderAttachment record);
 
     int updateByPrimaryKey(OrderAttachment record);
+    
+    OrderAttachment selectByPrimaryKeySelective(Map<String, Object>parms);
 }

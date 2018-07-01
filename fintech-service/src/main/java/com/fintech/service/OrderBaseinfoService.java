@@ -29,7 +29,7 @@ public interface OrderBaseinfoService {
 
     void saveDetailinfo(OrderDetailinfoVo orderDetailinfo);
 
-    String saveOrderAttachment(String serverId,String token,String attchType,String orderId);
+    Map<String, Object> saveOrderAttachment(String serverId,String token,String attchType,String orderId);
 
     String remoteSignCaOrder(OrderBaseinfoVo vo) throws Exception;
 
