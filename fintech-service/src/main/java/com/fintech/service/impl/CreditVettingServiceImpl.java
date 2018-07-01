@@ -91,8 +91,7 @@ public class CreditVettingServiceImpl implements CreditVettingService {
         // 拒绝 - 手机报告、通讯录都无效(两者都无效)
         // 拒绝 - 联系人联系电话不在手机报告或通讯录中
         // 通过(且) - 近三月通话号码>=10
-        // 通过(且) - 近三月互通电话>=3
-        // 通过(且) - 互通定义，主叫和被叫都有记录
+        // 通过(且) - 近三月互通电话>=3 互通定义，主叫和被叫都有记录
         // 通过(且) - 通讯录号码>=10 
 //        logOrder(orderId, CreditVettingResultEnum.拒绝.getValue(), "拒绝 - 其它原因");
 //        return CreditVettingResultEnum.拒绝;
