@@ -28,4 +28,6 @@ public interface OrderBaseinfoMapper {
     
     List<OrderBaseinfo> selectQuarteCancelOrder();
     
+    Integer selectOrderStatusCount(@Param("custCellphone")String custCellphone);
+    
 }

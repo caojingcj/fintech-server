@@ -50,6 +50,9 @@
     	and ORDER_STATUS=#{orderStatus}
     </if>
   </select>
+  <select id="selectOrderStatusCount" resultType="java.lang.Integer"  parameterType="java.lang.String" >
+    select count(*) from order_baseinfo where (ORDER_STATUS=00 or ORDER_STATUS=04) and CUST_CELLPHONE=#{custCellphone}
+  </select>
   
   
   <select id="selectByOrderAmountJudge" resultType="java.util.HashMap" parameterType="java.lang.String">

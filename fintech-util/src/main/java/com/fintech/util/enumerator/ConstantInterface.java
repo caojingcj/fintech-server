@@ -430,7 +430,8 @@ public interface ConstantInterface {
 	            ORDER_200006(200206,"异常请求，无法获取微信认证"),
 	            ORDER_200007(200207,"认证异常，不能用身份证的复印件"),
 	            ORDER_200008(200208,"认证异常，手机或电脑屏幕翻拍的照片"),
-	            ORDER_200009(200209,"认证异常，身份证照片不能处理或者编辑");
+	            ORDER_200009(200209,"认证异常，身份证照片不能处理或者编辑"),
+	            ORDER_200010(200210,"该客户已有录入中或待签署订单");
 	            private Integer key;
 	            private String value;
 	            public Integer getKey() {

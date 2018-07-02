@@ -1,13 +1,10 @@
 package com.fintech.service.impl;
 
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
 import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -17,8 +14,6 @@ import java.util.UUID;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.fintech.common.QysRemoteSignHandler;
 import com.fintech.common.oss.FileUploadSample;
@@ -41,13 +36,11 @@ import com.fintech.dao.UserContractMapper;
 import com.fintech.dao.UserReturnplanMapper;
 import com.fintech.dao.procedure.ContractProcedureMapper;
 import com.fintech.dao.procedure.OrderProcedureMapper;
-import com.fintech.enm.CreditVettingResultEnum;
 import com.fintech.model.CompanyAccountinfo;
 import com.fintech.model.CompanyBaseinfo;
 import com.fintech.model.CompanyChannel;
 import com.fintech.model.CompanyPeriodFee;
 import com.fintech.model.CustBaseinfo;
-import com.fintech.model.LogMoxieinfo;
 import com.fintech.model.LogMozhanginfo;
 import com.fintech.model.LogOcridcard;
 import com.fintech.model.LogOrder;
@@ -56,8 +49,6 @@ import com.fintech.model.OrderBaseinfo;
 import com.fintech.model.OrderDetailinfo;
 import com.fintech.model.UserContract;
 import com.fintech.model.domain.CompanyItemDo;
-import com.fintech.model.vo.CustBaseinfoVo;
-import com.fintech.model.vo.OrderAttachmentVo;
 import com.fintech.model.vo.OrderBaseinfoVo;
 import com.fintech.model.vo.OrderDetailinfoVo;
 import com.fintech.model.vo.ProjectVo;
@@ -65,17 +56,14 @@ import com.fintech.model.vo.faceid.FaceidIDCardPositiveVo;
 import com.fintech.model.vo.faceid.FaceidIDCardSideVo;
 import com.fintech.model.vo.faceid.Legality;
 import com.fintech.service.CreditVettingService;
-import com.fintech.service.LogOrderService;
 import com.fintech.service.OrderBaseinfoService;
 import com.fintech.service.RedisService;
 import com.fintech.service.ReturnPlanService;
-import com.fintech.service.CreditVettingService;
 import com.fintech.util.BeanUtils;
 import com.fintech.util.CommonUtil;
 import com.fintech.util.DateUtils;
 import com.fintech.util.FinTechException;
 import com.fintech.util.HttpClient;
-import com.fintech.util.StringUtil;
 import com.fintech.util.enumerator.ConstantInterface;
 import com.fintech.xcpt.FintechException;
 import com.google.gson.Gson;
@@ -192,8 +180,11 @@ public class OrderBaseinfoImpl implements OrderBaseinfoService {
         mapOrder.put("custCellphone", mobile);
         mapOrder.put("orderStatus", ConstantInterface.Enum.OrderStatus.ORDER_STATUS00.getKey());
         OrderBaseinfo orderBaseinfo=new OrderBaseinfo();
+        Integer orderCount=orderBaseinfoMapper.selectOrderStatusCount(mobile);
+        if(orderCount>0) {
+            throw new FinTechException(ConstantInterface.AppValidateConfig.OrderValidate.ORDER_200010.toString());
+        }
         OrderBaseinfo info=orderBaseinfoMapper.selectByPrimaryKeySelective(mapOrder);
-        if(info==null) {
             orderBaseinfo.setCompanyId(companyId);
             orderBaseinfo.setCustCellphone(mobile);
             orderBaseinfo.setOrderStatus(ConstantInterface.Enum.OrderStatus.ORDER_STATUS00.getKey());
@@ -204,13 +195,12 @@ public class OrderBaseinfoImpl implements OrderBaseinfoService {
             orderBaseinfoMapper.insertSelective(orderBaseinfo);
             orderDetailinfoMapper.insertSelective(detailinfo);
             logOrderMapper.insertSelective(new LogOrder(orderBaseinfo.getOrderId(),ConstantInterface.Enum.OrderLogStatus.ORDER_STATUS00.getKey(), ConstantInterface.Enum.OrderStatus.ORDER_STATUS00.getKey(), null));
-        }
-        reslutMap.put("channels", channels);
-        reslutMap.put("periodFees", periodFees);
-        reslutMap.put("items", items);
-        reslutMap.put("baseinfo", baseinfo);
-        reslutMap.put("order", info==null?orderBaseinfo:info);
-        return reslutMap;
+            reslutMap.put("channels", channels);
+            reslutMap.put("periodFees", periodFees);
+            reslutMap.put("items", items);
+            reslutMap.put("baseinfo", baseinfo);
+            reslutMap.put("order", info==null?orderBaseinfo:info);
+            return reslutMap;
     }
     
     /* (非 Javadoc) 

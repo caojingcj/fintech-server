@@ -75,7 +75,7 @@ public class OrderBaseInfoController {
             // Map<String, Object>params=new HashMap<String, Object>();
             // params.put("companyId", "999999");
             // 拿商户999999测试 generateVerifyCode
-            String companyId = "999999";
+            String companyId = "000001";
             // 客户已经有过记录 直接跑出商户信息
           Map<String, Object>resultMap=orderBaseinfoService.scanPiece(companyId,mobile);
             return ResultUtils.success(ResultUtils.SUCCESS_CODE_MSG, resultMap);
