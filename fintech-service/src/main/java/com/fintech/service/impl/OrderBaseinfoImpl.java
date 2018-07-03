@@ -52,6 +52,7 @@ import com.fintech.model.domain.CompanyItemDo;
 import com.fintech.model.vo.OrderBaseinfoVo;
 import com.fintech.model.vo.OrderDetailinfoVo;
 import com.fintech.model.vo.ProjectVo;
+import com.fintech.model.vo.UserBaseinfoVo;
 import com.fintech.model.vo.faceid.FaceidIDCardPositiveVo;
 import com.fintech.model.vo.faceid.FaceidIDCardSideVo;
 import com.fintech.model.vo.faceid.Legality;
@@ -487,18 +488,15 @@ public class OrderBaseinfoImpl implements OrderBaseinfoService {
         parms.put("multi_oriented_detection", ConstantInterface.Enum.ConstantNumber.ONE.getKey());
         JSONObject result=HttpClient.postFileInputStream(appConfig.getOCR_API_URL(), parms,faceStream,"");
         FaceidIDCardPositiveVo faceidVo=gson.fromJson(result.toString(),new TypeToken<FaceidIDCardPositiveVo>() {}.getType());
-        if(faceidVo==null) {
-            throw new FintechException("无法获取照片");
-        }
         String fileName,path = "";
         OSSEntity oss=null;
         String folder = CommonUtil.getStringTime(date, "yyyyMMdd") + "/";
         FileUploadSample sample = new FileUploadSample();
-            String mobile = redisService.get(token);
-            fileName = mobile + "-" + UUID.randomUUID() + ".jpg";
-            path = appConfig.getOSS_ORDER_OCR_PATH() + folder + fileName;
-            oss = new OSSEntity();
-            oss = sample.uploadFile(ossStream, path);
+        String mobile=redisService.get(token);
+        fileName =mobile+"-" +UUID.randomUUID()+".jpg";
+        path = appConfig.getOSS_ORDER_OCR_PATH() + folder + fileName;
+        oss = new OSSEntity();
+        oss=sample.uploadFile(ossStream, path);
         CustBaseinfo custBaseinfo=new CustBaseinfo();
         custBaseinfo.setCustRealname(faceidVo.getName());
         custBaseinfo.setCustIdCardNo(faceidVo.getId_card_number());
@@ -520,14 +518,12 @@ public class OrderBaseinfoImpl implements OrderBaseinfoService {
         ocridcard.setOcrSide(faceidVo.getSide());
         ocridcard.setOrderId(orderId);
         OrderBaseinfo orderBaseinfo=orderBaseinfoMapper.selectByPrimaryKey(orderId);
-        if(orderBaseinfo!=null) {
-            orderBaseinfo.setCustRealname(faceidVo.getName());
-            orderBaseinfo.setCustCellphone(custBaseinfo.getCustCellphone());
-            orderBaseinfo.setCustIdCardNo(faceidVo.getId_card_number());
-            orderBaseinfoMapper.updateByPrimaryKeySelective(orderBaseinfo);
-        }
+        orderBaseinfo.setCustRealname(faceidVo.getName());
+        orderBaseinfo.setCustCellphone(custBaseinfo.getCustCellphone());
+        orderBaseinfo.setCustIdCardNo(faceidVo.getId_card_number());
         logOcridcardMapper.insertSelective(ocridcard);
         custBaseinfoMapper.updateByPrimaryKeySelective(custBaseinfo);
+        orderBaseinfoMapper.updateByPrimaryKeySelective(orderBaseinfo);
         LegalityVerification(faceidVo.getLegality());
         return custBaseinfo;
     }
@@ -590,7 +586,7 @@ public class OrderBaseinfoImpl implements OrderBaseinfoService {
     * @param @param legality
     * @param @return    设定文件 
     * @Description: TODO[ ocr 身份证校验结果 ]
-    * @throws
+    * @throws 
     */
     public void LegalityVerification(Legality legality) {
         if(legality.getPhotocopy().equals(ConstantInterface.Enum.ConstantNumber.ONE.getKey().toString())) {
@@ -613,12 +609,21 @@ public class OrderBaseinfoImpl implements OrderBaseinfoService {
     }
 
     @Override
-    public PageInfo<CompanyBaseinfo> selectByPrimaryKeyList(OrderBaseinfoVo orderBaseinfoVo) throws Exception {
+    public PageInfo<OrderBaseinfoVo> selectByPrimaryKeyList(OrderBaseinfoVo orderBaseinfoVo) throws Exception {
+    	Gson gson=new Gson();
+        UserBaseinfoVo baseinfoVo=gson.fromJson(redisService.get(orderBaseinfoVo.getToken()),new TypeToken<UserBaseinfoVo>() {}.getType());
+        orderBaseinfoVo.setCompanyId(baseinfoVo.getUserCompanyId());
         Map<String, Object> parms = CommonUtil.object2Map(orderBaseinfoVo);
         PageHelper.startPage(orderBaseinfoVo.getPageIndex(), orderBaseinfoVo.getPageSize());
-        List<CompanyBaseinfo> companyBasseinfos=companyBaseinfoMapper.selectByPrimaryKeyList(parms);
-        PageInfo<CompanyBaseinfo> pageLists=new PageInfo<CompanyBaseinfo>(companyBasseinfos);
+        List<OrderBaseinfoVo> orderBaseinfoVos=orderBaseinfoMapper.selectByPrimaryKeyList(parms);
+        PageInfo<OrderBaseinfoVo> pageLists=new PageInfo<OrderBaseinfoVo>(orderBaseinfoVos);
         return pageLists;
     }
+
+	@Override
+	public Map<String, Object> selectOrderDetails() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 }

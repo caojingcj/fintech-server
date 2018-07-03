@@ -53,9 +53,28 @@
      <if test="contractId != null and contractId !=''">
     	and CONTRACT_ID=#{contractId}
     </if>
+    <if test="orderStatus != null and orderStatus !=''">
+    	and ORDER_STATUS=#{orderStatus}
+    </if>
     <if test="companyId != null and companyId !=''">
     	and COMPANY_ID=#{companyId}
     </if>
+    <if test="isAssure != null and isAssure !=''">
+    	and IS_ASSURE=#{isAssure}
+    </if>
+    <if test="searchOrderName !=null and searchOrderName !=''">
+   			AND (CUST_REALNAME like CONCAT('%',#{searchOrderName},'%') or CUST_CELLPHONE like  CONCAT('%',#{searchOrderName},'%' ) or CONTRACT_ID like  CONCAT('%',#{searchOrderName},'%' ))
+    </if>
+        <if test="searchCompanyName !=null and searchCompanyName !=''">
+   			AND (COMPANY_ID like CONCAT('%',#{searchCompanyName},'%') or COMPANY_NAME like  CONCAT('%',#{searchCompanyName},'%'))
+    </if>
+    <if test="beginDate !=null and beginDate !=''">
+      and CREATE_TIME &gt;=DATE_FORMAT(#{beginDate},'%Y-%m-%d')
+    </if>
+    <if test="endDate !=null and endDate !=''">
+      and CREATE_TIME &lt;= DATE_FORMAT(DATE_SUB(#{endDate},INTERVAL -1 DAY),'%Y-%m-%d')
+    </if>
+    
   </select>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String"  >
     select 
