@@ -84,19 +84,16 @@ public class MoxieImpl implements MoxieService {
             break;
         }
         try {
-            String result=MoxieUtil.doGetWithToken(url.replace("{task_id}", record.getMoxieTaskId()).replace("{mobile}", record.getMoxieMobile()),appConfig.getMOXIE_TOKEN());
-            JSONObject jsonObject = JSONObject.fromObject(result);
-            if(jsonObject.has("last_modify_time")) {
+            StringBuffer result=new StringBuffer(MoxieUtil.doGetWithToken(url.replace("{task_id}", record.getMoxieTaskId()).replace("{mobile}", record.getMoxieMobile()),appConfig.getMOXIE_TOKEN()));
                 LogMoxieinfo logMoxieinfo=logMoxieinfoMapper.selectByPrimaryKey(record.getMoxieTaskId());
-                record.setMoxieContent(result);
-                record.setReportTime(DateUtils.parse(jsonObject.get("last_modify_time").toString()));
+                record.setMoxieContent(result.toString());
+                record.setReportTime(new Date());
                 if(logMoxieinfo==null) {
                     logMoxieinfoMapper.insertSelective(record);
                 }else {
                     record.setUpdateTime(new Date());
                     logMoxieinfoMapper.updateByPrimaryKeySelective(record);
                 }
-            }
         } catch (Exception e) {
             e.printStackTrace();
         }

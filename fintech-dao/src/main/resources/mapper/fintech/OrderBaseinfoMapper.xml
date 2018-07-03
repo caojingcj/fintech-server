@@ -56,7 +56,7 @@
     <if test="orderStatus != null and orderStatus !=''">
     	and ORDER_STATUS=#{orderStatus}
     </if>
-    <if test="companyId != null and companyId !=''">
+    <if test="companyId != 'ALL'.toString() and companyId != null and companyId !=''">
     	and COMPANY_ID=#{companyId}
     </if>
     <if test="isAssure != null and isAssure !=''">
