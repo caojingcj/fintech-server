@@ -23,13 +23,38 @@
     COMPANY_ID, COMPANY_NAME, ITEM_CODE, ITEM_NAME, TOTAL_PERIOD, ORDER_AMOUNT, CONTRACT_ID, 
     CREATE_TIME, UPDATETIME
   </sql>
-  <select id="selectByPrimaryKeyList" resultMap="BaseResultMap" parameterType="java.util.Map"  >
+  
+   <resultMap id="BaseResultMapVo" type="com.fintech.model.vo.OrderBaseinfoVo" >
+    <id column="ORDER_ID" property="orderId" jdbcType="VARCHAR" />
+    <result column="CUST_CELLPHONE" property="custCellphone" jdbcType="CHAR" />
+    <result column="CUST_REALNAME" property="custRealname" jdbcType="VARCHAR" />
+    <result column="CUST_ID_CARD_NO" property="custIdCardNo" jdbcType="VARCHAR" />
+    <result column="ORDER_STATUS" property="orderStatus" jdbcType="CHAR" />
+    <result column="IS_ASSURE" property="isAssure" jdbcType="BIT" />
+    <result column="COMPANY_ID" property="companyId" jdbcType="CHAR" />
+    <result column="COMPANY_NAME" property="companyName" jdbcType="VARCHAR" />
+    <result column="ITEM_CODE" property="itemCode" jdbcType="CHAR" />
+    <result column="ITEM_NAME" property="itemName" jdbcType="VARCHAR" />
+    <result column="TOTAL_PERIOD" property="totalPeriod" jdbcType="INTEGER" />
+    <result column="ORDER_AMOUNT" property="orderAmount" jdbcType="DECIMAL" />
+    <result column="CONTRACT_ID" property="contractId" jdbcType="VARCHAR" />
+    <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="UPDATETIME" property="updatetime" jdbcType="TIMESTAMP" />
+    <result column="ORDER_OPERATION" property="orderOperation" jdbcType="VARCHAR" />
+  </resultMap>
+  <select id="selectByPrimaryKeyList" resultMap="BaseResultMapVo" parameterType="java.util.Map"  >
     select 
     <include refid="Base_Column_List" />
     from order_baseinfo
     where 1=1
     <if test="custCellphone != null and custCellphone !=''">
     	and CUST_CELLPHONE=#{custCellphone}
+    </if>
+     <if test="contractId != null and contractId !=''">
+    	and CONTRACT_ID=#{contractId}
+    </if>
+    <if test="companyId != null and companyId !=''">
+    	and COMPANY_ID=#{companyId}
     </if>
   </select>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String"  >
@@ -50,8 +75,17 @@
     	and ORDER_STATUS=#{orderStatus}
     </if>
   </select>
+  
+  <select id="selectByPrimaryKeyWx" resultMap="BaseResultMap" parameterType="java.util.Map">
+    select 
+    <include refid="Base_Column_List" />
+    from order_baseinfo
+    where  CUST_CELLPHONE=#{custCellphone} and ORDER_STATUS <![CDATA[ < ]]> #{orderStatus}
+  </select>
+  
+  
   <select id="selectOrderStatusCount" resultType="java.lang.Integer"  parameterType="java.lang.String" >
-    select count(*) from order_baseinfo where (ORDER_STATUS=00 or ORDER_STATUS=04) and CUST_CELLPHONE=#{custCellphone}
+    select count(*) from order_baseinfo where (ORDER_STATUS=04 or ORDER_STATUS=05) and CUST_CELLPHONE=#{custCellphone}
   </select>
   
   

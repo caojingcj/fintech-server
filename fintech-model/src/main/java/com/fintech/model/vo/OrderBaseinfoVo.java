@@ -17,6 +17,7 @@ public class OrderBaseinfoVo extends BaseVO {
     private Boolean isAssure;
 
     private String companyId;
+    private String companyIds;
 
     private String companyName;
 
@@ -33,6 +34,16 @@ public class OrderBaseinfoVo extends BaseVO {
     private Date createTime;
 
     private Date updatetime;
+
+    private String orderOperation;
+
+    public String getOrderOperation() {
+        return orderOperation;
+    }
+
+    public void setOrderOperation(String orderOperation) {
+        this.orderOperation = orderOperation;
+    }
 
     public String getOrderId() {
         return orderId;
@@ -152,6 +163,14 @@ public class OrderBaseinfoVo extends BaseVO {
 
     public void setUpdatetime(Date updatetime) {
         this.updatetime = updatetime;
+    }
+
+    public String getCompanyIds() {
+        return companyIds;
+    }
+
+    public void setCompanyIds(String companyIds) {
+        this.companyIds = companyIds;
     }
 
     @Override

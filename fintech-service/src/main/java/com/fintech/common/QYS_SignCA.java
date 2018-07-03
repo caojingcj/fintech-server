@@ -62,9 +62,6 @@ public class QYS_SignCA {
     private static SealService sealService;//印章
     private static LocalSignService localSignService;//本地签
     private static StandardSignService standardSignService;//标准签
-    @Autowired
-    public AppConfig appConfig;
-    
     private static String serverUrl="https://openapi.qiyuesuo.com/";
     private static String accessKey="zrs58RyUQm";
     private static String accessSecret="s5RPPtYsEYuOSswatJ8eZ5n1PiELWi";
@@ -77,23 +74,6 @@ public class QYS_SignCA {
         sdkClient = new SDKClient(serverUrl, accessKey, accessSecret);
         log = new ThreadLocal<ArrayList<String>>();
     }
-    
-//    @PostConstruct
-//    private void init() {
-//        try {
-//            logger.info("EK>初始化QYS_SignCA契约锁方法名Init[{}]操作时间[{}]",Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
-//            String serverUrl = appConfig.getQYS_SERVER_URL();
-//            String accessKey = appConfig.getQYS_ACCESS_KEY();
-//            String accessSecret = appConfig.getQYES_ACCESS_SECRET();
-//            sdkClient = new SDKClient(serverUrl, accessKey, accessSecret);
-//            localSignService = new LocalSignServiceImpl(sdkClient);
-//            remoteSignService = new RemoteSignServiceImpl(sdkClient);
-//            sealService = new SealServiceImpl(sdkClient);
-//            log =new ThreadLocal<ArrayList<String>>();
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//    }
     
     private QYS_SignCA() {
         
@@ -366,9 +346,15 @@ public class QYS_SignCA {
     public static OSSEntity download(String contractId, long contractDocId) {
         OutputStream outputStream = null;
         try {
-            String path = "order/qys/contract";
+            String path = "/order/qys/contract";
             String fileUrl = path + "/" + contractId;
-            File downToLocalFile = File.createTempFile(fileUrl, ".pdf");
+            File downToLocalFile = new File(path + "/" + contractId + ".pdf");
+            if (!downToLocalFile.exists()) {//如果文件不存在
+                downToLocalFile.createNewFile();
+                logger.info("合同记录文件不存在,创建一个:" + contractId + ".pdf");
+            }
+//            File downToLocalFile = File.createTempFile("winsun", ".tmp");
+            System.out.println(">>>>>>>>>>>>>>"+downToLocalFile);
             outputStream = new FileOutputStream(downToLocalFile);
             getService(RemoteSignService.class);
             remoteSignService.download(contractDocId, outputStream);
@@ -474,7 +460,8 @@ public class QYS_SignCA {
         logger.info("EK>before---用模板创建合同>方法名[{}]操作时间[{}]",
             Thread.currentThread().getStackTrace()[1].getMethodName(),
             DateUtils.getDateTime());
-        long contractDocId = QYS_SignCA.createContractWithTemplate(templateDocId, params, contractId);
+        long contractDocId = QYS_SignCA
+            .createContractWithTemplate(templateDocId, params, contractId);
         logger.info("EK>Done--用模板创建合同>Success, contractDocId[{}]方法名[{}]操作时间[{}]",
             contractDocId,
             Thread.currentThread().getStackTrace()[1].getMethodName(),

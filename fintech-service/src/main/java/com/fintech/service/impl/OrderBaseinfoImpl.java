@@ -66,6 +66,8 @@ import com.fintech.util.FinTechException;
 import com.fintech.util.HttpClient;
 import com.fintech.util.enumerator.ConstantInterface;
 import com.fintech.xcpt.FintechException;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -184,17 +186,22 @@ public class OrderBaseinfoImpl implements OrderBaseinfoService {
         if(orderCount>0) {
             throw new FinTechException(ConstantInterface.AppValidateConfig.OrderValidate.ORDER_200010.toString());
         }
-        OrderBaseinfo info=orderBaseinfoMapper.selectByPrimaryKeySelective(mapOrder);
+        Map<String, Object>omap=new HashMap<>();
+        omap.put("custCellphone", mobile);
+        List<OrderBaseinfoVo> orderBaseinfos= orderBaseinfoMapper.selectByPrimaryKeyList(omap);
+        if(orderBaseinfos.size()==0) {
             orderBaseinfo.setCompanyId(companyId);
             orderBaseinfo.setCustCellphone(mobile);
             orderBaseinfo.setOrderStatus(ConstantInterface.Enum.OrderStatus.ORDER_STATUS00.getKey());
             orderBaseinfo.setCompanyName(baseinfo.getCompanyName());
             orderBaseinfo.setOrderId(orderProcedureMapper.generateOrderId());
+            orderBaseinfoMapper.insertSelective(orderBaseinfo);
             OrderDetailinfo detailinfo=new OrderDetailinfo();
             detailinfo.setOrderId(orderBaseinfo.getOrderId());
-            orderBaseinfoMapper.insertSelective(orderBaseinfo);
             orderDetailinfoMapper.insertSelective(detailinfo);
             logOrderMapper.insertSelective(new LogOrder(orderBaseinfo.getOrderId(),ConstantInterface.Enum.OrderLogStatus.ORDER_STATUS00.getKey(), ConstantInterface.Enum.OrderStatus.ORDER_STATUS00.getKey(), null));
+        }
+            OrderBaseinfo info=orderBaseinfoMapper.selectByPrimaryKeySelective(mapOrder);
             reslutMap.put("channels", channels);
             reslutMap.put("periodFees", periodFees);
             reslutMap.put("items", items);
@@ -331,11 +338,12 @@ public class OrderBaseinfoImpl implements OrderBaseinfoService {
         Map<String, String>qysParams=resultCaMap(orderBaseinfo);
         orderBaseinfo.setContractId(qysParams.get("CONTRACT_ID"));
         orderBaseinfo.setOrderStatus(ConstantInterface.Enum.OrderStatus.ORDER_STATUS05.getKey());
-        oss = qysRemoteSignHandler.signOrderCA(orderBaseinfo.getContractId(), qysParams);
+//        oss = qysRemoteSignHandler.signOrderCA(orderBaseinfo.getContractId(), qysParams);
         orderBaseinfoMapper.updateByPrimaryKeySelective(orderBaseinfo);
         returnPlanService.generateReturnPlan(vo.getOrderId());//生成还款计划
         logOrderMapper.insertSelective(new LogOrder(vo.getOrderId(),ConstantInterface.Enum.OrderLogStatus.ORDER_STATUS06.getKey(), ConstantInterface.Enum.OrderStatus.ORDER_STATUS05.getKey(), null));
-        return oss.getUrl();
+//        return oss.getUrl();
+        return null;
     }
     
     /* (非 Javadoc) 
@@ -362,6 +370,7 @@ public class OrderBaseinfoImpl implements OrderBaseinfoService {
     * @Description: TODO[ 签署 封装返回 map ]
     * @throws 
     */
+    
     public Map<String, String> resultCaMap(OrderBaseinfo vo){
         UserContract contract=userContractMapper.selectByOrderId(vo.getOrderId());
         UserContract userContract=new UserContract();
@@ -406,10 +415,15 @@ public class OrderBaseinfoImpl implements OrderBaseinfoService {
     * 查询订单列表
     */
     @Override
-    public List<OrderBaseinfo> orderBaseinfos(String token) throws Exception{
+    public List<OrderBaseinfoVo> orderBaseinfos(String token) throws Exception{
         Map<String, Object>parms=new HashMap<>();
         parms.put("custCellphone", redisService.get(token));
-        return orderBaseinfoMapper.selectByPrimaryKeyList(parms);
+        List<OrderBaseinfoVo> baseinfo=orderBaseinfoMapper.selectByPrimaryKeyList(parms);
+        for (OrderBaseinfoVo orderBaseinfo : baseinfo) {
+           LogOrder order= logOrderMapper.selectByPrimaryKeyStatus(orderBaseinfo.getOrderId());
+           orderBaseinfo.setOrderOperation(order.getOrderOperation());
+        }
+        return baseinfo;
     }
     /* (非 Javadoc) 
     * <p>Title: orderBaseinfoDetail</p> 
@@ -591,6 +605,15 @@ public class OrderBaseinfoImpl implements OrderBaseinfoService {
             logOrderMapper.insertSelective(new LogOrder("123", "2", "11", "22"));
             logOrderMapper.insertSelective(new LogOrder("123", "2", "11", "22"));
             throw new FinTechException("asdasd");
+    }
+
+    @Override
+    public PageInfo<CompanyBaseinfo> selectByPrimaryKeyList(OrderBaseinfoVo orderBaseinfoVo) throws Exception {
+        Map<String, Object> parms = CommonUtil.object2Map(orderBaseinfoVo);
+        PageHelper.startPage(orderBaseinfoVo.getPageIndex(), orderBaseinfoVo.getPageSize());
+        List<CompanyBaseinfo> companyBasseinfos=companyBaseinfoMapper.selectByPrimaryKeyList(parms);
+        PageInfo<CompanyBaseinfo> pageLists=new PageInfo<CompanyBaseinfo>(companyBasseinfos);
+        return pageLists;
     }
 
 }

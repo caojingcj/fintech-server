@@ -6,17 +6,19 @@ import java.util.Map;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
+import com.fintech.model.CompanyBaseinfo;
 import com.fintech.model.CustBaseinfo;
 import com.fintech.model.OrderBaseinfo;
+import com.fintech.model.vo.CompanyBaseinfoVo;
 import com.fintech.model.vo.CustBaseinfoVo;
 import com.fintech.model.vo.OrderAttachmentVo;
 import com.fintech.model.vo.OrderBaseinfoVo;
 import com.fintech.model.vo.OrderDetailinfoVo;
 import com.fintech.model.vo.ProjectVo;
 import com.fintech.xcpt.FintechException;
+import com.github.pagehelper.PageInfo;
 
 @Transactional(rollbackFor = Exception.class)
-
 public interface OrderBaseinfoService {
 
     void insertSelective(OrderBaseinfo record) throws FintechException;
@@ -35,7 +37,7 @@ public interface OrderBaseinfoService {
 
     Map<String, String> previewCaOrder(String orderId) throws Exception;
 
-    List<OrderBaseinfo> orderBaseinfos(String token) throws Exception;
+    List<OrderBaseinfoVo> orderBaseinfos(String token) throws Exception;
 
     Map<String, Object> orderBaseinfoDetail(String orderId) throws Exception;
 
@@ -49,4 +51,6 @@ public interface OrderBaseinfoService {
 
     @Transactional(noRollbackFor = { RuntimeException.class, Exception.class })
     void testSaveOrder() throws Exception;
+    
+    PageInfo<CompanyBaseinfo> selectByPrimaryKeyList(OrderBaseinfoVo orderBaseinfoVo) throws Exception;
 }

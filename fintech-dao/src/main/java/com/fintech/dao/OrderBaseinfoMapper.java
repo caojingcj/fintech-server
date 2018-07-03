@@ -6,6 +6,7 @@ import java.util.Map;
 import org.apache.ibatis.annotations.Param;
 
 import com.fintech.model.OrderBaseinfo;
+import com.fintech.model.vo.OrderBaseinfoVo;
 
 public interface OrderBaseinfoMapper {
     int deleteByPrimaryKey(String orderId);
@@ -14,11 +15,13 @@ public interface OrderBaseinfoMapper {
 
     int insertSelective(OrderBaseinfo record);
     
-    List<OrderBaseinfo> selectByPrimaryKeyList(Map<String, Object>parms);
+    List<OrderBaseinfoVo> selectByPrimaryKeyList(Map<String, Object>parms);
     
     OrderBaseinfo selectByPrimaryKey(@Param("orderId")String orderId);
 
     OrderBaseinfo selectByPrimaryKeySelective(Map<String, Object> parms);
+    
+    OrderBaseinfo selectByPrimaryKeyWx(Map<String, Object> parms);
     
     int updateByPrimaryKeySelective(OrderBaseinfo record);
 
@@ -29,5 +32,6 @@ public interface OrderBaseinfoMapper {
     List<OrderBaseinfo> selectQuarteCancelOrder();
     
     Integer selectOrderStatusCount(@Param("custCellphone")String custCellphone);
+    
     
 }
