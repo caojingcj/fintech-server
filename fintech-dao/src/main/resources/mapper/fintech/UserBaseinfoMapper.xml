@@ -16,26 +16,13 @@
     ID, USER_REALNAME, USER_LOGIN_NAME, USER_LOGIN_PASSWORD, USER_TYPE, USER_COMPANY_ID, 
     IS_ENABLED, CREATE_TIME, UPDATETIME
   </sql>
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
     <include refid="Base_Column_List" />
     from user_baseinfo
-    where ID = #{id,jdbcType=INTEGER}
+    where USER_LOGIN_NAME = #{userLoginName,jdbcType=VARCHAR}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
-    delete from user_baseinfo
-    where ID = #{id,jdbcType=INTEGER}
-  </delete>
-  <insert id="insert" parameterType="com.fintech.model.UserBaseinfo" >
-    insert into user_baseinfo (ID, USER_REALNAME, USER_LOGIN_NAME, 
-      USER_LOGIN_PASSWORD, USER_TYPE, USER_COMPANY_ID, 
-      IS_ENABLED, CREATE_TIME, UPDATETIME
-      )
-    values (#{id,jdbcType=INTEGER}, #{userRealname,jdbcType=VARCHAR}, #{userLoginName,jdbcType=VARCHAR}, 
-      #{userLoginPassword,jdbcType=VARCHAR}, #{userType,jdbcType=CHAR}, #{userCompanyId,jdbcType=CHAR}, 
-      #{isEnabled,jdbcType=BIT}, #{createTime,jdbcType=TIMESTAMP}, #{updatetime,jdbcType=TIMESTAMP}
-      )
-  </insert>
+  
   <insert id="insertSelective" parameterType="com.fintech.model.UserBaseinfo" >
     insert into user_baseinfo
     <trim prefix="(" suffix=")" suffixOverrides="," >

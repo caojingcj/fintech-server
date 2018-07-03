@@ -52,5 +52,7 @@ public interface OrderBaseinfoService {
     @Transactional(noRollbackFor = { RuntimeException.class, Exception.class })
     void testSaveOrder() throws Exception;
     
-    PageInfo<CompanyBaseinfo> selectByPrimaryKeyList(OrderBaseinfoVo orderBaseinfoVo) throws Exception;
+    PageInfo<OrderBaseinfoVo> selectByPrimaryKeyList(OrderBaseinfoVo orderBaseinfoVo) throws Exception;
+    
+    Map<String, Object>selectOrderDetails();
 }

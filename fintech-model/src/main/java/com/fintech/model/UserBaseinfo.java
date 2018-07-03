@@ -91,5 +91,5 @@ public class UserBaseinfo {
 
     public void setUpdatetime(Date updatetime) {
         this.updatetime = updatetime;
-    }
+	}
 }

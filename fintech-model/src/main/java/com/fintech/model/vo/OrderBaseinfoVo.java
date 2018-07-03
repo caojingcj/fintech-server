@@ -4,181 +4,194 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 public class OrderBaseinfoVo extends BaseVO {
-    private String orderId;
+	private String orderId;
 
-    private String custCellphone;
+	private String custCellphone;
 
-    private String custRealname;
+	private String custRealname;
 
-    private String custIdCardNo;
+	private String custIdCardNo;
 
-    private String orderStatus;
+	private String orderStatus;
 
-    private Boolean isAssure;
+	private Boolean isAssure;
 
-    private String companyId;
-    private String companyIds;
+	private String companyId;
 
-    private String companyName;
+	private String companyName;
 
-    private String itemCode;
+	private String itemCode;
 
-    private String itemName;
+	private String itemName;
 
-    private Integer totalPeriod;
+	private Integer totalPeriod;
 
-    private BigDecimal orderAmount;
+	private BigDecimal orderAmount;
 
-    private String contractId;
+	private String contractId;
 
-    private Date createTime;
+	private Date createTime;
 
-    private Date updatetime;
+	private Date updatetime;
 
-    private String orderOperation;
+	private String orderOperation;
 
-    public String getOrderOperation() {
-        return orderOperation;
-    }
+	private String searchOrderName;
+	
+	private String searchCompanyName;
 
-    public void setOrderOperation(String orderOperation) {
-        this.orderOperation = orderOperation;
-    }
+	public String getSearchOrderName() {
+		return searchOrderName;
+	}
 
-    public String getOrderId() {
-        return orderId;
-    }
+	public void setSearchOrderName(String searchOrderName) {
+		this.searchOrderName = searchOrderName;
+	}
 
-    public void setOrderId(String orderId) {
-        this.orderId = orderId;
-    }
+	public String getSearchCompanyName() {
+		return searchCompanyName;
+	}
 
-    public String getCustCellphone() {
-        return custCellphone;
-    }
+	public void setSearchCompanyName(String searchCompanyName) {
+		this.searchCompanyName = searchCompanyName;
+	}
 
-    public void setCustCellphone(String custCellphone) {
-        this.custCellphone = custCellphone;
-    }
+	public String getOrderOperation() {
+		return orderOperation;
+	}
 
-    public String getCustRealname() {
-        return custRealname;
-    }
+	public void setOrderOperation(String orderOperation) {
+		this.orderOperation = orderOperation;
+	}
 
-    public void setCustRealname(String custRealname) {
-        this.custRealname = custRealname;
-    }
+	public String getOrderId() {
+		return orderId;
+	}
 
-    public String getCustIdCardNo() {
-        return custIdCardNo;
-    }
+	public void setOrderId(String orderId) {
+		this.orderId = orderId;
+	}
 
-    public void setCustIdCardNo(String custIdCardNo) {
-        this.custIdCardNo = custIdCardNo;
-    }
+	public String getCustCellphone() {
+		return custCellphone;
+	}
 
-    public String getOrderStatus() {
-        return orderStatus;
-    }
+	public void setCustCellphone(String custCellphone) {
+		this.custCellphone = custCellphone;
+	}
 
-    public void setOrderStatus(String orderStatus) {
-        this.orderStatus = orderStatus;
-    }
+	public String getCustRealname() {
+		return custRealname;
+	}
 
-    public Boolean getIsAssure() {
-        return isAssure;
-    }
+	public void setCustRealname(String custRealname) {
+		this.custRealname = custRealname;
+	}
 
-    public void setIsAssure(Boolean isAssure) {
-        this.isAssure = isAssure;
-    }
+	public String getCustIdCardNo() {
+		return custIdCardNo;
+	}
 
-    public String getCompanyId() {
-        return companyId;
-    }
+	public void setCustIdCardNo(String custIdCardNo) {
+		this.custIdCardNo = custIdCardNo;
+	}
 
-    public void setCompanyId(String companyId) {
-        this.companyId = companyId;
-    }
+	public String getOrderStatus() {
+		return orderStatus;
+	}
 
-    public String getCompanyName() {
-        return companyName;
-    }
+	public void setOrderStatus(String orderStatus) {
+		this.orderStatus = orderStatus;
+	}
 
-    public void setCompanyName(String companyName) {
-        this.companyName = companyName;
-    }
+	public Boolean getIsAssure() {
+		return isAssure;
+	}
 
-    public String getItemCode() {
-        return itemCode;
-    }
+	public void setIsAssure(Boolean isAssure) {
+		this.isAssure = isAssure;
+	}
 
-    public void setItemCode(String itemCode) {
-        this.itemCode = itemCode;
-    }
+	public String getCompanyId() {
+		return companyId;
+	}
 
-    public String getItemName() {
-        return itemName;
-    }
+	public void setCompanyId(String companyId) {
+		this.companyId = companyId;
+	}
 
-    public void setItemName(String itemName) {
-        this.itemName = itemName;
-    }
+	public String getCompanyName() {
+		return companyName;
+	}
 
-    public Integer getTotalPeriod() {
-        return totalPeriod;
-    }
+	public void setCompanyName(String companyName) {
+		this.companyName = companyName;
+	}
 
-    public void setTotalPeriod(Integer totalPeriod) {
-        this.totalPeriod = totalPeriod;
-    }
+	public String getItemCode() {
+		return itemCode;
+	}
 
-    public BigDecimal getOrderAmount() {
-        return orderAmount;
-    }
+	public void setItemCode(String itemCode) {
+		this.itemCode = itemCode;
+	}
 
-    public void setOrderAmount(BigDecimal orderAmount) {
-        this.orderAmount = orderAmount;
-    }
+	public String getItemName() {
+		return itemName;
+	}
 
-    public String getContractId() {
-        return contractId;
-    }
+	public void setItemName(String itemName) {
+		this.itemName = itemName;
+	}
 
-    public void setContractId(String contractId) {
-        this.contractId = contractId;
-    }
+	public Integer getTotalPeriod() {
+		return totalPeriod;
+	}
 
-    public Date getCreateTime() {
-        return createTime;
-    }
+	public void setTotalPeriod(Integer totalPeriod) {
+		this.totalPeriod = totalPeriod;
+	}
 
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
+	public BigDecimal getOrderAmount() {
+		return orderAmount;
+	}
 
-    public Date getUpdatetime() {
-        return updatetime;
-    }
+	public void setOrderAmount(BigDecimal orderAmount) {
+		this.orderAmount = orderAmount;
+	}
 
-    public void setUpdatetime(Date updatetime) {
-        this.updatetime = updatetime;
-    }
+	public String getContractId() {
+		return contractId;
+	}
 
-    public String getCompanyIds() {
-        return companyIds;
-    }
+	public void setContractId(String contractId) {
+		this.contractId = contractId;
+	}
 
-    public void setCompanyIds(String companyIds) {
-        this.companyIds = companyIds;
-    }
+	public Date getCreateTime() {
+		return createTime;
+	}
 
-    @Override
-    public String toString() {
-        return "OrderBaseinfoVo [orderId=" + orderId + ", custCellphone=" + custCellphone + ", custRealname="
-                + custRealname + ", custIdCardNo=" + custIdCardNo + ", orderStatus=" + orderStatus + ", isAssure="
-                + isAssure + ", companyId=" + companyId + ", companyName=" + companyName + ", itemCode=" + itemCode
-                + ", itemName=" + itemName + ", totalPeriod=" + totalPeriod + ", orderAmount=" + orderAmount
-                + ", contractId=" + contractId + ", createTime=" + createTime + ", updatetime=" + updatetime + "]";
-    }
+	public void setCreateTime(Date createTime) {
+		this.createTime = createTime;
+	}
+
+	public Date getUpdatetime() {
+		return updatetime;
+	}
+
+	public void setUpdatetime(Date updatetime) {
+		this.updatetime = updatetime;
+	}
+
+	@Override
+	public String toString() {
+		return "OrderBaseinfoVo [orderId=" + orderId + ", custCellphone=" + custCellphone + ", custRealname="
+				+ custRealname + ", custIdCardNo=" + custIdCardNo + ", orderStatus=" + orderStatus + ", isAssure="
+				+ isAssure + ", companyId=" + companyId + ", companyName=" + companyName + ", itemCode=" + itemCode
+				+ ", itemName=" + itemName + ", totalPeriod=" + totalPeriod + ", orderAmount=" + orderAmount
+				+ ", contractId=" + contractId + ", createTime=" + createTime + ", updatetime=" + updatetime
+				+ ", orderOperation=" + orderOperation + "]";
+	}
+
 }

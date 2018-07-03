@@ -52,6 +52,7 @@ import com.fintech.model.domain.CompanyItemDo;
 import com.fintech.model.vo.OrderBaseinfoVo;
 import com.fintech.model.vo.OrderDetailinfoVo;
 import com.fintech.model.vo.ProjectVo;
+import com.fintech.model.vo.UserBaseinfoVo;
 import com.fintech.model.vo.faceid.FaceidIDCardPositiveVo;
 import com.fintech.model.vo.faceid.FaceidIDCardSideVo;
 import com.fintech.model.vo.faceid.Legality;
@@ -608,12 +609,21 @@ public class OrderBaseinfoImpl implements OrderBaseinfoService {
     }
 
     @Override
-    public PageInfo<CompanyBaseinfo> selectByPrimaryKeyList(OrderBaseinfoVo orderBaseinfoVo) throws Exception {
+    public PageInfo<OrderBaseinfoVo> selectByPrimaryKeyList(OrderBaseinfoVo orderBaseinfoVo) throws Exception {
+    	Gson gson=new Gson();
+        UserBaseinfoVo baseinfoVo=gson.fromJson(redisService.get(orderBaseinfoVo.getToken()),new TypeToken<UserBaseinfoVo>() {}.getType());
+        orderBaseinfoVo.setCompanyId(baseinfoVo.getUserCompanyId());
         Map<String, Object> parms = CommonUtil.object2Map(orderBaseinfoVo);
         PageHelper.startPage(orderBaseinfoVo.getPageIndex(), orderBaseinfoVo.getPageSize());
-        List<CompanyBaseinfo> companyBasseinfos=companyBaseinfoMapper.selectByPrimaryKeyList(parms);
-        PageInfo<CompanyBaseinfo> pageLists=new PageInfo<CompanyBaseinfo>(companyBasseinfos);
+        List<OrderBaseinfoVo> orderBaseinfoVos=orderBaseinfoMapper.selectByPrimaryKeyList(parms);
+        PageInfo<OrderBaseinfoVo> pageLists=new PageInfo<OrderBaseinfoVo>(orderBaseinfoVos);
         return pageLists;
     }
+
+	@Override
+	public Map<String, Object> selectOrderDetails() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 }

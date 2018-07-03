@@ -44,7 +44,7 @@
     <include refid="Base_Column_List" />
     from company_baseinfo
     where 1=1
-    <if test="companyIds != null and companyIds !=''">
+    <if test="companyIds != null and companyIds !='' ">
       and m.company_id in
       <foreach close=")" collection="companyIds" index="index" item="item" open="(" separator=",">
         #{item}
