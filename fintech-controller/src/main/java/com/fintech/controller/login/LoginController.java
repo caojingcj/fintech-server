@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.fintech.service.RedisService;
 import com.fintech.service.UserBaseinfoService;
 import com.fintech.util.DateUtils;
+import com.fintech.util.enumerator.ConstantInterface;
+import com.fintech.util.result.BaseResult;
 import com.fintech.util.result.ResultUtils;
 
 @Controller
@@ -33,5 +35,18 @@ public class LoginController {
             return ResultUtils.error(ResultUtils.ERROR_CODE,e.getMessage());
         }
     }
-
+    
+    @RequestMapping(value ="loginout",method = RequestMethod.GET)
+    public @ResponseBody BaseResult appLoginout(String token) {
+        try {
+            logger.info("EK退出登录：操作人[{}]方法名[{}]操作时间[{}]",redisService.get(token),Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
+            //根据key删除缓存 
+            redisService.del(token);
+            return ResultUtils.success("bye-bye");
+        } catch (Exception e) {
+            logger.error("ERROR EK参数[{}] 报错[{}] 方法名[{}]报错时间[{}]",token,e.getMessage(),
+                    Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
+            return ResultUtils.error(ResultUtils.ERROR_CODE,e.getMessage());
+        }
+    }
 }
