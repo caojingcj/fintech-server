@@ -67,6 +67,9 @@ public class MoxieImpl implements MoxieService {
         case "mxdataex":
             url = appConfig.getMOXIE_TYPE_MXDATAEX();
             break;
+        case "mxreport":
+            url = appConfig.getMOXIE_TYPE_MXREPORT();
+            break;
         case "basic":
             url = appConfig.getMOXIE_TYPE_BASIC();
             break;
@@ -110,7 +113,7 @@ public class MoxieImpl implements MoxieService {
     public void backMoxieTaskSubmit(BackMoxieTaskSubmitVo submitVo) {
         logger.info("魔蝎回调参数[{}]",submitVo.toString());
         LogMoxieinfo record=new LogMoxieinfo();
-        record.setMoxieType("mxdataex");
+        record.setMoxieType("mxreport");
         record.setMoxieIdcard(submitVo.getIdcard());
         record.setMoxieMobile(submitVo.getMobile());
         record.setMoxieName(submitVo.getName());

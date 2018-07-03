@@ -487,15 +487,18 @@ public class OrderBaseinfoImpl implements OrderBaseinfoService {
         parms.put("multi_oriented_detection", ConstantInterface.Enum.ConstantNumber.ONE.getKey());
         JSONObject result=HttpClient.postFileInputStream(appConfig.getOCR_API_URL(), parms,faceStream,"");
         FaceidIDCardPositiveVo faceidVo=gson.fromJson(result.toString(),new TypeToken<FaceidIDCardPositiveVo>() {}.getType());
+        if(faceidVo==null) {
+            throw new FintechException("无法获取照片");
+        }
         String fileName,path = "";
         OSSEntity oss=null;
         String folder = CommonUtil.getStringTime(date, "yyyyMMdd") + "/";
         FileUploadSample sample = new FileUploadSample();
-        String mobile=redisService.get(token);
-        fileName =mobile+"-" +UUID.randomUUID()+".jpg";
-        path = appConfig.getOSS_ORDER_OCR_PATH() + folder + fileName;
-        oss = new OSSEntity();
-        oss=sample.uploadFile(ossStream, path);
+            String mobile = redisService.get(token);
+            fileName = mobile + "-" + UUID.randomUUID() + ".jpg";
+            path = appConfig.getOSS_ORDER_OCR_PATH() + folder + fileName;
+            oss = new OSSEntity();
+            oss = sample.uploadFile(ossStream, path);
         CustBaseinfo custBaseinfo=new CustBaseinfo();
         custBaseinfo.setCustRealname(faceidVo.getName());
         custBaseinfo.setCustIdCardNo(faceidVo.getId_card_number());
@@ -517,12 +520,14 @@ public class OrderBaseinfoImpl implements OrderBaseinfoService {
         ocridcard.setOcrSide(faceidVo.getSide());
         ocridcard.setOrderId(orderId);
         OrderBaseinfo orderBaseinfo=orderBaseinfoMapper.selectByPrimaryKey(orderId);
-        orderBaseinfo.setCustRealname(faceidVo.getName());
-        orderBaseinfo.setCustCellphone(custBaseinfo.getCustCellphone());
-        orderBaseinfo.setCustIdCardNo(faceidVo.getId_card_number());
+        if(orderBaseinfo!=null) {
+            orderBaseinfo.setCustRealname(faceidVo.getName());
+            orderBaseinfo.setCustCellphone(custBaseinfo.getCustCellphone());
+            orderBaseinfo.setCustIdCardNo(faceidVo.getId_card_number());
+            orderBaseinfoMapper.updateByPrimaryKeySelective(orderBaseinfo);
+        }
         logOcridcardMapper.insertSelective(ocridcard);
         custBaseinfoMapper.updateByPrimaryKeySelective(custBaseinfo);
-        orderBaseinfoMapper.updateByPrimaryKeySelective(orderBaseinfo);
         LegalityVerification(faceidVo.getLegality());
         return custBaseinfo;
     }
@@ -585,7 +590,7 @@ public class OrderBaseinfoImpl implements OrderBaseinfoService {
     * @param @param legality
     * @param @return    设定文件 
     * @Description: TODO[ ocr 身份证校验结果 ]
-    * @throws 
+    * @throws
     */
     public void LegalityVerification(Legality legality) {
         if(legality.getPhotocopy().equals(ConstantInterface.Enum.ConstantNumber.ONE.getKey().toString())) {

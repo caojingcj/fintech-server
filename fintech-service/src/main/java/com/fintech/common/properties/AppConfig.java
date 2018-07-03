@@ -141,6 +141,16 @@ public class AppConfig {
     private String WEIXIN_API_HTML_URL;
     @Value("${WEIXIN_API_REDIRECT_URL}")
     private String WEIXIN_API_REDIRECT_URL;
+    @Value("${MOXIE_TYPE_MXREPORT}")
+    private String MOXIE_TYPE_MXREPORT;
+
+    public String getMOXIE_TYPE_MXREPORT() {
+        return MOXIE_TYPE_MXREPORT;
+    }
+
+    public void setMOXIE_TYPE_MXREPORT(String mOXIE_TYPE_MXREPORT) {
+        MOXIE_TYPE_MXREPORT = mOXIE_TYPE_MXREPORT;
+    }
 
     public String getWEIXIN_API_REDIRECT_URL() {
         return WEIXIN_API_REDIRECT_URL;
