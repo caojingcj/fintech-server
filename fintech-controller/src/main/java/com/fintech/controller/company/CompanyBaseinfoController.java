@@ -19,6 +19,7 @@ import com.fintech.service.CompanyBaseinfoService;
 import com.fintech.service.CompanyChannelService;
 import com.fintech.service.CompanyItemService;
 import com.fintech.service.CompanyPeriodFeeService;
+import com.fintech.service.RedisService;
 import com.fintech.util.CommonUtil;
 import com.fintech.util.DateUtils;
 import com.fintech.util.result.BaseResult;
@@ -47,7 +48,10 @@ public class CompanyBaseinfoController {
     private CompanyItemService companyItemService;
     @Autowired
     private CompanyChannelService companyChannelService;
-    /** 
+    @Autowired
+    private RedisService redisService;
+    /**
+     * @throws Exception  
     * @Title: CompanyBaseinfoController.java 
     * @author qierkang xyqierkang@163.com   
     * @date 2018年6月11日 上午12:16:09  
@@ -57,13 +61,14 @@ public class CompanyBaseinfoController {
     * @throws 
     */
     @RequestMapping(value ="insertCompanyBaseInfo")
-    public @ResponseBody BaseResult insertCompanyBaseInfo(CompanyBaseinfo companyBaseinfo) {
-        logger.info("EK 方法名[{}]操作时间[{}]操作人[{}]",Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
+    public @ResponseBody BaseResult insertCompanyBaseInfo(CompanyBaseinfoVo vo) throws Exception {
+        logger.info("EK 方法名[{}]操作时间[{}]操作人[{}]",Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime(),redisService.get(vo.getToken()));
         try {
-            companyBaseinfoService.insertCompanyBaseInfo(companyBaseinfo);
+            redisService.tokenValidate(vo.getToken());
+            companyBaseinfoService.insertCompanyBaseInfo(vo);
             return ResultUtils.success(ResultUtils.SUCCESS_CODE_MSG);
         } catch (Exception e) {
-            logger.error("ERROR EK参数[{}] 报错[{}] 方法名[{}]报错时间[{}]",companyBaseinfo,e.getMessage(),Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
+            logger.error("ERROR EK参数[{}] 报错[{}] 方法名[{}]报错时间[{}]",vo,e.getMessage(),Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
             return ResultUtils.error(ResultUtils.ERROR_CODE,e.getMessage());
         }
     }
@@ -79,7 +84,7 @@ public class CompanyBaseinfoController {
     */
     @RequestMapping(value ="selectCompanyBaseInfos")
     public @ResponseBody BaseResult selectCompanyBaseInfos(CompanyBaseinfoVo vo) {
-        logger.info("EK 参数[{}]方法名[{}]操作时间[{}]操作人[{}]",vo,Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
+        logger.info("EK 参数[{}]方法名[{}]操作时间[{}]",vo,Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
         try {
             return ResultUtils.success(ResultUtils.SUCCESS_CODE_MSG,companyBaseinfoService.selectByPrimaryKeyList(vo));
         } catch (Exception e) {
@@ -98,13 +103,14 @@ public class CompanyBaseinfoController {
     * @throws 
     */
     @RequestMapping(value ="updateCompanyBaseInfoStatus")
-    public @ResponseBody BaseResult updateCompanyBaseInfoStatus(CompanyBaseinfo companyBaseinfo) {
-    	logger.info("EK 参数[商户编号{}][变更状态{}]方法名[{}]操作时间[{}]操作人[{}]",companyBaseinfo.getCompanyId(),companyBaseinfo.getCompanyStatus(),Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
+    public @ResponseBody BaseResult updateCompanyBaseInfoStatus(CompanyBaseinfoVo vo) {
+    	logger.info("EK 参数[商户编号{}][变更状态{}]方法名[{}]操作时间[{}]操作人[{}]",vo.getCompanyId(),vo.getCompanyStatus(),Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
     	try {
-    		companyBaseinfoService.updateCompanyBaseInfoStatus(companyBaseinfo);
+    	    redisService.tokenValidate(vo.getToken());
+    		companyBaseinfoService.updateCompanyBaseInfoStatus(vo);
     		return ResultUtils.success(ResultUtils.SUCCESS_CODE_MSG);
     	} catch (Exception e) {
-    		logger.error("ERROR EK参数[商户编号{}][变更状态{}] 报错[{}] 方法名[{}]报错时间[{}]",companyBaseinfo.getCompanyId(),companyBaseinfo.getCompanyStatus(),e.getMessage(),Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
+    		logger.error("ERROR EK参数[商户编号{}][变更状态{}] 报错[{}] 方法名[{}]报错时间[{}]",vo.getCompanyId(),vo.getCompanyStatus(),e.getMessage(),Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
     		return ResultUtils.error(ResultUtils.ERROR_CODE,e.getMessage());
     	}
     }

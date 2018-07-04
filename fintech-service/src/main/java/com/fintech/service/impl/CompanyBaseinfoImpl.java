@@ -12,6 +12,7 @@ import com.fintech.dao.procedure.CompanyProcedureMapper;
 import com.fintech.model.CompanyBaseinfo;
 import com.fintech.model.vo.CompanyBaseinfoVo;
 import com.fintech.service.CompanyBaseinfoService;
+import com.fintech.util.BeanUtils;
 import com.fintech.util.CommonUtil;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -39,10 +40,12 @@ public class CompanyBaseinfoImpl implements CompanyBaseinfoService {
     * 商户新增 
     */
     @Override
-    public void insertCompanyBaseInfo(CompanyBaseinfo companyBaseinfo) {
-        ObjectEmptyUtil.CompanyEmpty(companyBaseinfo);
-        companyBaseinfo.setCompanyId(companyProcedureMapper.generateCompanyId());
-        companyBaseinfoMapper.insertSelective(companyBaseinfo);
+    public void insertCompanyBaseInfo(CompanyBaseinfoVo vo) {
+        CompanyBaseinfo baseinfo=new CompanyBaseinfo();
+        BeanUtils.copyProperties(vo, baseinfo);
+        ObjectEmptyUtil.CompanyEmpty(baseinfo);
+        baseinfo.setCompanyId(companyProcedureMapper.generateCompanyId());
+        companyBaseinfoMapper.insertSelective(baseinfo);
     }
 
     /* (非 Javadoc) 
@@ -70,8 +73,10 @@ public class CompanyBaseinfoImpl implements CompanyBaseinfoService {
 	* 商户启用、禁用 
 	*/
 	@Override
-	public void updateCompanyBaseInfoStatus(CompanyBaseinfo companyBaseinfo) {
+	public void updateCompanyBaseInfoStatus(CompanyBaseinfoVo vo) {
 		Object[] obj={"companyId","companyStatus"};//通用属性判断
+		CompanyBaseinfo companyBaseinfo=new CompanyBaseinfo();
+		BeanUtils.copyProperties(vo, companyBaseinfo);
 		ObjectEmptyUtil.isObjectEmptyByName(obj,companyBaseinfo);
 		companyBaseinfoMapper.updateByPrimaryKeySelective(companyBaseinfo);
 	}
