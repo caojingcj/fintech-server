@@ -129,12 +129,14 @@ public class MoxieImpl implements MoxieService {
                     logMozhanginfo.setReportTime(DateUtils.parse(jsonObject.getString("update_date")));
                 }
                 logMozhanginfo.setOrderId(submitVo.getUser_id());
-                LogMozhanginfo mozhanginfo = logMozhanginfoMapper.selectByPrimaryKey(submitVo.getTask_id());
-                if (mozhanginfo == null) {
-                    logMozhanginfoMapper.insertSelective(logMozhanginfo);
-                } else {
-                    logMozhanginfo.setUpdateTime(new Date());
-                    logMozhanginfoMapper.updateByPrimaryKeySelective(logMozhanginfo);
+                logMozhanginfoMapper.insertSelective(logMozhanginfo);
+                OrderBaseinfo baseinfo=orderBaseinfoMapper.selectByPrimaryKey(submitVo.getUser_id());
+                if(baseinfo.getOrderStatus().equals(String.valueOf(ConstantInterface.Enum.OrderStatus.ORDER_STATUS01.getKey()))) {
+                    logger.info("EK 魔蝎日志 调用信审 方法名[orderId{}]操作时间[{}]",submitVo.getUser_id(),Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
+                   LogMozhanginfo mozhanginfo= logMozhanginfoMapper.selectByPrimaryKey(submitVo.getTask_id());
+                    if(mozhanginfo!=null) {
+                        creditVettingService.creditVetting(submitVo.getUser_id());
+                    }
                 }
             }
         } catch (Exception e) {
@@ -232,6 +234,7 @@ public class MoxieImpl implements MoxieService {
                 submitVo.setIdcard(moxieinfo.getMoxieIdcard());
                 submitVo.setTask_id(vo.getTask_id());
                 submitVo.setUser_id(vo.getUser_id());
+                submitVo.setName(vo.getName());
                 insertSelectiveMoZhang(submitVo);
             }
         } catch (Exception e) {

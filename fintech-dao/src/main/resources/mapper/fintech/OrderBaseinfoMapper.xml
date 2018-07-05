@@ -104,7 +104,7 @@
   
   
   <select id="selectOrderStatusCount" resultType="java.lang.Integer"  parameterType="java.lang.String" >
-    select count(*) from order_baseinfo where (ORDER_STATUS=04 or ORDER_STATUS=05) and CUST_CELLPHONE=#{custCellphone}
+    select count(*) from order_baseinfo where (ORDER_STATUS=01 or ORDER_STATUS=04) and CUST_CELLPHONE=#{custCellphone}
   </select>
   
   

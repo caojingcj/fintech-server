@@ -115,9 +115,7 @@ public class MoxieController {
     
     @RequestMapping(value = "backMoxieTaskSubmit",method = RequestMethod.POST)
     public @ResponseBody Object backMoxieTaskSubmit(@RequestBody BackMoxieTaskSubmitVo vo,HttpServletRequest request,HttpServletResponse response) {
-        System.out.println("执行了新增！！！！！！！！！！！！！！！！！！！！！！");
-        System.out.println("执行了新增！！！！！！！！！！！！！！！！！！！！！！");
-//        logger.info("EK 接到魔蝎回调任务backMoxieTaskSubmit 参数[{}]方法名[{}]操作时间[{}]",vo.toString(),Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
+        logger.info("EK 接到魔蝎回调任务backMoxieTaskSubmit 参数[{}]方法名[{}]操作时间[{}]",vo.toString(),Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
         try {
             moxieService.backMoxieTaskSubmit(vo);
             MoxieUtil.returnMoxieSuccStatus(response);
