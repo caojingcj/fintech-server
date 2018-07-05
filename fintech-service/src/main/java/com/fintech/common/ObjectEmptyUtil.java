@@ -27,9 +27,6 @@ public class ObjectEmptyUtil  {
     		if (StringUtil.isEmpty(companyBaseinfo.getCompanyName())) {
                 throw new FinTechException(ConstantInterface.ValidateConfig.CompanyValidate.COMPANY_NAME_IS_NULL.toString());
             }
-            if (StringUtil.isEmpty(companyBaseinfo.getCompanyType())) {
-                throw new FinTechException(ConstantInterface.ValidateConfig.CompanyValidate.COMPANY_TYPE_IS_NULL.toString());
-            }
             if (StringUtil.isEmpty(companyBaseinfo.getCompanyStatus())) {
                 throw new FinTechException(ConstantInterface.ValidateConfig.CompanyValidate.COMPANY_STATUS_IS_NULL.toString());
             }

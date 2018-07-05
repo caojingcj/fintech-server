@@ -17,12 +17,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.fintech.common.moxie.MoxieUtil;
 import com.fintech.common.properties.AppConfig;
 import com.fintech.dao.OrderBaseinfoMapper;
 import com.fintech.model.LogMoxieinfo;
 import com.fintech.model.LogOrder;
 import com.fintech.model.OrderBaseinfo;
+import com.fintech.model.vo.moxie.BackMoxieBillVo;
+import com.fintech.model.vo.moxie.BackMoxieFailVo;
+import com.fintech.model.vo.moxie.BackMoxieReportVo;
 import com.fintech.model.vo.moxie.BackMoxieTaskSubmitVo;
+import com.fintech.model.vo.moxie.BackMoxieTaskVo;
 import com.fintech.service.LogOrderService;
 import com.fintech.service.MoxieService;
 import com.fintech.service.RedisService;
@@ -109,10 +114,13 @@ public class MoxieController {
     }
     
     @RequestMapping(value = "backMoxieTaskSubmit",method = RequestMethod.POST)
-    public @ResponseBody Object backMoxieTaskSubmit(@RequestBody BackMoxieTaskSubmitVo vo) {
-        logger.info("EK 接到魔蝎回调任务TaskSubmit 参数[{}]方法名[{}]操作时间[{}]",vo,Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
+    public @ResponseBody Object backMoxieTaskSubmit(@RequestBody BackMoxieTaskSubmitVo vo,HttpServletRequest request,HttpServletResponse response) {
+        System.out.println("执行了新增！！！！！！！！！！！！！！！！！！！！！！");
+        System.out.println("执行了新增！！！！！！！！！！！！！！！！！！！！！！");
+//        logger.info("EK 接到魔蝎回调任务backMoxieTaskSubmit 参数[{}]方法名[{}]操作时间[{}]",vo.toString(),Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
         try {
             moxieService.backMoxieTaskSubmit(vo);
+            MoxieUtil.returnMoxieSuccStatus(response);
             return ResultUtils.success(ResultUtils.SUCCESS_CODE_MSG);
         } catch (Exception e) {
             logger.error("ERROR EK参数[{}] 报错[{}] 方法名[{}]报错时间[{}]",vo,e.getMessage(),Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
@@ -121,9 +129,37 @@ public class MoxieController {
     }
     
     @RequestMapping(value = "backMoxieTask",method = RequestMethod.POST)
-    public @ResponseBody Object backMoxieTask(@RequestBody String body,HttpServletRequest request,HttpServletResponse response) {
-        logger.info("EK 接到魔蝎回调任务Task 参数[{}]方法名[{}]操作时间[{}]",body,Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
+    public @ResponseBody Object backMoxieTask(@RequestBody BackMoxieTaskVo vo,HttpServletRequest request,HttpServletResponse response) {
+        logger.info("EK 接到魔蝎回调任务backMoxieTask 参数[{}]方法名[{}]操作时间[{}]",vo.toString(),Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
         try {
+            moxieService.backMoxieTask(vo);
+            MoxieUtil.returnMoxieSuccStatus(response);
+            return ResultUtils.success(ResultUtils.SUCCESS_CODE_MSG);
+        } catch (Exception e) {
+            logger.error("ERROR EK参数[{}] 报错[{}] 方法名[{}]报错时间[{}]",vo,e.getMessage(),Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
+            return ResultUtils.error(ResultUtils.ERROR_CODE,e.getMessage());
+        }
+    }
+    
+    @RequestMapping(value = "backMoxieFail",method = RequestMethod.POST)
+    public @ResponseBody Object backMoxieFail(@RequestBody BackMoxieFailVo vo,HttpServletRequest request,HttpServletResponse response) {
+        logger.info("EK 接到魔蝎回调任务backMoxieFail 参数[{}]方法名[{}]操作时间[{}]",vo.toString(),Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
+        try {
+            moxieService.backMoxieFail(vo);
+            MoxieUtil.returnMoxieSuccStatus(response);
+            return ResultUtils.success(ResultUtils.SUCCESS_CODE_MSG);
+        } catch (Exception e) {
+            logger.error("ERROR EK报错[{}] 方法名[{}]报错时间[{}]",e.getMessage(),Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
+            return ResultUtils.error(ResultUtils.ERROR_CODE,e.getMessage());
+        }
+    }
+    
+    @RequestMapping(value = "backMoxieBill",method = RequestMethod.POST)
+    public @ResponseBody Object backMoxieBill(@RequestBody BackMoxieBillVo vo,HttpServletRequest request,HttpServletResponse response) {
+        logger.info("EK 接到魔蝎回调任务backMoxieBill 参数[{}]方法名[{}]操作时间[{}]",vo.toString(),Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
+        try {
+            moxieService.backMoxieBill(vo);
+            MoxieUtil.returnMoxieSuccStatus(response);
             return ResultUtils.success(ResultUtils.SUCCESS_CODE_MSG);
         } catch (Exception e) {
             logger.error("ERROR EK报错[{}] 方法名[{}]报错时间[{}]",e.getMessage(),Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
@@ -132,9 +168,11 @@ public class MoxieController {
     }
     
     @RequestMapping(value = "backMoxieReport",method = RequestMethod.POST)
-    public @ResponseBody Object backMoxieReport(@RequestBody String body,HttpServletRequest request,HttpServletResponse response) {
-        logger.info("EK 接到魔蝎回调任务Report 参数[{}]方法名[{}]操作时间[{}]",body,Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
+    public @ResponseBody Object backMoxieReport(@RequestBody BackMoxieReportVo vo,HttpServletRequest request,HttpServletResponse response) {
+        logger.info("EK 接到魔蝎回调任务backMoxieReport 参数[{}]方法名[{}]操作时间[{}]",vo.toString(),Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
         try {
+            moxieService.backMoxieReport(vo);
+            MoxieUtil.returnMoxieSuccStatus(response);
             return ResultUtils.success(ResultUtils.SUCCESS_CODE_MSG);
         } catch (Exception e) {
             logger.error("ERROR EK报错[{}] 方法名[{}]报错时间[{}]",e.getMessage(),Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
@@ -144,7 +182,7 @@ public class MoxieController {
     
     @RequestMapping(value = "resultMoxie",method = RequestMethod.GET)
     public @ResponseBody Object resultMoxie(HttpServletRequest request) {
-        logger.info("EK 获取魔蝎报告返回成功[userId[{}]]方法名[{}]操作时间[{}]",request.getParameter("userId"),request.getParameter("orderId"),Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
+        logger.info("EK 获取魔蝎报告返回成功[userId[{}]]方法名[{}]操作时间[{}]",request.getParameter("orderId"),Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
         try {
             String userId=request.getParameter("userId");
             String orderId=request.getParameter("orderId");

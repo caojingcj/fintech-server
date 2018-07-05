@@ -11,26 +11,30 @@ public class LogMoxieinfo {
 
     private String moxieName;
 
-    private String moxieContent;
-
     private String moxieType;
 
     private String orderId;
 
+    private String moxieTaskId;
+
+    private Integer moxieStatus;
+
+    private String moxieOnlineUrl;
+
+    private Date reportTime;
+
     private Date createTime;
 
     private Date updateTime;
-    
-    private Date reportTime;
 
-    private String moxieTaskId;
+    private String moxieContent;
 
-    public Date getReportTime() {
-        return reportTime;
+    public String getMoxieContent() {
+        return moxieContent;
     }
 
-    public void setReportTime(Date reportTime) {
-        this.reportTime = reportTime;
+    public void setMoxieContent(String moxieContent) {
+        this.moxieContent = moxieContent;
     }
 
     public Long getId() {
@@ -65,14 +69,6 @@ public class LogMoxieinfo {
         this.moxieName = moxieName;
     }
 
-    public String getMoxieContent() {
-        return moxieContent;
-    }
-
-    public void setMoxieContent(String moxieContent) {
-        this.moxieContent = moxieContent;
-    }
-
     public String getMoxieType() {
         return moxieType;
     }
@@ -89,20 +85,44 @@ public class LogMoxieinfo {
         this.orderId = orderId;
     }
 
-    public Date getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
-
     public String getMoxieTaskId() {
         return moxieTaskId;
     }
 
     public void setMoxieTaskId(String moxieTaskId) {
         this.moxieTaskId = moxieTaskId;
+    }
+
+    public Integer getMoxieStatus() {
+        return moxieStatus;
+    }
+
+    public void setMoxieStatus(Integer moxieStatus) {
+        this.moxieStatus = moxieStatus;
+    }
+
+    public String getMoxieOnlineUrl() {
+        return moxieOnlineUrl;
+    }
+
+    public void setMoxieOnlineUrl(String moxieOnlineUrl) {
+        this.moxieOnlineUrl = moxieOnlineUrl;
+    }
+
+    public Date getReportTime() {
+        return reportTime;
+    }
+
+    public void setReportTime(Date reportTime) {
+        this.reportTime = reportTime;
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
     }
 
     public Date getUpdateTime() {
@@ -112,4 +132,5 @@ public class LogMoxieinfo {
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
     }
+
 }

@@ -8,11 +8,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.fintech.common.ObjectEmptyUtil;
-import com.fintech.model.CompanyBaseinfo;
 import com.fintech.model.vo.CompanyBaseinfoVo;
 import com.fintech.service.CompanyAccountinfoService;
 import com.fintech.service.CompanyBaseinfoService;
@@ -61,7 +61,7 @@ public class CompanyBaseinfoController {
     * @throws 
     */
     @RequestMapping(value ="insertCompanyBaseInfo")
-    public @ResponseBody BaseResult insertCompanyBaseInfo(CompanyBaseinfoVo vo) throws Exception {
+    public @ResponseBody BaseResult insertCompanyBaseInfo(@RequestBody CompanyBaseinfoVo vo) throws Exception {
         logger.info("EK 方法名[{}]操作时间[{}]操作人[{}]",Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime(),redisService.get(vo.getToken()));
         try {
             redisService.tokenValidate(vo.getToken());
@@ -103,7 +103,7 @@ public class CompanyBaseinfoController {
     * @throws 
     */
     @RequestMapping(value ="updateCompanyBaseInfoStatus")
-    public @ResponseBody BaseResult updateCompanyBaseInfoStatus(CompanyBaseinfoVo vo) {
+    public @ResponseBody BaseResult updateCompanyBaseInfoStatus(@RequestBody CompanyBaseinfoVo vo) {
     	logger.info("EK 参数[商户编号{}][变更状态{}]方法名[{}]操作时间[{}]操作人[{}]",vo.getCompanyId(),vo.getCompanyStatus(),Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
     	try {
     	    redisService.tokenValidate(vo.getToken());

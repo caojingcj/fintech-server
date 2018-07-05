@@ -30,5 +30,8 @@
     <if test="parentAreaId !=null and parentAreaId !=''">
       AND PARENT_AREA_ID = #{parentAreaId,jdbcType=INTEGER}
     </if>
+     <if test="areaLevel !=null and areaLevel !=''">
+      AND AREA_LEVEL = #{areaLevel,jdbcType=INTEGER}
+    </if>
   </select>
 </mapper>
