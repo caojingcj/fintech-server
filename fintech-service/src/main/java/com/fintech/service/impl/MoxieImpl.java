@@ -91,7 +91,7 @@ public class MoxieImpl implements MoxieService {
         record.setMoxieTaskId(submitVo.getTask_id());
         record.setOrderId(submitVo.getUser_id());
         record.setMoxieStatus(ConstantInterface.Enum.ConstantNumber.ZERO.getKey());
-//        logMoxieinfoMapper.insertSelective(record);
+        logMoxieinfoMapper.insertSelective(record);
     }
 
     /** 
@@ -125,17 +125,17 @@ public class MoxieImpl implements MoxieService {
                 logMozhanginfo.setMozhangMobile(submitVo.getMobile());
                 logMozhanginfo.setMozhangTaskId(submitVo.getTask_id());
                 logMozhanginfo.setMozhangContent(result);
-//                if (jsonObject.has("update_date")) {
-//                    logMozhanginfo.setReportTime(DateUtils.parse(jsonObject.getString("update_date")));
-//                }
-//                logMozhanginfo.setOrderId(submitVo.getUser_id());
-//                LogMozhanginfo mozhanginfo = logMozhanginfoMapper.selectByPrimaryKey(submitVo.getTask_id());
-//                if (mozhanginfo == null) {
-//                    logMozhanginfoMapper.insertSelective(logMozhanginfo);
-//                } else {
-//                    logMozhanginfo.setUpdateTime(new Date());
-//                    logMozhanginfoMapper.updateByPrimaryKeySelective(logMozhanginfo);
-//                }
+                if (jsonObject.has("update_date")) {
+                    logMozhanginfo.setReportTime(DateUtils.parse(jsonObject.getString("update_date")));
+                }
+                logMozhanginfo.setOrderId(submitVo.getUser_id());
+                LogMozhanginfo mozhanginfo = logMozhanginfoMapper.selectByPrimaryKey(submitVo.getTask_id());
+                if (mozhanginfo == null) {
+                    logMozhanginfoMapper.insertSelective(logMozhanginfo);
+                } else {
+                    logMozhanginfo.setUpdateTime(new Date());
+                    logMozhanginfoMapper.updateByPrimaryKeySelective(logMozhanginfo);
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -217,24 +217,22 @@ public class MoxieImpl implements MoxieService {
         redisService.setVal(vo.getUser_id(),"000000", 60*60L);
         try {
             if (vo.isResult()) {
-//                LogMoxieinfo moxieinfo = logMoxieinfoMapper.selectByPrimaryKey(vo.getTask_id());
-//                LogMoxieinfo logMoxieinfo=new LogMoxieinfo();
-//                BeanUtils.copyProperties(moxieinfo, logMoxieinfo);
-//                String result = MoxieUtil.doGetWithToken(url.replace("{task_id}", vo.getTask_id()).replace("{mobile}", vo.getMobile()),appConfig.getMOXIE_TOKEN());
-//                logMoxieinfo.setMoxieContent(result);
-//                logMoxieinfo.setReportTime(new Date());
-//                logMoxieinfo.setUpdateTime(new Date());
-//                logMoxieinfo.setMoxieStatus(ConstantInterface.Enum.ConstantNumber.FIVE.getKey());
-//                logMoxieinfo.setMoxieOnlineUrl(appConfig.getMOXIE_REPORT_DATA().replace("{message}", vo.getMessage()));
-//                logMoxieinfo.setId(moxieinfo.getId());
-//                System.out.println("在线报告地址：：：：：：：："+moxieinfo.getId()+"------"+logMoxieinfo.getMoxieOnlineUrl());
-//                logMoxieinfoMapper.updateByPrimaryKeySelective(logMoxieinfo);
-//                BackMoxieTaskSubmitVo submitVo=new BackMoxieTaskSubmitVo();
-//                submitVo.setMobile(moxieinfo.getMoxieMobile());
-//                submitVo.setIdcard(moxieinfo.getMoxieIdcard());
-//                submitVo.setTask_id(vo.getTask_id());
-//                submitVo.setUser_id(vo.getUser_id());
-//                insertSelectiveMoZhang(submitVo);
+                LogMoxieinfo moxieinfo = logMoxieinfoMapper.selectByPrimaryKey(vo.getTask_id());
+                LogMoxieinfo logMoxieinfo=new LogMoxieinfo();
+                BeanUtils.copyProperties(moxieinfo, logMoxieinfo);
+                String result = MoxieUtil.doGetWithToken(url.replace("{task_id}", vo.getTask_id()).replace("{mobile}", vo.getMobile()),appConfig.getMOXIE_TOKEN());
+                logMoxieinfo.setMoxieContent(result);
+                logMoxieinfo.setReportTime(new Date());
+                logMoxieinfo.setUpdateTime(new Date());
+                logMoxieinfo.setMoxieStatus(ConstantInterface.Enum.ConstantNumber.FIVE.getKey());
+                logMoxieinfo.setMoxieOnlineUrl(appConfig.getMOXIE_REPORT_DATA().replace("{message}", vo.getMessage()));
+                logMoxieinfoMapper.updateByPrimaryKeySelective(logMoxieinfo);
+                BackMoxieTaskSubmitVo submitVo=new BackMoxieTaskSubmitVo();
+                submitVo.setMobile(moxieinfo.getMoxieMobile());
+                submitVo.setIdcard(moxieinfo.getMoxieIdcard());
+                submitVo.setTask_id(vo.getTask_id());
+                submitVo.setUser_id(vo.getUser_id());
+                insertSelectiveMoZhang(submitVo);
             }
         } catch (Exception e) {
             e.printStackTrace();
