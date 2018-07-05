@@ -43,4 +43,16 @@ public class OrderBaseinfoController {
             return ResultUtils.error(ResultUtils.ERROR_CODE,e.getMessage());
         }
     }
+
+    @RequestMapping(value = "selectOrderDetails",method = RequestMethod.GET)
+    public @ResponseBody Object selectOrderDetails(OrderBaseinfoVo vo){
+        logger.info("EK 参数[{}]方法名[{}]操作时间[{}]操作人[{}]",vo,Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
+        try {
+            redisService.tokenValidate(vo.getToken());
+            return ResultUtils.success(ResultUtils.SUCCESS_CODE_MSG,orderBaseinfoService.selectOrderDetails(vo.getOrderId()));
+        } catch (Exception e) {
+            logger.error("ERROR EK 参数[{}] 报错[{}] 方法名[{}]报错时间[{}]",vo,e.getMessage(),Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
+            return ResultUtils.error(ResultUtils.ERROR_CODE,e.getMessage());
+        }
+    }
 }

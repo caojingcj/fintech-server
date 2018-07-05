@@ -9,7 +9,7 @@ import com.github.pagehelper.PageInfo;
 
 public interface CompanyBaseinfoService {
 
-    void insertCompanyBaseInfo(CompanyBaseinfo companyBaseinfo);
+    void insertCompanyBaseInfo(CompanyBaseinfoVo companyBaseinfo);
 
     PageInfo<CompanyBaseinfo> selectByPrimaryKeyList(CompanyBaseinfoVo companyBaseinfo)throws Exception;
     
@@ -17,7 +17,7 @@ public interface CompanyBaseinfoService {
     
     CompanyBaseinfo selectByPrimaryKeyInfo(String companyId);
     
-    void updateCompanyBaseInfoStatus(CompanyBaseinfo companyBaseinfo);
+    void updateCompanyBaseInfoStatus(CompanyBaseinfoVo vo);
     
     
 }

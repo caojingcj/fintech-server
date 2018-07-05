@@ -311,6 +311,34 @@ public interface ConstantInterface {
 	                return "[" + this.key + "]" + this.value;
 	            }
 	        }
+	        enum MoXieStatus {
+	            MOXIE_TYPE_MXDATAEX("mxdataex","魔蝎-获取运营商报告全量"),
+	            MOXIE_TYPE_BASIC("basic","魔蝎-获取账号基本记录"),
+	            MOXIE_TYPE_BILL("bill","魔蝎-获取账号账单记录"),
+	            MOXIE_TYPE_CALL("call","魔蝎-获取账号通话详单"),
+	            MOXIE_TYPE_SMS("sms","魔蝎-获取账号短信详单"),
+	            MOXIE_TYPE_MXREPORT("mxreport","魔蝎-获取用户分析报告全量");
+	            private final String key;
+	            private final String value;
+	            
+	            private MoXieStatus(String key, String value) {
+	                this.key = key;
+	                this.value = value;
+	            }
+	            
+	            public String getKey() {
+	                return key;
+	            }
+
+	            public String getValue() {
+	                return value;
+	            }
+
+	            @Override
+	            public String toString() {
+	                return "[" + this.key + "]" + this.value;
+	            }
+	        }
 	}
 	public interface DruidDataConfig {
 	    /**

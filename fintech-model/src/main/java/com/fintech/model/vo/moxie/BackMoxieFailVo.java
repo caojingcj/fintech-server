@@ -2,7 +2,7 @@ package com.fintech.model.vo.moxie;
 
 import com.fintech.model.vo.BaseVO;
 
-public class BackMoxieTaskVo extends BaseVO {
+public class BackMoxieFailVo extends BaseVO {
     private String mobile;
     private String user_id;
     private String task_id;
@@ -10,6 +10,7 @@ public class BackMoxieTaskVo extends BaseVO {
     private boolean result;
     private String message;
 
+    
     public String getMobile() {
         return mobile;
     }
@@ -60,7 +61,7 @@ public class BackMoxieTaskVo extends BaseVO {
 
     @Override
     public String toString() {
-        return "BackMoxieTaskVo [mobile=" + mobile + ", user_id=" + user_id + ", task_id=" + task_id + ", timestamp="
+        return "BackMoxieFailVo [mobile=" + mobile + ", user_id=" + user_id + ", task_id=" + task_id + ", timestamp="
                 + timestamp + ", result=" + result + ", message=" + message + "]";
     }
 

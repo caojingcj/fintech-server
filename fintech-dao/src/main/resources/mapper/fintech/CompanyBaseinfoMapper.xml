@@ -54,7 +54,7 @@
    			AND (COMPANY_ID like CONCAT('%',#{searchObject},'%') or COMPANY_NAME like  CONCAT('%',#{searchObject},'%'))
     </if>
     <if test="companyType != null" >
-        AND COMPANY_TYPE=#{COMPANY_TYPE}
+        AND COMPANY_TYPE=#{companyType}
       </if>
      ORDER BY COMPANY_ID DESC
   </select>

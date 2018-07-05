@@ -25,7 +25,7 @@
                         <!--userId="medcfc" password="Ulse04vi"/>-->
 		<!-- yfq_data_center新数据库地址 -->
         <jdbcConnection driverClass="com.mysql.jdbc.Driver"
-                        connectionURL="jdbc:mysql://rm-uf6pnuf480169p1dpwo.mysql.rds.aliyuncs.com:3306/fintech-test?useUnicode=true&amp;characterEncoding=UTF-8"
+                        connectionURL="jdbc:mysql://rm-uf6pnuf480169p1dpwo.mysql.rds.aliyuncs.com:3306/fintech-tests?useUnicode=true&amp;characterEncoding=UTF-8"
                         userId="root" password="19840723cJ"/>
 
 		<!-- 生成实体类地址 -->
@@ -45,7 +45,7 @@
             <!--<property name="rootInterface" value="com.MutiModule.common.mybatis.base.BaseEntity"/>-->
         </javaClientGenerator>
          <!-- 配置表信息 -->
-        <table schema="fintech" tableName="log_ocridcard"
+        <table schema="fintech" tableName="log_moxieinfo"
                enableCountByExample="false" enableUpdateByExample="false"
                enableDeleteByExample="false" enableSelectByExample="false"
                selectByExampleQueryId="false">

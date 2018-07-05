@@ -123,7 +123,7 @@ public class MoxieUtil {
         HttpGet httpGet;
         HttpResponse response;
         HttpEntity entity;
-        String result = null;
+        StringBuffer result = null;
         try {
             //创建默认的httpClient实例
             httpClient = HttpClients.createDefault();
@@ -132,12 +132,12 @@ public class MoxieUtil {
             httpGet.setHeader("Authorization", token);
             response = httpClient.execute(httpGet);
             entity = response.getEntity();
-            result = EntityUtils.toString(entity);
+            result = new StringBuffer(EntityUtils.toString(entity));
             LOGGER.debug("[moxie] doGetWithToken() OK");
         } catch (Exception e) {
             LOGGER.error("[moxie] doGetWithToken() exception! ", e);
         }
-        return result;
+        return result.toString();
     }
 
     public static void returnMoxieSuccStatus(HttpServletResponse response) {

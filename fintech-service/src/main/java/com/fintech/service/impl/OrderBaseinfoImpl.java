@@ -48,6 +48,7 @@ import com.fintech.model.OrderAttachment;
 import com.fintech.model.OrderBaseinfo;
 import com.fintech.model.OrderDetailinfo;
 import com.fintech.model.UserContract;
+import com.fintech.model.UserReturnplan;
 import com.fintech.model.domain.CompanyItemDo;
 import com.fintech.model.vo.OrderBaseinfoVo;
 import com.fintech.model.vo.OrderDetailinfoVo;
@@ -621,9 +622,21 @@ public class OrderBaseinfoImpl implements OrderBaseinfoService {
     }
 
 	@Override
-	public Map<String, Object> selectOrderDetails() {
-		// TODO Auto-generated method stub
-		return null;
+	public Map<String, Object> selectOrderDetails(String orderId) {
+	    Map<String, Object>parms=new HashMap<>();
+	   OrderBaseinfo baseinfo= orderBaseinfoMapper.selectByPrimaryKey(orderId);
+	   CustBaseinfo custBaseinfo= custBaseinfoMapper.selectByPrimaryKey(baseinfo.getCustCellphone());
+	   OrderDetailinfo orderDetailinfo= orderDetailinfoMapper.selectByPrimaryKey(orderId);
+	  OrderAttachment orderAttachment= orderAttachmentMapper.selectByPrimaryKey(orderId);
+	  Map<String, Object>map=new HashMap<>();
+	  map.put("orderId", orderId);
+	  List<UserReturnplan> userReturnplans=userReturnplanMapper.selectByPrimaryKeyList(map);
+	  parms.put("baseinfo", baseinfo);
+	  parms.put("custBaseinfo", custBaseinfo);
+	  parms.put("orderDetailinfo", orderDetailinfo);
+	  parms.put("orderAttachment", orderAttachment);
+	  parms.put("userReturnplans", userReturnplans);
+	    return parms;
 	}
 
 }
