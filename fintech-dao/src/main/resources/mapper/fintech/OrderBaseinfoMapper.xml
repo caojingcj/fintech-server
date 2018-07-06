@@ -296,7 +296,7 @@ WHERE
    <select id="selectQuarteCancelOrder" resultMap="BaseResultMap" >
     select 
     <include refid="Base_Column_List" />
-    from order_baseinfo where to_days(CREATE_TIME) = to_days(now()) and ORDER_STATUS=00;
+    from order_baseinfo where to_days(CREATE_TIME) - to_days(now()) and ORDER_STATUS=00;
   </select>
   
   

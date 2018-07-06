@@ -1,11 +1,14 @@
 package com.fintech.service.impl;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.fintech.dao.CustBaseinfoMapper;
+import com.fintech.dao.LogMoxieinfoMapper;
 import com.fintech.dao.LogOrderMapper;
 import com.fintech.dao.OrderBaseinfoMapper;
 import com.fintech.dao.OrderDetailinfoMapper;
@@ -16,11 +19,15 @@ import com.fintech.enm.IdentityStatusEnum;
 import com.fintech.enm.OrderOperationEnum;
 import com.fintech.enm.OrderStatusEnum;
 import com.fintech.model.CustBaseinfo;
+import com.fintech.model.LogMoxieinfo;
 import com.fintech.model.LogOrder;
 import com.fintech.model.OrderBaseinfo;
 import com.fintech.model.OrderDetailinfo;
 import com.fintech.service.CreditVettingService;
 import com.fintech.util.IDCardUtil;
+import com.fintech.util.JsonTools;
+import com.fintech.util.JsonValidator;
+import com.fintech.util.enumerator.ConstantInterface;
 
 @Service
 public class CreditVettingServiceImpl implements CreditVettingService {
@@ -36,10 +43,13 @@ public class CreditVettingServiceImpl implements CreditVettingService {
 
     @Autowired
     private LogOrderMapper logOrderMapper;
-
+@Autowired
+private LogMoxieinfoMapper logMoxieinfoMapper;
     @Override
     public CreditVettingResultEnum creditVetting(String orderId) {
-        // 拒绝 - 年龄18岁以下
+    	JsonValidator jv = new JsonValidator();
+		JsonTools jsonTools=new JsonTools();
+    	// 拒绝 - 年龄18岁以下
         OrderBaseinfo orderBaseInfo = orderBaseinfoMapper.selectByPrimaryKey(orderId);
         String custId = orderBaseInfo.getCustIdCardNo();
         int age = IDCardUtil.getAgeByIdCard(custId);
@@ -81,11 +91,36 @@ public class CreditVettingServiceImpl implements CreditVettingService {
             return CreditVettingResultEnum.拒绝;
         }
         // 拒绝 - 同一申请人申请超过3笔
+        Map<String, Object> amount = orderBaseinfoMapper.selectByOrderAmountJudge(orderBaseInfo.getCustCellphone());
+        if (Integer.parseInt(amount.get("statusCount").toString()) > 3) {
+        	logOrder(orderId, CreditVettingResultEnum.拒绝.getValue(), "拒绝 - 同一申请人申请超过3笔");
+            return CreditVettingResultEnum.拒绝;
+        }
         // 拒绝 - 同一申请人借款金额高于50w
+        if(Integer.parseInt(amount.get("amount").toString()) > 1) {
+        	logOrder(orderId, CreditVettingResultEnum.拒绝.getValue(), "拒绝 - 同一申请人借款金额高于50w");
+            return CreditVettingResultEnum.拒绝;
+        }
+        Map<String, Object>parms=new HashMap<>();
+        LogMoxieinfo logMoxieinfo=logMoxieinfoMapper.selectByPrimaryKeySelective(parms);
         // 拒绝 - 魔蝎运营商报告  黑名单信息   黑中介分数   <=40分  用户信息监测（user_info_check）/用户黑名单信息（check_black_info）/phone_gray_score
+		if(logMoxieinfo.getMoxieStatus()==5&&jv.validate(logMoxieinfo.getMoxieContent())){
+			Object object=jsonTools.getObjectByJson(logMoxieinfo.getMoxieContent(), "user_info_check.check_black_info.phone_gray_score", ConstantInterface.Enum.TypeEnum.string);
+			if(object==null||Integer.parseInt(object.toString())<=40) {
+				logOrder(orderId, CreditVettingResultEnum.拒绝.getValue(), "拒绝 - 魔蝎运营商报告  黑名单信息   黑中介分数   <=40分");
+				return CreditVettingResultEnum.拒绝;
+			}
+		}
         // 拒绝 - 魔蝎运营商报告  1.5风险分析摘要-魔蝎变量  申请人姓名+身份证号码是否出现在法院黑名单   基本信息校验点（basic_check_items）/is_name_and_idcard_in_court_black
-        // 拒绝 - 魔蝎运营商报告  1.5风险分析摘要-魔蝎变量  申请人姓名+身份证号码是否出现在金融机构黑名单 基本信息校验点（basic_check_items）/is_name_and_idcard_in_finance_black
-        // 拒绝 - 魔蝎运营商报告  1.5风险分析摘要-魔蝎变量  申请人姓名+手机号码是否出现在金融机构黑名单  基本信息校验点（basic_check_items）/is_name_and_mobile_in_finance_black
+		if(logMoxieinfo.getMoxieStatus()==5&&jv.validate(logMoxieinfo.getMoxieContent())){
+			Object object=jsonTools.getObjectByJson(logMoxieinfo.getMoxieContent(), "basic_check_items.is_name_and_idcard_in_court_black", ConstantInterface.Enum.TypeEnum.string);
+			if(object.toString().equals("否")) {
+				logOrder(orderId, CreditVettingResultEnum.拒绝.getValue(), "拒绝 - 魔蝎运营商报告  1.5风险分析摘要-魔蝎变量  申请人姓名+身份证号码出现在法院黑名单");
+				return CreditVettingResultEnum.拒绝;
+			}
+		}
+		// 拒绝 - 魔蝎运营商报告  1.5风险分析摘要-魔蝎变量  申请人姓名+身份证号码是否出现在金融机构黑名单 基本信息校验点（basic_check_items）/is_name_and_idcard_in_finance_black
+		// 拒绝 - 魔蝎运营商报告  1.5风险分析摘要-魔蝎变量  申请人姓名+手机号码是否出现在金融机构黑名单  基本信息校验点（basic_check_items）/is_name_and_mobile_in_finance_black
         // 拒绝 - 魔蝎运营商报告  1.5风险分析摘要-魔蝎变量  号码类别--催收公司  近3个月通话次数    >=10次
         // 拒绝 - 魔蝎运营商报告  1.6活跃分析摘要   通话活跃天数  近3个月-通话活跃天数 <=30天 4.1分析点枚举（近1/3/6月）(active_degree)/call_day
         // 拒绝 - 手机报告、通讯录都无效(两者都无效)
@@ -93,10 +128,10 @@ public class CreditVettingServiceImpl implements CreditVettingService {
         // 通过(且) - 近三月通话号码>=10
         // 通过(且) - 近三月互通电话>=3 互通定义，主叫和被叫都有记录
         // 通过(且) - 通讯录号码>=10 
-//        logOrder(orderId, CreditVettingResultEnum.拒绝.getValue(), "拒绝 - 其它原因");
-//        return CreditVettingResultEnum.拒绝;
-        logOrder(orderId, CreditVettingResultEnum.通过.getValue(), "");
-        return CreditVettingResultEnum.通过;
+        logOrder(orderId, CreditVettingResultEnum.拒绝.getValue(), "拒绝 - 其它原因");
+        return CreditVettingResultEnum.拒绝;
+//        logOrder(orderId, CreditVettingResultEnum.通过.getValue(), "");
+//        return CreditVettingResultEnum.通过;
     }
 
     private void logOrder(String orderId, String result, String note) {

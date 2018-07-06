@@ -339,6 +339,20 @@ public interface ConstantInterface {
 	                return "[" + this.key + "]" + this.value;
 	            }
 	        }
+	        
+	        /*
+	    	 * Json数据解析返回数据类型枚举
+	    	 */
+	    	public enum TypeEnum{
+	    		/** 单纯的键值对，通过key获取valus */
+	            string,
+	            /** 通过key获取到Map对象 */
+	            map,
+	            /** 通过key获取到ArrayList数组 */
+	            arrayList,
+	            /** 通过key获取到ArrayMap数组对象 */
+	            arrayMap;
+	        }
 	}
 	public interface DruidDataConfig {
 	    /**
