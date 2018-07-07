@@ -1,5 +1,6 @@
 package com.fintech.service.impl;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -53,8 +54,18 @@ private LogMoxieinfoMapper logMoxieinfoMapper;
     public CreditVettingResultEnum creditVetting(String orderId) {
     	JsonValidator jv = new JsonValidator();
 		JsonTools jsonTools=new JsonTools();
+		OrderBaseinfo orderBaseInfo = orderBaseinfoMapper.selectByPrimaryKey(orderId);
+		OrderDetailinfo orderDetailinfo = orderDetailinfoMapper.selectByPrimaryKey(orderId);
+		// 通过 - 首付比30%以上
+		BigDecimal orderAmount = orderBaseInfo.getOrderAmount();
+		BigDecimal depositAmount = orderDetailinfo.getDepositAmount();
+		BigDecimal totalAmount = orderAmount.add(depositAmount);
+		BigDecimal depositPercent = depositAmount.divide(totalAmount, 4, BigDecimal.ROUND_DOWN);
+		if (orderAmount != null && depositAmount != null && depositPercent.doubleValue() >= 0.3) {
+		    logOrder(orderId, CreditVettingResultEnum.通过.getValue(), "通过 - 首付比30%以上");
+            return CreditVettingResultEnum.通过;
+		}
     	// 拒绝 - 年龄18岁以下
-        OrderBaseinfo orderBaseInfo = orderBaseinfoMapper.selectByPrimaryKey(orderId);
         String custId = orderBaseInfo.getCustIdCardNo();
         int age = IDCardUtil.getAgeByIdCard(custId);
         if (age < 18) {
@@ -85,7 +96,7 @@ private LogMoxieinfoMapper logMoxieinfoMapper;
         }
         // 拒绝 - 学生（年龄18-21岁；学历 专科/本科/硕士及以上）
         if(!StringUtil.isEmpty(orderId)) {
-        	OrderDetailinfo orderDetailinfo = orderDetailinfoMapper.selectByPrimaryKey(orderId);
+        	
         	String educationStatus = orderDetailinfo.getEducationalStatus();
         	if (age >= 18 && age <= 21
         			&& (educationStatus.equals(EducationStatusEnum.专科.getValue())
