@@ -145,8 +145,40 @@ public class AppConfig {
     private String MOXIE_TYPE_MXREPORT;
     @Value("${MOXIE_REPORT_DATA}")
     private String MOXIE_REPORT_DATA;
+    @Value("${tmpFile}")
+    private String tmpFile;
+    @Value("${QYS_OSS_PATH}")
+    private String QYS_OSS_PATH;
+    
+    /**
+	 * @return the qYS_OSS_PATH
+	 */
+	public String getQYS_OSS_PATH() {
+		return QYS_OSS_PATH;
+	}
 
-    public String getMOXIE_REPORT_DATA() {
+	/** 
+	* @param qYS_OSS_PATH 要设置的 qYS_OSS_PATH 
+	*/
+	public void setQYS_OSS_PATH(String qYS_OSS_PATH) {
+		QYS_OSS_PATH = qYS_OSS_PATH;
+	}
+
+	/**
+	 * @return the tmpFile
+	 */
+	public String getTmpFile() {
+		return tmpFile;
+	}
+
+	/** 
+	* @param tmpFile 要设置的 tmpFile 
+	*/
+	public void setTmpFile(String tmpFile) {
+		this.tmpFile = tmpFile;
+	}
+
+	public String getMOXIE_REPORT_DATA() {
         return MOXIE_REPORT_DATA;
     }
 

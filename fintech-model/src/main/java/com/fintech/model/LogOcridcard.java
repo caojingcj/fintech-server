@@ -25,7 +25,46 @@ public class LogOcridcard {
 
     private Date updateTime;
 
-    public Long getId() {
+    
+    /** 
+	* @Title: LogOcridcard.java 
+	* @param     设定文件 
+	* @Description: TODO[ 这里用一句话描述这个方法的作用 ]
+	* @throws 
+	*/
+	public LogOcridcard() {
+	}
+
+	/** 
+	* @Title: LogOcridcard.java 
+	* @param @param id
+	* @param @param ocrMobile
+	* @param @param ocrName
+	* @param @param ocrRequestId
+	* @param @param ocrLegality
+	* @param @param ocrSide
+	* @param @param ocrIdCard
+	* @param @param ocrContent
+	* @param @param orderId
+	* @param @param createTime
+	* @param @param updateTime    设定文件 
+	* @Description: TODO[ 这里用一句话描述这个方法的作用 ]
+	* @throws 
+	*/
+	public LogOcridcard(String ocrMobile, String ocrName, String ocrRequestId, String ocrLegality,
+			String ocrSide, String ocrIdCard, String ocrContent, String orderId) {
+		super();
+		this.ocrMobile = ocrMobile;
+		this.ocrName = ocrName;
+		this.ocrRequestId = ocrRequestId;
+		this.ocrLegality = ocrLegality;
+		this.ocrSide = ocrSide;
+		this.ocrIdCard = ocrIdCard;
+		this.ocrContent = ocrContent;
+		this.orderId = orderId;
+	}
+
+	public Long getId() {
         return id;
     }
 

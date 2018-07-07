@@ -7,7 +7,9 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
@@ -23,6 +25,7 @@ import org.springframework.stereotype.Service;
 import com.fintech.common.oss.FileUploadSample;
 import com.fintech.common.oss.OSSEntity;
 import com.fintech.common.properties.AppConfig;
+import com.fintech.service.RedisService;
 import com.fintech.util.DateUtils;
 import com.qiyuesuo.sdk.SDKClient;
 import com.qiyuesuo.sdk.api.LocalSignService;
@@ -62,21 +65,41 @@ public class QYS_SignCA {
     private static SealService sealService;//印章
     private static LocalSignService localSignService;//本地签
     private static StandardSignService standardSignService;//标准签
-    private static String serverUrl="https://openapi.qiyuesuo.com/";
-    private static String accessKey="zrs58RyUQm";
-    private static String accessSecret="s5RPPtYsEYuOSswatJ8eZ5n1PiELWi";
-//    private static String serverUrl="https://openapi.qiyuesuo.com/";
-//    private static String accessKey="yxAIiAwH3L";
-//    private static String accessSecret="Bbvgf57uLlOJqzhz2Jiea4g7J5YEMs";
+    private static RedisService redisService;
+    private static AppConfig appConfig;
     
-    static  {
-        logger.info("初始化CA,{}===》{}==>{}",serverUrl, accessKey, accessSecret);
-        sdkClient = new SDKClient(serverUrl, accessKey, accessSecret);
-        log = new ThreadLocal<ArrayList<String>>();
+	/** 
+	* @param redisService 要设置的 redisService 
+	*/
+    @Autowired(required = true)
+	public void setRedisService(RedisService redisService) {
+		QYS_SignCA.redisService = redisService;
+	}
+    
+
+	/** 
+	* @param appConfig 要设置的 appConfig 
+	*/
+    @Autowired(required = true)
+	public void setAppConfig(AppConfig appConfig) {
+		QYS_SignCA.appConfig = appConfig;
+	}
+    
+	@PostConstruct
+    private void init() {
+        try {
+            logger.info("EK>初始化QYS_SignCA契约锁方法名[{}，{}，{}]操作时间[{}]",appConfig.getQYS_SERVER_URL(),appConfig.getQYS_ACCESS_KEY(), appConfig.getQYES_ACCESS_SECRET(),Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
+            sdkClient = new SDKClient(appConfig.getQYS_SERVER_URL(),appConfig.getQYS_ACCESS_KEY(), appConfig.getQYES_ACCESS_SECRET());
+            log = new ThreadLocal<ArrayList<String>>();
+            localSignService = new LocalSignServiceImpl(sdkClient);
+            remoteSignService = new RemoteSignServiceImpl(sdkClient);
+            sealService = new SealServiceImpl(sdkClient);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
-    
+	
     private QYS_SignCA() {
-        
     };//私有化构造器，防呆
 
     /**
@@ -346,15 +369,17 @@ public class QYS_SignCA {
     public static OSSEntity download(String contractId, long contractDocId) {
         OutputStream outputStream = null;
         try {
-            String path = "/order/qys/contract";
-            String fileUrl = path + "/" + contractId;
+        	Date nowDate = new Date();
+            SimpleDateFormat year = new SimpleDateFormat("yyyyMM");
+            SimpleDateFormat day = new SimpleDateFormat("dd");
+            String nowDateTime = new SimpleDateFormat("yyyyMMddHHmmssSSS").format(nowDate);
+            String path = redisService.get("tmpFile");
+            String fileName = contractId + "_EKQYS" + nowDateTime;
+            String fileUrl = appConfig.getQYS_OSS_PATH() +year.format(nowDate) + "/" + day.format(nowDate)+"/" + fileName;
             File downToLocalFile = new File(path + "/" + contractId + ".pdf");
             if (!downToLocalFile.exists()) {//如果文件不存在
                 downToLocalFile.createNewFile();
-                logger.info("合同记录文件不存在,创建一个:" + contractId + ".pdf");
             }
-//            File downToLocalFile = File.createTempFile("winsun", ".tmp");
-            System.out.println(">>>>>>>>>>>>>>"+downToLocalFile);
             outputStream = new FileOutputStream(downToLocalFile);
             getService(RemoteSignService.class);
             remoteSignService.download(contractDocId, outputStream);

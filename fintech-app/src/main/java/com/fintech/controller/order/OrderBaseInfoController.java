@@ -25,6 +25,7 @@ import com.fintech.service.CompanyPeriodFeeService;
 import com.fintech.service.LogSmsMessageService;
 import com.fintech.service.OrderBaseinfoService;
 import com.fintech.service.RedisService;
+import com.fintech.util.BeanUtils;
 import com.fintech.util.DateUtils;
 import com.fintech.util.result.BaseResult;
 import com.fintech.util.result.ResultUtils;
@@ -103,6 +104,7 @@ public class OrderBaseInfoController {
             orderBaseinfoService.saveProject(projectVo);
             return ResultUtils.success(ResultUtils.SUCCESS_CODE_MSG);
         } catch (Exception e) {
+        	e.printStackTrace();
             logger.error("ERROR EK参数[{}] 报错[{}] 方法名[{}]报错时间[{}]", projectVo.toString(),e.getMessage(),
                     Thread.currentThread().getStackTrace()[1].getMethodName(), DateUtils.getDateTime());
             return ResultUtils.error(ResultUtils.ERROR_CODE, e.getMessage());
@@ -171,6 +173,7 @@ public class OrderBaseInfoController {
         try {
             redisService.tokenValidate(orderDetailinfo.getToken());
             logger.info("EK 客户进件项目填写[[{}]方法名[{}]操作时间[{}]",orderDetailinfo,Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
+            BeanUtils.beanValueTrim(orderDetailinfo);
             orderBaseinfoService.saveDetailinfo(orderDetailinfo);
             return ResultUtils.success(ResultUtils.SUCCESS_CODE_MSG);
         } catch (Exception e) {

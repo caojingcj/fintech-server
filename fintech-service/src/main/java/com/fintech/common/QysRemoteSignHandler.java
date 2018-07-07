@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
@@ -19,6 +20,7 @@ import org.springframework.stereotype.Service;
 import com.fintech.common.oss.FileUploadSample;
 import com.fintech.common.oss.OSSEntity;
 import com.fintech.common.properties.AppConfig;
+import com.fintech.service.RedisService;
 import com.fintech.util.CommonUtil;
 import com.fintech.util.DateUtils;
 import com.qiyuesuo.sdk.SDKClient;
@@ -60,20 +62,22 @@ public class QysRemoteSignHandler {
      * 印章服务接口
      */
      static SealService sealService;
-     @Autowired
-     public AppConfig appConfig;// 配置文件
-     public Long platformSealId=2447365689749541073L;// 配置文件
-     public Long qyesCaDocid=2446934247064212351L;// 配置文件
-     public String qyesCaStamp="1,0.34f,0.54f";// 配置文件
-     private static String serverUrl="https://openapi.qiyuesuo.com/";
-     private static String accessKey="zrs58RyUQm";
-     private static String accessSecret="s5RPPtYsEYuOSswatJ8eZ5n1PiELWi";
      
-     @PostConstruct
+     private static AppConfig appConfig;
+     
+     /** 
+	* @param appConfig 要设置的 appConfig 
+	*/
+     @Autowired(required = true)
+ 	public void setAppConfig(AppConfig appConfig) {
+    	 QysRemoteSignHandler.appConfig = appConfig;
+ 	}
+
+	@PostConstruct
      private void init() {
          try {
-             logger.info("EK>初始化QysRemoteSignHandler契约锁方法名Init[{}]操作时间[{}]",appConfig.getQYS_SERVER_URL(),Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
-             sdkClient = new SDKClient(serverUrl, accessKey, accessSecret);
+             logger.info("EK>初始化QysRemoteSignHandler契约锁方法名[{}，{}，{}]操作时间[{}]",appConfig.getQYS_SERVER_URL(),appConfig.getQYS_ACCESS_KEY(), appConfig.getQYES_ACCESS_SECRET(),Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
+             sdkClient = new SDKClient(appConfig.getQYS_SERVER_URL(),appConfig.getQYS_ACCESS_KEY(), appConfig.getQYES_ACCESS_SECRET());
              localSignService = new LocalSignServiceImpl(sdkClient);
              remoteSignService = new RemoteSignServiceImpl(sdkClient);
              sealService = new SealServiceImpl(sdkClient);
@@ -219,7 +223,7 @@ public class QysRemoteSignHandler {
           logger.info("EK>用户签约授权书>商户编号：[{}]方法名[{}]操作时间[{}]",contractId,Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
             try {
                 /**** qys用户签署 ***/
-                OSSEntity oss = QYS_SignCA.signCommit(contractId, qyesCaDocid, platformSealId, qysParams, qyesCaStamp, null);
+                OSSEntity oss = QYS_SignCA.signCommit(contractId, Long.parseLong(appConfig.getQYES_CA_DOCID()), Long.parseLong(appConfig.getQYES_CA_SEALID()), qysParams, appConfig.getQYES_CA_STAMP(),"签约合同");
                 return oss;
             } catch (Exception e) {
                 logger.info("EK>QYS ERROR>商户编号：[{}]方法名[{}]操作时间[{}]error:[{}]",contractId,Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime(),e.getMessage());

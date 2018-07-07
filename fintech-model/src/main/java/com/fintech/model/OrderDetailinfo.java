@@ -163,5 +163,22 @@ public class OrderDetailinfo {
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
     }
+
+	/* (非 Javadoc) 
+	* <p>Title: toString</p> 
+	* <p>Description: </p> 
+	* @return 
+	* @see java.lang.Object#toString() 
+	*/
+	@Override
+	public String toString() {
+		return "OrderDetailinfo [orderId=" + orderId + ", maritalStatus=" + maritalStatus + ", educationalStatus="
+				+ educationalStatus + ", vocationStatus=" + vocationStatus + ", commAddrProvince=" + commAddrProvince
+				+ ", commAddrCity=" + commAddrCity + ", commAddrDistrict=" + commAddrDistrict + ", commAddr=" + commAddr
+				+ ", contactName=" + contactName + ", contactPhone=" + contactPhone + ", depositAmount=" + depositAmount
+				+ ", companyChannelId=" + companyChannelId + ", companyChannelName=" + companyChannelName
+				+ ", companyChannelPhone=" + companyChannelPhone + ", createTime=" + createTime + ", updateTime="
+				+ updateTime + "]";
+	}
     
 }

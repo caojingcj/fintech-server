@@ -15,7 +15,16 @@ public class OrderAttachment {
 
     private Date updateTime;
 
-    public Integer getId() {
+	public OrderAttachment(String orderId, String atthType, String atthPath) {
+		this.orderId = orderId;
+		this.atthType = atthType;
+		this.atthPath = atthPath;
+	}
+
+	public OrderAttachment() {
+	}
+
+	public Integer getId() {
         return id;
     }
 

@@ -23,6 +23,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 
 import com.fintech.common.properties.AppConfig;
+import com.fintech.service.RedisService;
 import com.fintech.util.DateUtils;
 
 /**   
@@ -43,6 +44,8 @@ public class WebApplication extends SpringBootServletInitializer implements Embe
     
     @Autowired
     private AppConfig appConfig;
+    @Autowired
+    private RedisService redisService;
     
     public static void main(String[] args) {
         SpringApplication.run(WebApplication.class ,args);
@@ -52,17 +55,23 @@ public class WebApplication extends SpringBootServletInitializer implements Embe
      * 文件上传临时路径
      * 支持Linux路径（网络图片流需要临时文件夹地址）
      */
-     @Bean
-     MultipartConfigElement multipartConfigElement() {
-        MultipartConfigFactory factory = new MultipartConfigFactory();
-        File tmpFile = new File(this.getClass().getResource("/").getPath()+ "/data/tmp");
-        logger.info("EK 创建临时文件夹路径[{}]方法名[{}]操作时间[{}]",tmpFile,Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
-        if (!tmpFile.exists()) {
-            tmpFile.mkdirs();
-        }
-        factory.setLocation(tmpFile.getPath());
-        return factory.createMultipartConfig();
-    }
+    @Bean
+    MultipartConfigElement multipartConfigElement() {
+   	 MultipartConfigFactory factory = new MultipartConfigFactory();
+       try {
+       	File file = new File(appConfig.getTmpFile());
+			redisService.set("tmpFile", file.getPath());
+			logger.info("EK 创建临时文件夹路径[{}]方法名[{}]操作时间[{}]",file,Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
+			if (!file.exists()) {
+				file.mkdirs();
+			}
+			factory.setLocation(file.getPath());
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.error("EK 创建临时文件夹失败：可能无权限访问！方法名[{}]操作时间[{}]",Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
+		}
+       return factory.createMultipartConfig();
+   }
      
     @Bean
     public ErrorPageFilter errorPageFilter() {

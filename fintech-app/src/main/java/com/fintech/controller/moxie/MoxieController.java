@@ -23,6 +23,7 @@ import com.fintech.dao.OrderBaseinfoMapper;
 import com.fintech.model.LogMoxieinfo;
 import com.fintech.model.LogOrder;
 import com.fintech.model.OrderBaseinfo;
+import com.fintech.model.OrderDetailinfo;
 import com.fintech.model.vo.moxie.BackMoxieBillVo;
 import com.fintech.model.vo.moxie.BackMoxieFailVo;
 import com.fintech.model.vo.moxie.BackMoxieReportVo;
@@ -31,7 +32,9 @@ import com.fintech.model.vo.moxie.BackMoxieTaskVo;
 import com.fintech.service.LogOrderService;
 import com.fintech.service.MoxieService;
 import com.fintech.service.RedisService;
+import com.fintech.util.BeanUtils;
 import com.fintech.util.DateUtils;
+import com.fintech.util.StringUtil;
 import com.fintech.util.enumerator.ConstantInterface;
 import com.fintech.util.result.BaseResult;
 import com.fintech.util.result.ResultUtils;
@@ -85,7 +88,6 @@ public class MoxieController {
                     baseinfo.getCustRealname() + "\",\"idcard\":\"" + baseinfo.getCustIdCardNo() + "\"}", "UTF-8");
             String moxieUrl="https://api.51datakey.com/h5/importV3/index.html#/carrier?apiKey="+appConfig.getMOXIE_APIKEY()+"&userId="+orderId+"&quitOnLoginDone=YES&goBackEnable=YES&backUrl="+appConfig.getMOXIE_BACKURL()+"&themeColor=2196F3&cacheDisable=YES&loginParams="+loginParams;
             logger.info("EK魔蝎日志 魔蝎H5完整地址[{}]",moxieUrl);
-            logOrderService.insertSelective(new LogOrder(orderId, ConstantInterface.Enum.OrderLogStatus.ORDER_STATUS03.getKey(), ConstantInterface.Enum.OrderStatus.ORDER_STATUS00.getKey(), null));
             return ResultUtils.success(ResultUtils.SUCCESS_CODE_MSG,moxieUrl);
         } catch (Exception e) {
             logger.error("EK ERROR [{}]魔蝎日志 H5参数【定单号[{}]]】>方法名[{}]操作时间[{}]",e.getMessage(),orderId,Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
@@ -187,6 +189,9 @@ public class MoxieController {
             if(userId!=null) {
                 redisService.setVal(userId,"000000", 60*60L);
             }
+            if(!StringUtil.isEmpty(orderId)) {
+            	logOrderService.insertSelective(new LogOrder(orderId, ConstantInterface.Enum.OrderLogStatus.ORDER_STATUS03.getKey(), ConstantInterface.Enum.OrderStatus.ORDER_STATUS00.getKey(), null));
+            }
             return ResultUtils.success(ResultUtils.SUCCESS_CODE_MSG,redisService.get(orderId==null?userId:orderId));
             } catch (Exception e) {
                 e.printStackTrace();
@@ -194,4 +199,11 @@ public class MoxieController {
                 return ResultUtils.error(ResultUtils.ERROR_CODE,e.getMessage());
             }
     }
+    
+    public static void main(String[] args) {
+    	OrderDetailinfo detailinfo=new OrderDetailinfo();
+    	detailinfo.setContactPhone(" 138139383 83 ");
+    	System.out.println(detailinfo.toString());
+		System.out.println(detailinfo.toString());
+	}
 }

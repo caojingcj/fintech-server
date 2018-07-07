@@ -222,11 +222,7 @@ public class OrderBaseinfoImpl implements OrderBaseinfoService {
     */
     @Override
     public void saveProject(ProjectVo projectVo) throws Exception {
-        // 总在还款额不超过50w，分期还款中的笔数不超过3笔；
-        Map<String, Object> amount = orderBaseinfoMapper.selectByOrderAmountJudge(redisService.get(projectVo.getToken()));
-        if (Integer.parseInt(amount.get("amount").toString()) > 1 || Integer.parseInt(amount.get("statusCount").toString()) > 3) {
-            throw new FinTechException(ConstantInterface.AppValidateConfig.OrderValidate.ORDER_200001.toString());
-        }
+    	BeanUtils.beanValueTrim(projectVo);
         OrderBaseinfo record=new OrderBaseinfo();
         record.setItemCode(projectVo.getItemCode());
         record.setItemName(projectVo.getItemName());
@@ -255,6 +251,11 @@ public class OrderBaseinfoImpl implements OrderBaseinfoService {
     public void saveDetailinfo(OrderDetailinfoVo orderDetailinfo) {
         OrderDetailinfo detailinfo=new OrderDetailinfo();
         BeanUtils.copyProperties(orderDetailinfo, detailinfo);
+        Map<String, Object>map=new HashMap<>();
+        map.put("custCellphone", detailinfo.getContactPhone());
+        if(orderBaseinfoMapper.selectByPrimaryKeySelective(map)!=null) {
+            throw new FinTechException(ConstantInterface.AppValidateConfig.OrderValidate.ORDER_200011.toString());
+        }
         orderDetailinfoMapper.updateByPrimaryKeySelective(detailinfo);
         logOrderMapper.insertSelective(new LogOrder(orderDetailinfo.getOrderId(),ConstantInterface.Enum.OrderLogStatus.ORDER_STATUS04.getKey(), ConstantInterface.Enum.OrderStatus.ORDER_STATUS00.getKey(), null));
     }
@@ -286,16 +287,6 @@ public class OrderBaseinfoImpl implements OrderBaseinfoService {
             path = appConfig.getOSS_ORDER_ATTACMENT_PATH() + folder + fileName;
             oss = new OSSEntity();
             oss=sample.uploadFile(input, path);
-            OrderAttachment orderAttachment= orderAttachmentMapper.selectByPrimaryKey(orderId);
-            OrderAttachment attachment=new OrderAttachment();
-            attachment.setOrderId(orderId);
-            attachment.setAtthType(attchType);
-            attachment.setAtthPath(oss.getUrl());
-            if(orderAttachment==null) {
-                orderAttachmentMapper.insertSelective(attachment);
-            }else {
-                orderAttachmentMapper.updateByPrimaryKeySelective(attachment);
-            }
             OrderBaseinfo baseinfo=new OrderBaseinfo();
             baseinfo.setOrderId(orderId);
             baseinfo.setOrderStatus(ConstantInterface.Enum.OrderStatus.ORDER_STATUS01.getKey());
@@ -303,6 +294,7 @@ public class OrderBaseinfoImpl implements OrderBaseinfoService {
             logOrderMapper.insertSelective(new LogOrder(orderId,ConstantInterface.Enum.OrderLogStatus.ORDER_STATUS05.getKey(), ConstantInterface.Enum.OrderStatus.ORDER_STATUS01.getKey(), null));
             Map<String, Object>parms=new HashMap<>();
             parms.put("orderId", orderId);
+            orderAttachmentMapper.insertSelective(new OrderAttachment(orderId, attchType, oss.getUrl()));
             LogMozhanginfo logMozhanginfo= logMozhanginfoMapper.selectByPrimaryKeySelective(parms);
             if(logMozhanginfo!=null) {
                 //調用信审服务
@@ -340,12 +332,12 @@ public class OrderBaseinfoImpl implements OrderBaseinfoService {
         Map<String, String>qysParams=resultCaMap(orderBaseinfo);
         orderBaseinfo.setContractId(qysParams.get("CONTRACT_ID"));
         orderBaseinfo.setOrderStatus(ConstantInterface.Enum.OrderStatus.ORDER_STATUS05.getKey());
-//        oss = qysRemoteSignHandler.signOrderCA(orderBaseinfo.getContractId(), qysParams);
+        oss = qysRemoteSignHandler.signOrderCA(orderBaseinfo.getContractId(), qysParams);
         orderBaseinfoMapper.updateByPrimaryKeySelective(orderBaseinfo);
         returnPlanService.generateReturnPlan(vo.getOrderId());//生成还款计划
+        orderAttachmentMapper.insertSelective(new OrderAttachment(vo.getOrderId(), String.valueOf(4), oss.getUrl()));
         logOrderMapper.insertSelective(new LogOrder(vo.getOrderId(),ConstantInterface.Enum.OrderLogStatus.ORDER_STATUS06.getKey(), ConstantInterface.Enum.OrderStatus.ORDER_STATUS05.getKey(), null));
-//        return oss.getUrl();
-        return null;
+        return oss.getUrl();
     }
     
     /* (非 Javadoc) 
@@ -386,6 +378,7 @@ public class OrderBaseinfoImpl implements OrderBaseinfoService {
             userContractMapper.insertSelective(userContract);
         }
         CompanyBaseinfo companyBaseinfo=companyBaseinfoMapper.selectByPrimaryKeyInfo(vo.getCompanyId());
+        CompanyPeriodFee periodFee=companyPeriodFeeMapper.selectByCompanyIdAndPeriod(companyBaseinfo.getCompanyId(), vo.getTotalPeriod());
         CompanyAccountinfo accountinfo= companyAccountinfoMapper.selectByPrimaryKey(vo.getCompanyId());
         Map<String, String> qysParams = new HashMap<>();
         qysParams.put("PartyA_Name", ConstantInterface.Enum.PartyAInfo.PartyA_Name.getValue());
@@ -402,9 +395,15 @@ public class OrderBaseinfoImpl implements OrderBaseinfoService {
         qysParams.put("COMPANY_ACCOUNT_NAME", accountinfo.getCompanyAccountName());
         qysParams.put("COMPANY_ACCOUNT_BRANCH", accountinfo.getCompanyAccountBranch());
         qysParams.put("COMPANY_ACCOUNT_NO", accountinfo.getCompanyAccountNo());
+        qysParams.put("CUST_REALNAME", vo.getCustRealname());
+        qysParams.put("CUST_ID_CARD_NO", vo.getCustIdCardNo());
+        qysParams.put("CUST_CELLPHONE", vo.getCustCellphone());
         qysParams.put("ITEM_NAME", vo.getItemName());
         qysParams.put("ORDER_AMOUNT",String.valueOf(vo.getOrderAmount()));
-        qysParams.put("CUST_REALNAME", vo.getCustRealname());
+        qysParams.put("ORDER_COM_PER_TOTAL", "商户号："+companyBaseinfo.getCompanyId()+"期数："+vo.getTotalPeriod()+"费率："+periodFee.getRateTotal());
+        qysParams.put("ORDER_CHARGE", "申请金额 * 分期手续费率 / 100");
+        qysParams.put("ORDER_TOTAL_COST", "申请金额 + 分期手续费");
+        qysParams.put("ORDER_PERIOD", String.valueOf(vo.getTotalPeriod()));
         return qysParams;
     }
     /* (非 Javadoc) 
@@ -498,33 +497,15 @@ public class OrderBaseinfoImpl implements OrderBaseinfoService {
         path = appConfig.getOSS_ORDER_OCR_PATH() + folder + fileName;
         oss = new OSSEntity();
         oss=sample.uploadFile(ossStream, path);
-        CustBaseinfo custBaseinfo=new CustBaseinfo();
-        custBaseinfo.setCustRealname(faceidVo.getName());
-        custBaseinfo.setCustIdCardNo(faceidVo.getId_card_number());
-        custBaseinfo.setCustCellphone(mobile);
-        custBaseinfo.setIdentityStatus(String.valueOf(1));
-        custBaseinfo.setCustNation(faceidVo.getRace());
-        custBaseinfo.setCustAddress(faceidVo.getAddress());
-        custBaseinfo.setCustIdCardFront(oss.getUrl());
-        custBaseinfo.setIdentityTime(date);
-        custBaseinfo.setIsEnabled(true);
-        custBaseinfo.setCustDeviceCode("wx");
-        LogOcridcard ocridcard=new LogOcridcard();
-        ocridcard.setOcrIdCard(custBaseinfo.getCustIdCardNo());
-        ocridcard.setOcrLegality(gson.toJson(faceidVo.getLegality()));
-        ocridcard.setOcrContent(result.toString());
-        ocridcard.setOcrMobile(custBaseinfo.getCustCellphone());
-        ocridcard.setOcrName(custBaseinfo.getCustRealname());
-        ocridcard.setOcrRequestId(faceidVo.getRequest_id());
-        ocridcard.setOcrSide(faceidVo.getSide());
-        ocridcard.setOrderId(orderId);
+        CustBaseinfo custBaseinfo=new CustBaseinfo(mobile, String.valueOf(1), faceidVo.getName(), faceidVo.getId_card_number(), faceidVo.getRace(), faceidVo.getAddress(), null, null, oss.getUrl(), null, date, true, "wx");
         OrderBaseinfo orderBaseinfo=orderBaseinfoMapper.selectByPrimaryKey(orderId);
         orderBaseinfo.setCustRealname(faceidVo.getName());
-        orderBaseinfo.setCustCellphone(custBaseinfo.getCustCellphone());
+        orderBaseinfo.setCustCellphone(mobile);
         orderBaseinfo.setCustIdCardNo(faceidVo.getId_card_number());
-        logOcridcardMapper.insertSelective(ocridcard);
+        logOcridcardMapper.insertSelective(new LogOcridcard(orderBaseinfo.getCustCellphone(), orderBaseinfo.getCustRealname(), faceidVo.getRequest_id(), gson.toJson(faceidVo.getLegality()), faceidVo.getSide(), orderBaseinfo.getCustIdCardNo(), result.toString(), orderId));
         custBaseinfoMapper.updateByPrimaryKeySelective(custBaseinfo);
         orderBaseinfoMapper.updateByPrimaryKeySelective(orderBaseinfo);
+        orderAttachmentMapper.insertSelective(new OrderAttachment(orderId, String.valueOf(2), oss.getUrl()));
         LegalityVerification(faceidVo.getLegality());
         return custBaseinfo;
     }
@@ -555,26 +536,13 @@ public class OrderBaseinfoImpl implements OrderBaseinfoService {
         path = appConfig.getOSS_ORDER_OCR_PATH() + folder + fileName;
         oss = new OSSEntity();
         oss=sample.uploadFile(ossStream, path);
-        CustBaseinfo custBaseinfo=new CustBaseinfo();
         String [] idTime=faceidVo.getValid_date().split("-");
-        custBaseinfo.setCustCellphone(mobile);
-        custBaseinfo.setCustIdCardValBegin(DateUtils.parse(idTime[0].replace(".", "-")));
-        custBaseinfo.setCustIdCardValEnd(DateUtils.parse(idTime[1].replace(".", "-")));
-        custBaseinfo.setCustIdCardBack(oss.getUrl());
-        custBaseinfo.setIdentityTime(date);
+        CustBaseinfo custBaseinfo=new CustBaseinfo(mobile, null, null, null, null, null, DateUtils.parse(idTime[0].replace(".", "-")), DateUtils.parse(idTime[1].replace(".", "-")), oss.getUrl(), null, date, null, null);
         OrderBaseinfo orderBaseinfo=orderBaseinfoMapper.selectByPrimaryKey(orderId);
-        LogOcridcard ocridcard=new LogOcridcard();
-        ocridcard.setOcrIdCard(orderBaseinfo.getCustIdCardNo());
-        ocridcard.setOcrLegality(gson.toJson(faceidVo.getLegality()));
-        ocridcard.setOcrContent(result.toString());
-        ocridcard.setOcrMobile(orderBaseinfo.getCustCellphone());
-        ocridcard.setOcrName(orderBaseinfo.getCustRealname());
-        ocridcard.setOcrRequestId(faceidVo.getRequest_id());
-        ocridcard.setOcrSide(faceidVo.getSide());
-        ocridcard.setOrderId(orderBaseinfo.getOrderId());
-        logOcridcardMapper.insertSelective(ocridcard);
+        logOcridcardMapper.insertSelective(new LogOcridcard(orderBaseinfo.getCustCellphone(), orderBaseinfo.getCustRealname(), faceidVo.getRequest_id(), gson.toJson(faceidVo.getLegality()), faceidVo.getSide(), orderBaseinfo.getCustIdCardNo(), result.toString(), orderId));
         custBaseinfoMapper.updateByPrimaryKeySelective(custBaseinfo);
         orderBaseinfoMapper.updateByPrimaryKeySelective(orderBaseinfo);
+        orderAttachmentMapper.insertSelective(new OrderAttachment(orderId, String.valueOf(3), oss.getUrl()));
         LegalityVerification(faceidVo.getLegality());
         logOrderMapper.insertSelective(new LogOrder(orderId, ConstantInterface.Enum.OrderLogStatus.ORDER_STATUS02.getKey(), ConstantInterface.Enum.OrderStatus.ORDER_STATUS00.getKey(), null));
         return custBaseinfo;
@@ -617,6 +585,9 @@ public class OrderBaseinfoImpl implements OrderBaseinfoService {
         Map<String, Object> parms = CommonUtil.object2Map(orderBaseinfoVo);
         PageHelper.startPage(orderBaseinfoVo.getPageIndex(), orderBaseinfoVo.getPageSize());
         List<OrderBaseinfoVo> orderBaseinfoVos=orderBaseinfoMapper.selectByPrimaryKeyList(parms);
+        for (OrderBaseinfoVo oBaseinfoVo : orderBaseinfoVos) {
+			orderBaseinfoVo.setCustCellphone(oBaseinfoVo.getCustCellphone().replaceAll("(\\d{3})\\d{4}(\\d{4})", "$1****$2"));
+		}
         PageInfo<OrderBaseinfoVo> pageLists=new PageInfo<OrderBaseinfoVo>(orderBaseinfoVos);
         return pageLists;
     }

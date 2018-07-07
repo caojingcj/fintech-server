@@ -33,7 +33,48 @@ public class CustBaseinfo {
 
     private Date updatetime;
 
-    public String getCustCellphone() {
+    /** 
+	* @Title: CustBaseinfo.java 
+	* @param @param custCellphone
+	* @param @param identityStatus
+	* @param @param custRealname
+	* @param @param custIdCardNo
+	* @param @param custNation
+	* @param @param custAddress
+	* @param @param custIdCardValBegin
+	* @param @param custIdCardValEnd
+	* @param @param custIdCardFront
+	* @param @param custIdCardBack
+	* @param @param identityTime
+	* @param @param isEnabled
+	* @param @param custDeviceCode
+	* @param @param createTime
+	* @param @param updatetime    设定文件 
+	* @Description: TODO[ 这里用一句话描述这个方法的作用 ]
+	* @throws 
+	*/
+    public CustBaseinfo(String custCellphone, String identityStatus, String custRealname, String custIdCardNo,
+			String custNation, String custAddress, Date custIdCardValBegin, Date custIdCardValEnd,
+			String custIdCardFront, String custIdCardBack, Date identityTime, Boolean isEnabled, String custDeviceCode) {
+		this.custCellphone = custCellphone;
+		this.identityStatus = identityStatus;
+		this.custRealname = custRealname;
+		this.custIdCardNo = custIdCardNo;
+		this.custNation = custNation;
+		this.custAddress = custAddress;
+		this.custIdCardValBegin = custIdCardValBegin;
+		this.custIdCardValEnd = custIdCardValEnd;
+		this.custIdCardFront = custIdCardFront;
+		this.custIdCardBack = custIdCardBack;
+		this.identityTime = identityTime;
+		this.isEnabled = isEnabled;
+		this.custDeviceCode = custDeviceCode;
+	}
+    
+    public CustBaseinfo() {
+	}
+
+	public String getCustCellphone() {
         return custCellphone;
     }
 

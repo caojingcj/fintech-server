@@ -3,6 +3,7 @@ package com.fintech;
 
 import java.io.File;
 
+import javax.servlet.DispatcherType;
 import javax.servlet.MultipartConfigElement;
 
 import org.slf4j.Logger;
@@ -26,6 +27,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import com.fintech.common.properties.AppConfig;
+import com.fintech.service.RedisService;
 import com.fintech.util.DateUtils;
 
 /**   
@@ -49,6 +51,8 @@ public class Application extends SpringBootServletInitializer implements Embedde
     
     @Autowired
     private AppConfig appConfig;
+    @Autowired
+    private RedisService redisService;
     
     public static void main(String[] args) {
         SpringApplication.run(Application.class ,args);
@@ -59,13 +63,19 @@ public class Application extends SpringBootServletInitializer implements Embedde
      */
      @Bean
      MultipartConfigElement multipartConfigElement() {
-        MultipartConfigFactory factory = new MultipartConfigFactory();
-        File tmpFile = new File(this.getClass().getResource("/").getPath()+ "/data/tmp");
-        logger.info("EK 创建临时文件夹路径[{}]方法名[{}]操作时间[{}]",tmpFile,Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
-        if (!tmpFile.exists()) {
-            tmpFile.mkdirs();
-        }
-        factory.setLocation(tmpFile.getPath());
+    	 MultipartConfigFactory factory = new MultipartConfigFactory();
+        try {
+        	File file = new File(appConfig.getTmpFile());
+			redisService.set("tmpFile", file.getPath());
+			logger.info("EK 创建临时文件夹路径[{}]方法名[{}]操作时间[{}]",file,Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
+			if (!file.exists()) {
+				file.mkdirs();
+			}
+			factory.setLocation(file.getPath());
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.error("EK 创建临时文件夹失败：可能无权限访问！方法名[{}]操作时间[{}]",Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
+		}
         return factory.createMultipartConfig();
     }
      
@@ -94,5 +104,4 @@ public class Application extends SpringBootServletInitializer implements Embedde
      public void customize(ConfigurableEmbeddedServletContainer container){
          container.setPort(appConfig.getServer_port());
      }
-     
 }
