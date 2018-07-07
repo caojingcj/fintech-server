@@ -11,7 +11,7 @@ import java.util.Map;
 */
 public class MapUtils {
 
-    public static String getMap2String(Map map,Object key){
+	public static String getMap2String(Map<String, Object> map,Object key){
         Object value =  map.get(key);
         if(value==null){
             return "";

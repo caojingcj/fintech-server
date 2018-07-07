@@ -17,7 +17,7 @@ import com.fintech.util.enumerator.ConstantInterface;
  */
 public class JsonTools {
 	@JsonSerialize(include=JsonSerialize.Inclusion.NON_NULL) //类头部注解，空不生成json节点
-	private static String jsonStr = "{\"api\",\"2.1\",\"message\":[\"产品\",\"tokken\"],\"request\":{\"ptype\":\"\",\"tokken\":\"A#daDSFkiwi239sdls#dsd\"},\"response\":{\"status\":{\"statusCode\":\"500\",\"statusMessage\":[\"产品类型错误\",\"tokken失效\"]},\"page\":{\"pageSize\":\"100\",\"pageIndex\":\"1\"},\"data\":{\"ptitle\":\"all product lists\",\"sDate\":\"2014-12-01\",\"eDate\":\"2016-12-01\",\"productList\":[{\"pid\":\"RA001\",\"pname\":\"产品1\"},{\"pid\":\"RA002\",\"pname\":\"产品2\"}]}},\"args\":[{\"tit\":\"RA001\",\"val\":\"产品1\"},{\"tit\":\"RA002\",\"val\":\"产品2\"}]}";
+	private static String jsonStr = "{\"api\":\"2.1\",\"message\":[\"产品\",\"tokken\"],\"request\":{\"ptype\":\"\",\"tokken\":\"A#daDSFkiwi239sdls#dsd\"},\"response\":{\"status\":{\"statusCode\":\"500\",\"statusMessage\":[\"产品类型错误\",\"tokken失效\"]},\"page\":{\"pageSize\":\"100\",\"pageIndex\":\"1\"},\"data\":{\"ptitle\":\"all product lists\",\"sDate\":\"2014-12-01\",\"eDate\":\"2016-12-01\",\"productList\":[{\"pid\":\"RA001\",\"pname\":\"产品1\"},{\"pid\":\"RA002\",\"pname\":\"产品2\"}]}},\"args\":[{\"tit\":\"RA001\",\"val\":\"产品1\"},{\"tit\":\"RA002\",\"val\":\"产品2\"}]}";
 	private static ObjectMapper mapper = new ObjectMapper();
 	
 	public static void main(String[] args) throws Exception {
@@ -29,14 +29,14 @@ public class JsonTools {
 //			Object obj = jsonTools.getObjectByJson(jsonStr,"request.tokken",ConstantInterface.Enum.TypeEnum.string); //层级递归String
 //			System.out.println("API:"+obj.toString());
 			
-//			Object obj = jsonTools.getObjectByJson(jsonStr,"response.page",ConstantInterface.Enum.TypeEnum.map);  //层级递归Map
-//			System.out.println("API:"+obj.toString()+((Map)obj).get("pageSize"));
+			Object obj = jsonTools.getObjectByJson(jsonStr,"response.page",ConstantInterface.Enum.TypeEnum.map);  //层级递归Map
+			System.out.println("API:"+obj.toString()+((Map<String, Object>)obj).get("pageSize"));
 			
 //			Object obj = jsonTools.getObjectByJson(jsonStr,"response.status.statusMessage",ConstantInterface.Enum.TypeEnum.arrayList); //层级递归ArrayList
 //			System.out.println("API:"+obj.toString()+((List)obj).get(0));
 			
-			//Object obj = getObjectByJson(jsonStr,"response.data.productList",ConstantInterface.Enum.TypeEnum.arrayMap);   //层级递归ArrayMap 
-			//System.out.println("API:"+obj.toString()+((List<Map>)obj).get(1).get("pid"));
+//			Object obj = jsonTools.getObjectByJson(jsonStr,"response.data.productList",ConstantInterface.Enum.TypeEnum.arrayMap);   //层级递归ArrayMap 
+//			System.out.println("API:"+obj.toString()+((List<Map>)obj).get(1).get("pid"));
 			
 			
 			//测试Objectz转json

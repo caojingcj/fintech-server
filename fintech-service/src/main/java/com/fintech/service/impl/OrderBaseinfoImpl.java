@@ -134,12 +134,12 @@ public class OrderBaseinfoImpl implements OrderBaseinfoService {
     @Override
     public void insertSelective(OrderBaseinfo record) throws FintechException {
 //        // 总在还款额不超过50w，分期还款中的笔数不超过3笔；
-        Map<String, Object> amount = orderBaseinfoMapper.selectByOrderAmountJudge(record.getCustCellphone());
-        if (Integer.parseInt(amount.get("amount").toString()) > 1
-                || Integer.parseInt(amount.get("statusCount").toString()) > 3) {
-            throw new FinTechException(ConstantInterface.AppValidateConfig.OrderValidate.ORDER_200001.getKey(),
-                    ConstantInterface.AppValidateConfig.OrderValidate.ORDER_200001.getValue());
-        }
+//        Map<String, Object> amount = orderBaseinfoMapper.selectByOrderAmountJudge(record.getCustCellphone());
+//        if (Integer.parseInt(amount.get("amount").toString()) > 1
+//                || Integer.parseInt(amount.get("statusCount").toString()) > 3) {
+//            throw new FinTechException(ConstantInterface.AppValidateConfig.OrderValidate.ORDER_200001.getKey(),
+//                    ConstantInterface.AppValidateConfig.OrderValidate.ORDER_200001.getValue());
+//        }
 //        orderBaseinfoMapper.insertSelective(record);
 //        // OrderDetailinfo orderDetailinfo=new OrderDetailinfo();
 //        // orderDetailinfoMapper.insertSelective(orderDetailinfo);
