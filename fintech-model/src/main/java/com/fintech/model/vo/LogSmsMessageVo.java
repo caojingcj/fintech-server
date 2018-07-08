@@ -72,5 +72,18 @@ public class LogSmsMessageVo extends BaseVO {
     public void setSendCode(String sendCode) {
         this.sendCode = sendCode;
     }
+
+	/* (非 Javadoc) 
+	* <p>Title: toString</p> 
+	* <p>Description: </p> 
+	* @return 
+	* @see java.lang.Object#toString() 
+	*/
+	@Override
+	public String toString() {
+		return "LogSmsMessageVo [id=" + id + ", sendMobile=" + sendMobile + ", sendContent=" + sendContent
+				+ ", sendCode=" + sendCode + ", resultState=" + resultState + ", resultMsg=" + resultMsg
+				+ ", createTime=" + createTime + "]";
+	}
     
 }

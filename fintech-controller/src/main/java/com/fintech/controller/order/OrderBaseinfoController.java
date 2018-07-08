@@ -34,7 +34,7 @@ public class OrderBaseinfoController {
 
     @RequestMapping(value = "queryOrderByKeyPage",method = RequestMethod.GET)
     public @ResponseBody Object queryOrderByKeyPage(OrderBaseinfoVo vo){
-        logger.info("EK 参数[{}]方法名[{}]操作时间[{}]操作人[{}]",vo,Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
+        logger.info("EK 参数[{}]方法名[{}]操作时间[{}]]",vo,Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
         try {
         	redisService.tokenValidate(vo.getToken());
             return ResultUtils.success(ResultUtils.SUCCESS_CODE_MSG,orderBaseinfoService.selectByPrimaryKeyList(vo));

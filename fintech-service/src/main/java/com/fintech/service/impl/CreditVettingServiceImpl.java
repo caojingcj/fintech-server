@@ -100,7 +100,6 @@ public class CreditVettingServiceImpl implements CreditVettingService {
         }
         // 拒绝 - 学生（年龄18-21岁；学历 专科/本科/硕士及以上）
         if(!StringUtil.isEmpty(orderId)) {
-        	
         	String educationStatus = orderDetailinfo.getEducationalStatus();
         	if (age >= 18 && age <= 21
         			&& (educationStatus.equals(EducationStatusEnum.专科.getValue())
@@ -198,6 +197,40 @@ public class CreditVettingServiceImpl implements CreditVettingService {
         				}
         			}
         		}
+        	//拒绝 -  魔蝎姓名是否与运营商数据匹配
+        	if(logMoxieinfo.getMoxieStatus()==5&&jv.validate(logMoxieinfo.getMoxieContent())){
+    			Object object=jsonTools.getObjectByJson(logMoxieinfo.getMoxieContent(), "basic_check_items", ConstantInterface.Enum.TypeEnum.arrayList);
+    			if(object!=null) {
+    				ArrayList<Map<String, Object>>list=(ArrayList<Map<String, Object>>) object;
+        			for (Map<String, Object> map : list) {
+        				for (Map.Entry<String, Object> entry : map.entrySet()) {
+    						if(entry.getValue()!=null&&entry.getValue().equals("name_match")) {
+    							if(!map.get("result").equals("匹配成功")) {
+    								logOrder(orderId, CreditVettingResultEnum.拒绝.getValue(), "拒绝 - 姓名与运营商数据不匹配");
+    								return CreditVettingResultEnum.拒绝;
+    							}
+    						}
+    					}
+        			}
+    			}
+    		}
+        	// 拒绝 - 魔蝎联系人联系电话不在手机报告或通讯录中
+        	if(logMoxieinfo.getMoxieStatus()==5&&jv.validate(logMoxieinfo.getMoxieContent())){
+        		Object object=jsonTools.getObjectByJson(logMoxieinfo.getMoxieContent(), "call_contact_detail", ConstantInterface.Enum.TypeEnum.arrayList);
+        		if(object!=null) {
+        			boolean flag=false;
+        			ArrayList<Map<String, Object>>list=(ArrayList<Map<String, Object>>) object;
+        			for (Map<String, Object> map : list) {
+        				if(map.get("peer_num").equals(orderDetailinfo.getContactPhone())) {
+        					flag=true;
+        				}
+        			}
+        			if(!flag) {
+        				logOrder(orderId, CreditVettingResultEnum.拒绝.getValue(), "拒绝 - 魔蝎联系人联系电话不在手机报告或通讯录中");
+						return CreditVettingResultEnum.拒绝;
+        			}
+        		}
+        	}
         		LogMozhanginfo logMozhanginfo=logMozhanginfoMapper.selectByPrimaryKeySelective(parms);
         		// 拒绝 - 魔杖运营商报告 手机和姓名在黑名单black_info_detail.mobile_name_in_blacklist
         		if(jv.validate(logMozhanginfo.getMozhangContent())){
@@ -215,27 +248,41 @@ public class CreditVettingServiceImpl implements CreditVettingService {
         				return CreditVettingResultEnum.拒绝;
         			}
         		}
-        		// 拒绝 - 联系人联系电话不在手机报告或通讯录中
-        		
-        		// 通过(且) - 近三月通话号码>=10
-        		// 通过(且) - 近三月互通电话>=3 互通定义，主叫和被叫都有记录
-        		if(logMoxieinfo.getMoxieStatus()==5&&jv.validate(logMoxieinfo.getMoxieContent())){
-        			Object dial_cnt=jsonTools.getObjectByJson(logMoxieinfo.getMoxieContent(), "call_service_analysis.analysis_point", ConstantInterface.Enum.TypeEnum.map);
-        			Object cnt=jsonTools.getObjectByJson(logMoxieinfo.getMoxieContent(), "call_service_analysis.analysis_point", ConstantInterface.Enum.TypeEnum.map);
-        			if(dial_cnt!=null&&cnt!=null) {
-//						if(entry.getValue()!=null&&entry.getValue().equals("call_dial_cnt_3m")) {
-//							Map<String, Object>m=(Map<String, Object>) map.get("item");
-//							if(Integer.parseInt(m.get("item_3m").toString())<=30) {
-//								logOrder(orderId, CreditVettingResultEnum.拒绝.getValue(), "拒绝 - 魔蝎运营商报告  1.6活跃分析摘要   通话活跃天数  近3个月-通话活跃天数 <=30天");
-//								return CreditVettingResultEnum.拒绝;
-//							}
-//						}
+        	//通过(且) - 魔蝎近三月通话号码>=10 & 近三月互通电话>=3 互通定义，主叫和被叫都有记录
+        	if(logMoxieinfo.getMoxieStatus()==5&&jv.validate(logMoxieinfo.getMoxieContent())){
+        		Object item_3m=jsonTools.getObjectByJson(logMoxieinfo.getMoxieContent(), "active_degree", ConstantInterface.Enum.TypeEnum.arrayList);
+        		Object inter_peer_num_3m=jsonTools.getObjectByJson(logMoxieinfo.getMoxieContent(), "friend_circle.summary", ConstantInterface.Enum.TypeEnum.arrayList);
+        		if(item_3m!=null&&inter_peer_num_3m!=null) {
+        			boolean flag=true;
+        			ArrayList<Map<String, Object>>list=(ArrayList<Map<String, Object>>) item_3m;
+        			ArrayList<Map<String, Object>>peer=(ArrayList<Map<String, Object>>) inter_peer_num_3m;
+        			for (Map<String, Object> map : list) {
+        				if(map.get("app_point_zh").equals("通话号码数目")) {
+        					Map<String, Object>item3m=(Map<String, Object>) map.get("item");
+        					if(item3m.containsKey("item_3m")) {
+        						if(Integer.parseInt(item3m.get("item_3m").toString())<10) {
+        							flag=false;
+        							logOrder(orderId, CreditVettingResultEnum.拒绝.getValue(), "拒绝 -   近三月通话号码<10");
+            						return CreditVettingResultEnum.拒绝;
+        						}
+        					}
+        				}
+					}
+        			for (Map<String, Object> peer3m : peer) {
+    					if(peer3m.get("key").equals("inter_peer_num_3m")&&Integer.parseInt(peer3m.get("value").toString())<3) {
+    						flag=false;
+    						logOrder(orderId, CreditVettingResultEnum.拒绝.getValue(), "拒绝 -  近三月互通电话<3 互通定义，主叫和被叫都有记录");
+    						return CreditVettingResultEnum.拒绝;
+    					}
+					}
+        			if(flag) {
+        				logOrder(orderId, CreditVettingResultEnum.通过.getValue(), "");
+        		        return CreditVettingResultEnum.通过;
         			}
         		}
-//        logOrder(orderId, CreditVettingResultEnum.拒绝.getValue(), "拒绝 - 其它原因");
-//        return CreditVettingResultEnum.拒绝;
-        logOrder(orderId, CreditVettingResultEnum.通过.getValue(), "");
-        return CreditVettingResultEnum.通过;
+        	}
+        logOrder(orderId, CreditVettingResultEnum.拒绝.getValue(), "拒绝 - 其它原因");
+        return CreditVettingResultEnum.拒绝;
     }
 
     public void logOrder(String orderId, String result, String note) {

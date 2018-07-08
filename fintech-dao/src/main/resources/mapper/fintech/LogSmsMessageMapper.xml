@@ -11,7 +11,7 @@
     <result column="SEND_TYPE" property="sendType" jdbcType="INTEGER" />
   </resultMap>
   <sql id="Base_Column_List" >
-    ID, SEND_MOBILE, SEND_CONTENT, RESULT_STATE, RESULT_MSG, CREATE_TIME, SEND_TYPE
+    ID, SEND_MOBILE, SEND_CONTENT, RESULT_STATE, CREATE_TIME, SEND_TYPE
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
@@ -19,6 +19,17 @@
     from log_sms_message
     where ID = #{id,jdbcType=BIGINT}
   </select>
+  
+  <select id="selectByPrimaryKeyList" resultMap="BaseResultMap" parameterType="java.util.Map" >
+    select 
+    <include refid="Base_Column_List" />
+    from log_sms_message
+    where 1=1
+     <if test="sendMobile !=null and sendMobile !=''">
+      and SEND_MOBILE  LIKE  concat('%', #{sendMobile},'%')
+    </if>
+  </select>
+  
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
     delete from log_sms_message
     where ID = #{id,jdbcType=BIGINT}

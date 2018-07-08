@@ -1,6 +1,7 @@
 package com.fintech.service.impl;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
@@ -20,7 +21,10 @@ import com.fintech.model.LogSmsMessage;
 import com.fintech.model.vo.LogSmsMessageVo;
 import com.fintech.service.LogSmsMessageService;
 import com.fintech.service.RedisService;
+import com.fintech.util.CommonUtil;
 import com.fintech.util.DateUtils;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.google.gson.Gson;
 
 @Service
@@ -82,5 +86,23 @@ public class LogSmsMessageImpl implements LogSmsMessageService {
         }
         return serverCode;
     }
+
+	/* (非 Javadoc) 
+	* <p>Title: selectByPrimaryKeyList</p> 
+	* <p>Description: </p> 
+	* @param vo
+	* @return
+	* @throws Exception 
+	* @see com.fintech.service.LogSmsMessageService#selectByPrimaryKeyList(com.fintech.model.vo.LogSmsMessageVo) 
+	*查询短信列表
+	*/
+	@Override
+	public PageInfo<LogSmsMessage> selectByPrimaryKeyList(LogSmsMessageVo vo) throws Exception {
+		Map<String, Object> parms = CommonUtil.object2Map(vo);
+		PageHelper.startPage(vo.getPageIndex(), vo.getPageSize());
+		List<LogSmsMessage> logSmsMessages=logSmsMessageMapper.selectByPrimaryKeyList(parms);
+		PageInfo<LogSmsMessage>pageLists=new PageInfo<>(logSmsMessages);
+		return pageLists;
+	}
 
 }
