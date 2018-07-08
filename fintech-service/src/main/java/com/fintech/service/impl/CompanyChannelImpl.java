@@ -8,7 +8,9 @@ import org.springframework.stereotype.Service;
 
 import com.fintech.dao.CompanyChannelMapper;
 import com.fintech.model.CompanyChannel;
+import com.fintech.model.vo.CompanyChannelVo;
 import com.fintech.service.CompanyChannelService;
+import com.fintech.util.BeanUtils;
 
 /**   
 * @Title: CompanyChannelImpl.java 
@@ -32,6 +34,43 @@ public class CompanyChannelImpl implements CompanyChannelService {
 	@Override
 	public List<CompanyChannel> selectByPrimaryKeyList(Map<String, Object> parms) {
 		return companyChannelMapper.selectByPrimaryKeyList(parms);
+	}
+	/* (非 Javadoc) 
+	* <p>Title: insertSelective</p> 
+	* <p>Description: </p> 
+	* @param vo 
+	* @see com.fintech.service.CompanyChannelService#insertSelective(com.fintech.model.vo.CompanyChannelVo) 
+	*新增咨询师
+	*/
+	@Override
+	public void insertSelective(CompanyChannelVo vo) {
+		CompanyChannel channel=new CompanyChannel();
+		BeanUtils.copyProperties(vo, channel);
+		companyChannelMapper.insertSelective(channel);
+	}
+	/* (非 Javadoc) 
+	* <p>Title: updateSelective</p> 
+	* <p>Description: </p> 
+	* @param vo 
+	* @see com.fintech.service.CompanyChannelService#updateSelective(com.fintech.model.vo.CompanyChannelVo) 
+	*更新咨询师
+	*/
+	@Override
+	public void updateSelective(CompanyChannelVo vo) {
+		CompanyChannel channel=new CompanyChannel();
+		BeanUtils.copyProperties(vo, channel);
+		companyChannelMapper.updateByPrimaryKeySelective(channel);
+	}
+	/* (非 Javadoc) 
+	* <p>Title: deleteSelective</p> 
+	* <p>Description: </p> 
+	* @param id 
+	* @see com.fintech.service.CompanyChannelService#deleteSelective(java.lang.Integer) 
+	*删除咨询师
+	*/
+	@Override
+	public void deleteSelective(Integer id) {
+		companyChannelMapper.deleteByPrimaryKey(id);
 	}
 
 }

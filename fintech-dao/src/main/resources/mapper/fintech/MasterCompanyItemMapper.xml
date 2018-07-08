@@ -18,6 +18,13 @@
     from master_company_item
     where ITEM_CODE = #{itemCode,jdbcType=CHAR}
   </select>
+  
+  <select id="selectByPrimaryKeyList" resultMap="BaseResultMap"  >
+    select 
+    <include refid="Base_Column_List" />
+    from master_company_item
+  </select>
+  
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
     delete from master_company_item
     where ITEM_CODE = #{itemCode,jdbcType=CHAR}

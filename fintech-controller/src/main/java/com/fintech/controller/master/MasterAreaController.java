@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.fintech.model.MasterArea;
@@ -40,7 +41,7 @@ public class MasterAreaController {
     * @Description: TODO[ 查询通用省市区 ]
     * @throws 
     */
-    @RequestMapping(value ="queryMasterAreaByKey")
+    @RequestMapping(value ="queryMasterAreaByKey",method = RequestMethod.GET)
     public @ResponseBody BaseResult queryMasterAreaByKey(MasterArea vo) {
         logger.info("EK运营系统日志： 方法名[{}]参数[{}]操作时间[{}]",Thread.currentThread().getStackTrace()[1].getMethodName(),vo,DateUtils.getDateTime());
         try {

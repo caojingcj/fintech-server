@@ -8,7 +8,9 @@ import org.springframework.stereotype.Service;
 
 import com.fintech.dao.CompanyPeriodFeeMapper;
 import com.fintech.model.CompanyPeriodFee;
+import com.fintech.model.vo.CompanyPeriodFeeVo;
 import com.fintech.service.CompanyPeriodFeeService;
+import com.fintech.util.BeanUtils;
 /**   
 * @Title: CompanyPeriodFeeImpl.java 
 * @Package com.fintech.service.impl 
@@ -30,6 +32,43 @@ public class CompanyPeriodFeeImpl implements CompanyPeriodFeeService {
 	@Override
 	public List<CompanyPeriodFee> selectByPrimaryKeyList(Map<String, Object> parms) {
 		return companyPeriodFeeMapper.selectByPrimaryKeyList(parms);
+	}
+	/* (非 Javadoc) 
+	* <p>Title: insertSelective</p> 
+	* <p>Description: </p> 
+	* @param vo 
+	* @see com.fintech.service.CompanyPeriodFeeService#insertSelective(com.fintech.model.vo.CompanyPeriodFeeVo) 
+	*增加期數
+	*/
+	@Override
+	public void insertSelective(CompanyPeriodFeeVo vo) {
+		CompanyPeriodFee periodFee=new CompanyPeriodFee();
+		BeanUtils.copyProperties(vo, periodFee);
+		companyPeriodFeeMapper.insertSelective(periodFee);
+	}
+	/* (非 Javadoc) 
+	* <p>Title: updateSelective</p> 
+	* <p>Description: </p> 
+	* @param vo 
+	* @see com.fintech.service.CompanyPeriodFeeService#updateSelective(com.fintech.model.vo.CompanyPeriodFeeVo) 
+	*更新期數
+	*/
+	@Override
+	public void updateSelective(CompanyPeriodFeeVo vo) {
+		CompanyPeriodFee periodFee=new CompanyPeriodFee();
+		BeanUtils.copyProperties(vo, periodFee);
+		companyPeriodFeeMapper.updateByPrimaryKeySelective(periodFee);
+	}
+	/* (非 Javadoc) 
+	* <p>Title: deleteSelective</p> 
+	* <p>Description: </p> 
+	* @param id 
+	* @see com.fintech.service.CompanyPeriodFeeService#deleteSelective(java.lang.Integer) 
+	*刪除期數
+	*/
+	@Override
+	public void deleteSelective(Integer id) {
+		companyPeriodFeeMapper.deleteByPrimaryKey(id);
 	}
 
 }

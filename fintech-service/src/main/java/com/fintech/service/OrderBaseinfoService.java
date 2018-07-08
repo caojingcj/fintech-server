@@ -55,5 +55,6 @@ public interface OrderBaseinfoService {
     PageInfo<OrderBaseinfoVo> selectByPrimaryKeyList(OrderBaseinfoVo orderBaseinfoVo) throws Exception;
     
     Map<String, Object>selectOrderDetails(String orderId);
+    
     void cancelOrder(OrderBaseinfoVo vo);
 }

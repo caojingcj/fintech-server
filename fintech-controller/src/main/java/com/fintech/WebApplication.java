@@ -61,14 +61,14 @@ public class WebApplication extends SpringBootServletInitializer implements Embe
        try {
        	File file = new File(appConfig.getTmpFile());
 			redisService.set("tmpFile", file.getPath());
-			logger.info("EK 创建临时文件夹路径[{}]方法名[{}]操作时间[{}]",file,Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
+			logger.info("EK运营系统日志：  方法名[{}]创建临时文件夹路径[{}]操作时间[{}]",Thread.currentThread().getStackTrace()[1].getMethodName(),file,DateUtils.getDateTime());
 			if (!file.exists()) {
 				file.mkdirs();
 			}
 			factory.setLocation(file.getPath());
 		} catch (Exception e) {
 			e.printStackTrace();
-			logger.error("EK 创建临时文件夹失败：可能无权限访问！方法名[{}]操作时间[{}]",Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
+			logger.error("ERROR EK运营系统日志：方法名[{}] 创建临时文件夹失败：可能无权限访问！操作时间[{}]",Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
 		}
        return factory.createMultipartConfig();
    }

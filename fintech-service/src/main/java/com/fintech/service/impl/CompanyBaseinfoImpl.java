@@ -1,5 +1,6 @@
 package com.fintech.service.impl;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -7,8 +8,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.fintech.common.ObjectEmptyUtil;
+import com.fintech.dao.CompanyAccountinfoMapper;
 import com.fintech.dao.CompanyBaseinfoMapper;
+import com.fintech.dao.CompanyChannelMapper;
+import com.fintech.dao.CompanyItemMapper;
+import com.fintech.dao.CompanyPeriodFeeMapper;
 import com.fintech.dao.procedure.CompanyProcedureMapper;
+import com.fintech.model.CompanyAccountinfo;
 import com.fintech.model.CompanyBaseinfo;
 import com.fintech.model.vo.CompanyBaseinfoVo;
 import com.fintech.service.CompanyBaseinfoService;
@@ -31,6 +37,14 @@ public class CompanyBaseinfoImpl implements CompanyBaseinfoService {
     private CompanyBaseinfoMapper companyBaseinfoMapper;
     @Autowired
     private CompanyProcedureMapper companyProcedureMapper;
+    @Autowired
+    private CompanyAccountinfoMapper companyAccountinfoMapper;
+    @Autowired
+    private CompanyPeriodFeeMapper companyPeriodFeeMapper;
+    @Autowired
+    private CompanyItemMapper companyItemMapper;
+    @Autowired
+    private CompanyChannelMapper companyChannelMapper;
 
     /* (非 Javadoc) 
     * <p>Title: insertCompanyBaseInfo</p> 
@@ -74,11 +88,9 @@ public class CompanyBaseinfoImpl implements CompanyBaseinfoService {
 	*/
 	@Override
 	public void updateCompanyBaseInfoStatus(CompanyBaseinfoVo vo) {
-		Object[] obj={"companyId","companyStatus"};//通用属性判断
-		CompanyBaseinfo companyBaseinfo=new CompanyBaseinfo();
-		BeanUtils.copyProperties(vo, companyBaseinfo);
-		ObjectEmptyUtil.isObjectEmptyByName(obj,companyBaseinfo);
-		companyBaseinfoMapper.updateByPrimaryKeySelective(companyBaseinfo);
+		CompanyBaseinfo baseinfo=companyBaseinfoMapper.selectByPrimaryKeyInfo(vo.getCompanyId());
+		baseinfo.setCompanyStatus(vo.getCompanyStatus());
+		companyBaseinfoMapper.updateByPrimaryKeySelective(baseinfo);
 	}
 
 	/* (非 Javadoc) 
@@ -99,5 +111,19 @@ public class CompanyBaseinfoImpl implements CompanyBaseinfoService {
     public CompanyBaseinfo selectByPrimaryKeyInfo(String companyId) {
         return companyBaseinfoMapper.selectByPrimaryKeyInfo(companyId);
     }
+
+	@Override
+	public Map<String, Object> selectCompanyBaseInfoDetails(String companyId) throws Exception {
+		ObjectEmptyUtil.isEmptyByName(companyId);
+		Map<String, Object>parms=new HashMap<>();
+		parms.put("companyId", companyId);
+		Map<String, Object>companyInfo=new HashMap<>();
+		companyInfo.put("baseInfo", companyBaseinfoMapper.selectByPrimaryKeyInfo(companyId));
+		companyInfo.put("accountinfo", companyAccountinfoMapper.selectByPrimaryKeyList(parms));
+		companyInfo.put("periodFeeInfo", companyPeriodFeeMapper.selectByPrimaryKeyList(parms));
+		companyInfo.put("itemInfo", companyItemMapper.selectByPrimaryKeyList(parms));
+		companyInfo.put("channelInfo", companyChannelMapper.selectByPrimaryKeyList(parms));
+		return companyInfo;
+	}
 
 }

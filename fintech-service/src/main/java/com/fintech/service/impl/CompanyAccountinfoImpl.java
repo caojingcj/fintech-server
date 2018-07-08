@@ -8,7 +8,9 @@ import org.springframework.stereotype.Service;
 
 import com.fintech.dao.CompanyAccountinfoMapper;
 import com.fintech.model.CompanyAccountinfo;
+import com.fintech.model.vo.CompanyAccountinfoVo;
 import com.fintech.service.CompanyAccountinfoService;
+import com.fintech.util.BeanUtils;
 /**   
 * @Title: CompanyAccountinfoImpl.java 
 * @Package com.fintech.service.impl 
@@ -32,5 +34,47 @@ public class CompanyAccountinfoImpl implements CompanyAccountinfoService {
 	public List<CompanyAccountinfo> selectByPrimaryKeyList(Map<String, Object>parms) {
 		return companyAccountinfoMapper.selectByPrimaryKeyList(parms);
 	}
+
+	/* (非 Javadoc) 
+	* <p>Title: insertSelective</p> 
+	* <p>Description: </p> 
+	* @param vo 
+	* @see com.fintech.service.CompanyAccountinfoService#insertSelective(com.fintech.model.vo.CompanyAccountinfoVo) 
+	*新增清算账户
+	*/
+	@Override
+	public void insertSelective(CompanyAccountinfoVo vo) {
+		CompanyAccountinfo accountinfo=new CompanyAccountinfo();
+		BeanUtils.copyProperties(vo, accountinfo);
+		companyAccountinfoMapper.insertSelective(accountinfo);
+	}
+
+	/* (非 Javadoc) 
+	* <p>Title: updateSelective</p> 
+	* <p>Description: </p> 
+	* @param vo 
+	* @see com.fintech.service.CompanyAccountinfoService#updateSelective(com.fintech.model.vo.CompanyAccountinfoVo) 
+	*更出清算账户
+	*/
+	@Override
+	public void updateSelective(CompanyAccountinfoVo vo) {
+		CompanyAccountinfo accountinfo=new CompanyAccountinfo();
+		BeanUtils.copyProperties(vo, accountinfo);
+		companyAccountinfoMapper.updateByPrimaryKeySelective(accountinfo);
+	}
+
+	/* (非 Javadoc) 
+	* <p>Title: deleteSelective</p> 
+	* <p>Description: </p> 
+	* @param id 
+	* @see com.fintech.service.CompanyAccountinfoService#deleteSelective(java.lang.Integer) 
+	*删除清算账户
+	*/
+	@Override
+	public void deleteSelective(Integer id) {
+		companyAccountinfoMapper.deleteByPrimaryKey(id);
+	}
+	
+	
 	
 }

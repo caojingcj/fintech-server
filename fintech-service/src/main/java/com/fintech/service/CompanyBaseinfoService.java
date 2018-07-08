@@ -3,10 +3,12 @@ package com.fintech.service;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.transaction.annotation.Transactional;
+
 import com.fintech.model.CompanyBaseinfo;
 import com.fintech.model.vo.CompanyBaseinfoVo;
 import com.github.pagehelper.PageInfo;
-
+@Transactional(rollbackFor = Exception.class)
 public interface CompanyBaseinfoService {
 
     void insertCompanyBaseInfo(CompanyBaseinfoVo companyBaseinfo);
@@ -19,5 +21,5 @@ public interface CompanyBaseinfoService {
     
     void updateCompanyBaseInfoStatus(CompanyBaseinfoVo vo);
     
-    
+    Map<String, Object> selectCompanyBaseInfoDetails(String companyId)throws Exception;
 }

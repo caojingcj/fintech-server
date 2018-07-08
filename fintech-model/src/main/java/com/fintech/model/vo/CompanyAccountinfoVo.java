@@ -102,4 +102,19 @@ public class CompanyAccountinfoVo extends BaseVO {
     public void setUpdatetime(Date updatetime) {
         this.updatetime = updatetime;
     }
+
+	/* (非 Javadoc) 
+	* <p>Title: toString</p> 
+	* <p>Description: </p> 
+	* @return 
+	* @see java.lang.Object#toString() 
+	*/
+	@Override
+	public String toString() {
+		return "CompanyAccountinfoVo [id=" + id + ", companyId=" + companyId + ", companyAccountName="
+				+ companyAccountName + ", companyAccountNo=" + companyAccountNo + ", companyAccountBranch="
+				+ companyAccountBranch + ", accountType=" + accountType + ", isEnabled=" + isEnabled + ", bankCode="
+				+ bankCode + ", createTime=" + createTime + ", updatetime=" + updatetime + "]";
+	}
+    
 }
