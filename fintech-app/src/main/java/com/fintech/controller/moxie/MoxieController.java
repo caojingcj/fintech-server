@@ -83,14 +83,14 @@ public class MoxieController {
             redisService.tokenValidate(token);
             redisService.set(orderId,"999999");
             OrderBaseinfo baseinfo=orderBaseinfoMapper.selectByPrimaryKey(orderId);
-            logger.info("EK魔蝎日志 H5参数【订单号[{}]token[{}]】>方法名[{}]操作时间[{}]",orderId,token,Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
+            logger.info("EK>APP系统日志：方法名[{}] 魔蝎日志 H5参数【订单号[{}]token[{}]】>操作时间[{}]",Thread.currentThread().getStackTrace()[1].getMethodName(),orderId,token,DateUtils.getDateTime());
             String loginParams = URLEncoder.encode("{\"phone\":\"" + baseinfo.getCustCellphone() + "\",\"name\":\"" +
                     baseinfo.getCustRealname() + "\",\"idcard\":\"" + baseinfo.getCustIdCardNo() + "\"}", "UTF-8");
             String moxieUrl="https://api.51datakey.com/h5/importV3/index.html#/carrier?apiKey="+appConfig.getMOXIE_APIKEY()+"&userId="+orderId+"&quitOnLoginDone=YES&goBackEnable=YES&backUrl="+appConfig.getMOXIE_BACKURL()+"&themeColor=2196F3&cacheDisable=YES&loginParams="+loginParams;
             logger.info("EK魔蝎日志 魔蝎H5完整地址[{}]",moxieUrl);
             return ResultUtils.success(ResultUtils.SUCCESS_CODE_MSG,moxieUrl);
         } catch (Exception e) {
-            logger.error("EK ERROR [{}]魔蝎日志 H5参数【定单号[{}]]】>方法名[{}]操作时间[{}]",e.getMessage(),orderId,Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
+            logger.error("ERROR EK>APP系统日志：方法名[{}]H5参数【定单号[{}]]】报错[{}]操作时间[{}]",Thread.currentThread().getStackTrace()[1].getMethodName(),orderId,e.getMessage(),DateUtils.getDateTime());
             return ResultUtils.error(ResultUtils.ERROR_CODE,e.getMessage());
         }
     }
@@ -105,84 +105,84 @@ public class MoxieController {
     */
     @RequestMapping(value = "getMXPresentation",method = RequestMethod.GET)
     public @ResponseBody BaseResult toMoxieCarrierH5(LogMoxieinfo record) {
-        logger.info("EK 获取魔蝎报告[{}]方法名[{}]操作时间[{}]",record,Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
+        logger.info("EK>APP系统日志： 方法名[{}]参数[{}]操作时间[{}]",Thread.currentThread().getStackTrace()[1].getMethodName(),record,DateUtils.getDateTime());
         try {
             moxieService.insertSelective(record);
             return ResultUtils.success(ResultUtils.SUCCESS_CODE_MSG);
         } catch (Exception e) {
-            logger.error("ERROR EK参数[{}] 报错[{}] 方法名[{}]报错时间[{}]",record,e.getMessage(),Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
+            logger.error("ERROR EK>APP系统日志：参数[{}] 报错[{}] 方法名[{}]报错时间[{}]",record,e.getMessage(),Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
             return ResultUtils.error(ResultUtils.ERROR_CODE,e.getMessage());
         }
     }
     
     @RequestMapping(value = "backMoxieTaskSubmit",method = RequestMethod.POST)
     public @ResponseBody Object backMoxieTaskSubmit(@RequestBody BackMoxieTaskSubmitVo vo,HttpServletRequest request,HttpServletResponse response) {
-        logger.info("EK 接到魔蝎回调任务backMoxieTaskSubmit 参数[{}]方法名[{}]操作时间[{}]",vo.toString(),Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
+        logger.info("EK>APP系统日志： 方法名[{}]接到魔蝎回调任务backMoxieTaskSubmit 参数[{}]操作时间[{}]",Thread.currentThread().getStackTrace()[1].getMethodName(),vo,DateUtils.getDateTime());
         try {
             moxieService.backMoxieTaskSubmit(vo);
             MoxieUtil.returnMoxieSuccStatus(response);
             return ResultUtils.success(ResultUtils.SUCCESS_CODE_MSG);
         } catch (Exception e) {
-            logger.error("ERROR EK参数[{}] 报错[{}] 方法名[{}]报错时间[{}]",vo,e.getMessage(),Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
+            logger.error("ERROR EK>APP系统日志：方法名[{}]参数[{}] 报错[{}]报错时间[{}]",Thread.currentThread().getStackTrace()[1].getMethodName(),vo,e.getMessage(),DateUtils.getDateTime());
             return ResultUtils.error(ResultUtils.ERROR_CODE,e.getMessage());
         }
     }
     
     @RequestMapping(value = "backMoxieTask",method = RequestMethod.POST)
     public @ResponseBody Object backMoxieTask(@RequestBody BackMoxieTaskVo vo,HttpServletRequest request,HttpServletResponse response) {
-        logger.info("EK 接到魔蝎回调任务backMoxieTask 参数[{}]方法名[{}]操作时间[{}]",vo.toString(),Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
+        logger.info("EK>APP系统日志： 接到魔蝎回调任务backMoxieTask 参数[{}]方法名[{}]操作时间[{}]",vo.toString(),Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
         try {
             moxieService.backMoxieTask(vo);
             MoxieUtil.returnMoxieSuccStatus(response);
             return ResultUtils.success(ResultUtils.SUCCESS_CODE_MSG);
         } catch (Exception e) {
-            logger.error("ERROR EK参数[{}] 报错[{}] 方法名[{}]报错时间[{}]",vo,e.getMessage(),Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
+            logger.error("ERROR EK>APP系统日志：参数[{}] 报错[{}] 方法名[{}]报错时间[{}]",vo,e.getMessage(),Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
             return ResultUtils.error(ResultUtils.ERROR_CODE,e.getMessage());
         }
     }
     
     @RequestMapping(value = "backMoxieFail",method = RequestMethod.POST)
     public @ResponseBody Object backMoxieFail(@RequestBody BackMoxieFailVo vo,HttpServletRequest request,HttpServletResponse response) {
-        logger.info("EK 接到魔蝎回调任务backMoxieFail 参数[{}]方法名[{}]操作时间[{}]",vo.toString(),Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
+        logger.info("EK>APP系统日志：方法名[{}]接到魔蝎回调任务backMoxieFail 参数[{}]操作时间[{}]",Thread.currentThread().getStackTrace()[1].getMethodName(),vo,DateUtils.getDateTime());
         try {
             moxieService.backMoxieFail(vo);
             MoxieUtil.returnMoxieSuccStatus(response);
             return ResultUtils.success(ResultUtils.SUCCESS_CODE_MSG);
         } catch (Exception e) {
-            logger.error("ERROR EK报错[{}] 方法名[{}]报错时间[{}]",e.getMessage(),Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
+            logger.error("ERROR EK>APP系统日志：方法名[{}]报错[{}]报错时间[{}]",Thread.currentThread().getStackTrace()[1].getMethodName(),e.getMessage(),DateUtils.getDateTime());
             return ResultUtils.error(ResultUtils.ERROR_CODE,e.getMessage());
         }
     }
     
     @RequestMapping(value = "backMoxieBill",method = RequestMethod.POST)
     public @ResponseBody Object backMoxieBill(@RequestBody BackMoxieBillVo vo,HttpServletRequest request,HttpServletResponse response) {
-        logger.info("EK 接到魔蝎回调任务backMoxieBill 参数[{}]方法名[{}]操作时间[{}]",vo.toString(),Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
+        logger.info("EK>APP系统日志：方法名[{}] 接到魔蝎回调任务backMoxieBill 参数[{}]操作时间[{}]",Thread.currentThread().getStackTrace()[1].getMethodName(),vo,DateUtils.getDateTime());
         try {
             moxieService.backMoxieBill(vo);
             MoxieUtil.returnMoxieSuccStatus(response);
             return ResultUtils.success(ResultUtils.SUCCESS_CODE_MSG);
         } catch (Exception e) {
-            logger.error("ERROR EK报错[{}] 方法名[{}]报错时间[{}]",e.getMessage(),Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
+            logger.error("ERROR EK>APP系统日志：方法名[{}]报错[{}]报错时间[{}]",Thread.currentThread().getStackTrace()[1].getMethodName(),e.getMessage(),DateUtils.getDateTime());
             return ResultUtils.error(ResultUtils.ERROR_CODE,e.getMessage());
         }
     }
     
     @RequestMapping(value = "backMoxieReport",method = RequestMethod.POST)
     public @ResponseBody Object backMoxieReport(@RequestBody BackMoxieReportVo vo,HttpServletRequest request,HttpServletResponse response) {
-        logger.info("EK 接到魔蝎回调任务backMoxieReport 参数[{}]方法名[{}]操作时间[{}]",vo.toString(),Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
+        logger.info("EK>APP系统日志： 方法名[{}]接到魔蝎回调任务backMoxieReport 参数[{}]操作时间[{}]",Thread.currentThread().getStackTrace()[1].getMethodName(),vo,DateUtils.getDateTime());
         try {
             moxieService.backMoxieReport(vo);
             MoxieUtil.returnMoxieSuccStatus(response);
             return ResultUtils.success(ResultUtils.SUCCESS_CODE_MSG);
         } catch (Exception e) {
-            logger.error("ERROR EK报错[{}] 方法名[{}]报错时间[{}]",e.getMessage(),Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
+            logger.error("ERROR EK>APP系统日志：方法名[{}]报错[{}]报错时间[{}]",Thread.currentThread().getStackTrace()[1].getMethodName(),e.getMessage(),DateUtils.getDateTime());
             return ResultUtils.error(ResultUtils.ERROR_CODE,e.getMessage());
         }
     }
     
     @RequestMapping(value = "resultMoxie",method = RequestMethod.GET)
     public @ResponseBody Object resultMoxie(HttpServletRequest request) {
-        logger.info("EK 获取魔蝎报告返回成功[userId[{}]]方法名[{}]操作时间[{}]",request.getParameter("orderId"),Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
+        logger.info("EK>APP系统日志：方法名[{}]获取魔蝎报告返回成功[userId[{}]]操作时间[{}]",Thread.currentThread().getStackTrace()[1].getMethodName(),request.getParameter("orderId"),DateUtils.getDateTime());
         try {
             String userId=request.getParameter("userId");
             String orderId=request.getParameter("orderId");
@@ -193,7 +193,7 @@ public class MoxieController {
             return ResultUtils.success(ResultUtils.SUCCESS_CODE_MSG,redisService.get(orderId==null?userId:orderId));
             } catch (Exception e) {
                 e.printStackTrace();
-                logger.error("ERROR EK 魔蝎报告报错[{}] 方法名[{}]报错时间[{}]", e.getMessage(),Thread.currentThread().getStackTrace()[1].getMethodName(), DateUtils.getDateTime());
+                logger.error("ERROR EK>APP系统日志：方法名[{}] 魔蝎报告报错[{}]报错时间[{}]", Thread.currentThread().getStackTrace()[1].getMethodName(), e.getMessage(),DateUtils.getDateTime());
                 return ResultUtils.error(ResultUtils.ERROR_CODE,e.getMessage());
             }
     }

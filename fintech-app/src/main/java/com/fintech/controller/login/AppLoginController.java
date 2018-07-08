@@ -60,12 +60,12 @@ public class AppLoginController {
     @RequestMapping(value ="appLogin",method = RequestMethod.GET)
     public @ResponseBody BaseResult appLogin(String mobile) {
         try {
-            logger.info("EK 发送登录验证码[{}] 方法名[{}]操作时间[{}]",mobile,Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
+            logger.info("EK>APP系统日志： 方法名[{}]发送登录验证码[{}]操作时间[{}]",Thread.currentThread().getStackTrace()[1].getMethodName(),mobile,DateUtils.getDateTime());
             appLoginService.appLogin(mobile);
             return ResultUtils.success(ResultUtils.SUCCESS_CODE_MSG);
         } catch (Exception e) {
-            logger.error("ERROR EK参数[{}] 报错[{}] 方法名[{}]报错时间[{}]",mobile,e.getMessage(),
-                    Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
+            logger.error("ERROR EK>APP系统日志：方法名[{}]参数[{}] 报错[{}]报错时间[{}]",Thread.currentThread().getStackTrace()[1].getMethodName(),mobile,e.getMessage(),
+                    DateUtils.getDateTime());
             return ResultUtils.error(ResultUtils.ERROR_CODE,e.getMessage());
         }
     }
@@ -82,11 +82,9 @@ public class AppLoginController {
     @RequestMapping(value ="appLoginout",method = RequestMethod.GET)
     public @ResponseBody BaseResult appLoginout(String token) {
         try {
-            logger.info("EK 操作人[{}]方法名[{}]操作时间[{}]",redisService.get(token),Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
-            System.out.println("清除前："+redisService.get(ConstantInterface.AppValidateConfig.ObjectRedisValidate.OBJECT_REDIS_TOKEN.getValue()+token));
+            logger.info("EK>APP系统日志： 操作人[{}]方法名[{}]操作时间[{}]",redisService.get(token),Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
             //根据key删除缓存 
             redisService.del(token);
-            System.out.println("清除后："+redisService.get(ConstantInterface.AppValidateConfig.ObjectRedisValidate.OBJECT_REDIS_TOKEN.getValue()+token));
             return ResultUtils.success("bye-bye");
         } catch (Exception e) {
             logger.error("ERROR EK参数[{}] 报错[{}] 方法名[{}]报错时间[{}]",token,e.getMessage(),
@@ -107,11 +105,11 @@ public class AppLoginController {
     */
     @RequestMapping(value ="appLoginVerification",method = RequestMethod.GET)
     public @ResponseBody BaseResult appLoginVerification(String mobile,String openId,String code) {
-        logger.info("EK 方法名[{}]操作时间[{}]",Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
+        logger.info("EK>APP系统日志： 方法名[{}]操作时间[{}]",Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
         try {
             return ResultUtils.success(ResultUtils.SUCCESS_CODE_MSG,appLoginService.appLoginVerification(mobile, openId,code));
         } catch (Exception e) {
-            logger.error("ERROR EK参数[{}] 报错[{}] 方法名[{}]报错时间[{}]",mobile,e.getMessage(),Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
+            logger.error("ERROR EK>APP系统日志：方法名[{}]参数[{}] 报错[{}] 报错时间[{}]",Thread.currentThread().getStackTrace()[1].getMethodName(),mobile,e.getMessage(),DateUtils.getDateTime());
             return ResultUtils.error(ResultUtils.ERROR_CODE,e.getMessage());
         }
     }

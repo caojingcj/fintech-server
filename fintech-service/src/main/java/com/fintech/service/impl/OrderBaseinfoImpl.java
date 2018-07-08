@@ -163,8 +163,8 @@ public class OrderBaseinfoImpl implements OrderBaseinfoService {
     public void updateByPrimaryKeySelective(OrderBaseinfo record) {
         CompanyBaseinfo baseinfo = companyBaseinfoMapper.selectByPrimaryKeyInfo(record.getCompanyId());
         if (baseinfo.getCompanyStatus().equals(String.valueOf(ConstantInterface.Enum.ConstantNumber.ZERO.getKey()))) {
-            throw new FinTechException(ConstantInterface.ValidateConfig.CompanyValidate.COMPANY_100006.getKey(),
-                    ConstantInterface.ValidateConfig.CompanyValidate.COMPANY_100006.getValue());
+            throw new FinTechException(ConstantInterface.WebValidateConfig.CompanyValidate.COMPANY_100106.getKey(),
+                    ConstantInterface.WebValidateConfig.CompanyValidate.COMPANY_100106.getValue());
         }
         orderBaseinfoMapper.updateByPrimaryKeySelective(record);
         logOrderMapper.insertSelective(new LogOrder(record.getOrderId(),
@@ -635,6 +635,14 @@ public class OrderBaseinfoImpl implements OrderBaseinfoService {
 	  parms.put("orderAttachment", orderAttachment);
 	  parms.put("userReturnplans", userReturnplans);
 	    return parms;
+	}
+
+	@Override
+	public void cancelOrder(OrderBaseinfoVo vo) {
+		OrderBaseinfo baseinfo=orderBaseinfoMapper.selectByPrimaryKey(vo.getOrderId());
+		baseinfo.setOrderStatus(ConstantInterface.Enum.OrderStatus.ORDER_STATUS11.getKey());
+		orderBaseinfoMapper.updateByPrimaryKey(baseinfo);
+		logOrderMapper.insertSelective(new LogOrder(vo.getOrderId(), ConstantInterface.Enum.OrderLogStatus.ORDER_STATUS11.getKey(), ConstantInterface.Enum.OrderStatus.ORDER_STATUS11.getKey(), ConstantInterface.WebValidateConfig.OrderValidate.ORDER_100201.getValue()));
 	}
 
 }

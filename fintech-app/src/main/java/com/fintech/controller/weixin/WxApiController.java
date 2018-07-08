@@ -54,7 +54,7 @@ public class WxApiController {
     */
     @RequestMapping(value = "wxCode",method = RequestMethod.GET)
     public void wxCode(HttpServletRequest request, HttpServletResponse response) {
-        logger.info("EK 微信通道：我要进件 方法名[{}]操作时间[{}]",Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
+        logger.info("EK>APP系统日志：我要进件 方法名[{}]操作时间[{}]",Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
         try {
             response.setContentType("text/html");
             response.setCharacterEncoding("UTF-8");
@@ -82,7 +82,7 @@ public class WxApiController {
     @RequestMapping(value = "wxOrderCode",method = RequestMethod.GET)
     public void wxOrderCode(HttpServletRequest request, HttpServletResponse response) {
         try {
-            logger.info("EK 微信通道：我的订单 方法名[{}]操作时间[{}]",Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
+            logger.info("EK>APP系统日志：我的订单 方法名[{}]操作时间[{}]",Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
             response.setContentType("text/html");
             response.setCharacterEncoding("UTF-8");
             request.setCharacterEncoding("UTF-8");
@@ -108,7 +108,7 @@ public class WxApiController {
     */
     @RequestMapping(value = "wxReturnCode",method = RequestMethod.GET)
     public void wxReturnCode(HttpServletRequest request, HttpServletResponse response) {
-        logger.info("EK 微信通道：我要还款 方法名[{}]操作时间[{}]",Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
+        logger.info("EK>APP系统日志：我要还款 方法名[{}]操作时间[{}]",Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
         try {
             response.setContentType("text/html");
             response.setCharacterEncoding("UTF-8");
@@ -140,12 +140,12 @@ public class WxApiController {
             Gson gson=new Gson();
             parms.put("pageStatus", ConstantInterface.Enum.ConstantNumber.ONE.getKey());
             String resMap=gson.toJson(parms);
-            logger.info("EK 页面获取的参数[{}]方法名[{}]操作时间[{}]",resMap,Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
+            logger.info("EK>APP系统日志：页面获取的参数[{}]方法名[{}]操作时间[{}]",resMap,Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
             response.sendRedirect(appConfig.getWEIXIN_API_HTML_URL().replace("{resMap}", URLEncoder.encode(resMap, "UTF-8")));
 //            response.sendRedirect("http://192.168.10.55:8020/fintech-wechath5/#/waiting?"+URLEncoder.encode(resMap, "UTF-8"));
         } catch (Exception e) {
             e.printStackTrace();
-            logger.error("ERROR EK 报错[{}] 方法名[{}]报错时间[{}]", e.getMessage(),
+            logger.error("ERROR EK>APP系统日志：报错[{}] 方法名[{}]报错时间[{}]", e.getMessage(),
                     Thread.currentThread().getStackTrace()[1].getMethodName(), DateUtils.getDateTime());
         }
     }
@@ -166,12 +166,12 @@ public class WxApiController {
             Gson gson=new Gson();
             parms.put("pageStatus", ConstantInterface.Enum.ConstantNumber.TOW.getKey());
             String resMap=gson.toJson(parms);
-            logger.info("EK 页面获取的参数[{}]方法名[{}]操作时间[{}]",resMap,Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
+            logger.info("EK>APP系统日志：页面获取的参数[{}]方法名[{}]操作时间[{}]",resMap,Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
             response.sendRedirect(appConfig.getWEIXIN_API_HTML_URL().replace("{resMap}", URLEncoder.encode(resMap, "UTF-8")));
 //            response.sendRedirect("http://192.168.10.55:8020/fintech-wechath5/#/waiting?"+URLEncoder.encode(resMap, "UTF-8"));
         } catch (Exception e) {
             e.printStackTrace();
-            logger.error("ERROR EK 报错[{}] 方法名[{}]报错时间[{}]", e.getMessage(),
+            logger.error("ERROR EK>APP系统日志：报错[{}] 方法名[{}]报错时间[{}]", e.getMessage(),
                     Thread.currentThread().getStackTrace()[1].getMethodName(), DateUtils.getDateTime());
         }
     }
@@ -192,12 +192,12 @@ public class WxApiController {
             Gson gson=new Gson();
             parms.put("pageStatus", ConstantInterface.Enum.ConstantNumber.THREE.getKey());
             String resMap=gson.toJson(parms);
-            logger.info("EK 页面获取的参数[{}]方法名[{}]操作时间[{}]",resMap,Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
+            logger.info("EK>APP系统日志：页面获取的参数[{}]方法名[{}]操作时间[{}]",resMap,Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
             response.sendRedirect(appConfig.getWEIXIN_API_HTML_URL().replace("{resMap}", URLEncoder.encode(resMap, "UTF-8")));
 //            response.sendRedirect("http://192.168.10.55:8020/fintech-wechath5/#/waiting?"+URLEncoder.encode(resMap, "UTF-8"));
         } catch (Exception e) {
             e.printStackTrace();
-            logger.error("ERROR EK 报错[{}] 方法名[{}]报错时间[{}]", e.getMessage(),
+            logger.error("ERROR EK>APP系统日志： 报错[{}] 方法名[{}]报错时间[{}]", e.getMessage(),
                     Thread.currentThread().getStackTrace()[1].getMethodName(), DateUtils.getDateTime());
         }
     }
@@ -216,10 +216,10 @@ public class WxApiController {
     public @ResponseBody Object wxJsTicket(String token) {
         try {
             redisService.tokenValidate(token);
-            logger.info("EK 客户订单列表[token{}]方法名[{}]操作时间[{}]",token,Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
+            logger.info("EK>APP系统日志： 客户订单列表[token{}]方法名[{}]操作时间[{}]",token,Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
             return ResultUtils.success(ResultUtils.SUCCESS_CODE_MSG,redisService.get("WEIXIN_API_JSAPI"));
         } catch (Exception e) {
-            logger.error("ERROR EK参数[{}] 报错[{}] 方法名[{}]报错时间[{}]", token,e.getMessage(),
+            logger.error("ERROR EK>APP系统日志：参数[{}] 报错[{}] 方法名[{}]报错时间[{}]", token,e.getMessage(),
                     Thread.currentThread().getStackTrace()[1].getMethodName(), DateUtils.getDateTime());
             return ResultUtils.error(ResultUtils.ERROR_CODE, e.getMessage());
         }
@@ -236,12 +236,12 @@ public class WxApiController {
     */
     @RequestMapping(value = "wxJSSignature",method = RequestMethod.GET)
     public @ResponseBody Object wxJSSignature(String token) {
-        logger.info("EK 微信授权 获取JS-SDK使用权限签名算法方法名[{}]操作时间[{}]",token,Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
+        logger.info("EK>APP系统日志： 微信授权 获取JS-SDK使用权限签名算法方法名[{}]操作时间[{}]",token,Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
         try {
             redisService.tokenValidate(token);
             return ResultUtils.success(ResultUtils.SUCCESS_CODE_MSG,wxApiService.wxJSSignature());
         } catch (Exception e) {
-            logger.error("ERROR EK参数[{}] 报错[{}] 方法名[{}]报错时间[{}]", token,e.getMessage(),
+            logger.error("ERROR EK>APP系统日志：参数[{}] 报错[{}] 方法名[{}]报错时间[{}]", token,e.getMessage(),
                     Thread.currentThread().getStackTrace()[1].getMethodName(), DateUtils.getDateTime());
             return ResultUtils.error(ResultUtils.ERROR_CODE, e.getMessage());
         }

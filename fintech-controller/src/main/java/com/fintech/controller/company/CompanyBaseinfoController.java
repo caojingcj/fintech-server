@@ -62,13 +62,13 @@ public class CompanyBaseinfoController {
     */
     @RequestMapping(value ="insertCompanyBaseInfo")
     public @ResponseBody BaseResult insertCompanyBaseInfo(@RequestBody CompanyBaseinfoVo vo) throws Exception {
-        logger.info("EK 方法名[{}]操作时间[{}]操作人[{}]",Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime(),redisService.get(vo.getToken()));
         try {
             redisService.tokenValidate(vo.getToken());
+            logger.info("EK运营系统日志：方法名[{}]参数[{}]操作时间[{}]操作人[{}]",Thread.currentThread().getStackTrace()[1].getMethodName(),vo,DateUtils.getDateTime(),redisService.get(vo.getToken()));
             companyBaseinfoService.insertCompanyBaseInfo(vo);
             return ResultUtils.success(ResultUtils.SUCCESS_CODE_MSG);
         } catch (Exception e) {
-            logger.error("ERROR EK参数[{}] 报错[{}] 方法名[{}]报错时间[{}]",vo,e.getMessage(),Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
+            logger.error("ERROR EK运营系统日志：方法名[{}]报错[{}] 参数[{}] 报错时间[{}]",Thread.currentThread().getStackTrace()[1].getMethodName(),e.getMessage(),vo,DateUtils.getDateTime());
             return ResultUtils.error(ResultUtils.ERROR_CODE,e.getMessage());
         }
     }
@@ -84,11 +84,11 @@ public class CompanyBaseinfoController {
     */
     @RequestMapping(value ="selectCompanyBaseInfos")
     public @ResponseBody BaseResult selectCompanyBaseInfos(CompanyBaseinfoVo vo) {
-        logger.info("EK 参数[{}]方法名[{}]操作时间[{}]",vo,Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
+        logger.info("EK运营系统日志：参数[{}]方法名[{}]操作时间[{}]",vo,Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
         try {
             return ResultUtils.success(ResultUtils.SUCCESS_CODE_MSG,companyBaseinfoService.selectByPrimaryKeyList(vo));
         } catch (Exception e) {
-            logger.error("ERROR EK 参数[{}] 报错[{}] 方法名[{}]报错时间[{}]",vo,e.getMessage(),Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
+            logger.error("ERROR EK运营系统日志：方法名[{}]报错[{}] 参数[{}] 报错时间[{}]",Thread.currentThread().getStackTrace()[1].getMethodName(),e.getMessage(),vo,DateUtils.getDateTime());
             return ResultUtils.error(ResultUtils.ERROR_CODE,e.getMessage());
         }
     }
@@ -104,13 +104,13 @@ public class CompanyBaseinfoController {
     */
     @RequestMapping(value ="updateCompanyBaseInfoStatus")
     public @ResponseBody BaseResult updateCompanyBaseInfoStatus(@RequestBody CompanyBaseinfoVo vo) {
-    	logger.info("EK 参数[商户编号{}][变更状态{}]方法名[{}]操作时间[{}]操作人[{}]",vo.getCompanyId(),vo.getCompanyStatus(),Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
     	try {
     	    redisService.tokenValidate(vo.getToken());
+            logger.info("EK运营系统日志：方法名[{}]参数[商户编号{}][变更状态{}]操作时间[{}]操作人[{}]",Thread.currentThread().getStackTrace()[1].getMethodName(),vo.getCompanyId(),vo.getCompanyStatus(),DateUtils.getDateTime(),redisService.get(vo.getToken()));
     		companyBaseinfoService.updateCompanyBaseInfoStatus(vo);
     		return ResultUtils.success(ResultUtils.SUCCESS_CODE_MSG);
     	} catch (Exception e) {
-    		logger.error("ERROR EK参数[商户编号{}][变更状态{}] 报错[{}] 方法名[{}]报错时间[{}]",vo.getCompanyId(),vo.getCompanyStatus(),e.getMessage(),Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
+            logger.error("ERROR EK运营系统日志：方法名[{}]报错[{}] 参数[{}] 报错时间[{}]",Thread.currentThread().getStackTrace()[1].getMethodName(),e.getMessage(),vo,DateUtils.getDateTime());
     		return ResultUtils.error(ResultUtils.ERROR_CODE,e.getMessage());
     	}
     }
@@ -125,7 +125,7 @@ public class CompanyBaseinfoController {
     */
     @RequestMapping(value ="selectCompanyBaseInfo")
     public @ResponseBody BaseResult selectCompanyBaseInfo(CompanyBaseinfoVo vo) {
-    	logger.info("EK 参数[商户编号{}]方法名[{}]操作时间[{}]操作人[{}]",vo.getCompanyId(),Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
+        logger.info("EK运营系统日志：方法名[{}]参数[{}]操作时间[{}]",Thread.currentThread().getStackTrace()[1].getMethodName(),vo,DateUtils.getDateTime());
     	try {
     		ObjectEmptyUtil.isEmptyByName(vo.getCompanyId());
     		Map<String, Object>parms=CommonUtil.object2Map(vo);
@@ -137,7 +137,7 @@ public class CompanyBaseinfoController {
     		companyInfo.put("channelInfo", companyChannelService.selectByPrimaryKeyList(parms));
     		return ResultUtils.success(ResultUtils.SUCCESS_CODE_MSG,companyInfo);
     	} catch (Exception e) {
-    		logger.error("ERROR EK参数[商户编号{}] 报错[{}] 方法名[{}]报错时间[{}]",vo,e.getMessage(),Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
+            logger.error("ERROR EK运营系统日志：方法名[{}]报错[{}] 参数[{}] 报错时间[{}]",Thread.currentThread().getStackTrace()[1].getMethodName(),e.getMessage(),vo,DateUtils.getDateTime());
     		return ResultUtils.error(ResultUtils.ERROR_CODE,e.getMessage());
     	}
     }

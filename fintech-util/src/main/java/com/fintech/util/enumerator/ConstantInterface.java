@@ -383,7 +383,7 @@ public interface ConstantInterface {
 	* @date 2018年6月10日 下午11:37:23  
 	* @Description: TODO[ 验证统一枚举 100开头都是后台异常码 200app\微信错误码 ]
 	*/
-	public interface ValidateConfig {
+	public interface WebValidateConfig {
 	    /**   
 	    * @Title: ConstantInterface.java 
 	    * @Package com.fintech.util.enumerator 
@@ -392,12 +392,12 @@ public interface ConstantInterface {
 	    * @Description: TODO[ 商户属性验证 100=商户code ]
 	    */
 	    enum CompanyValidate{
-	        COMPANY_NAME_IS_NULL(100001,"商户名称不能为空"),
-	        COMPANY_TYPE_IS_NULL(100002,"商户类型不能为空"),
-	        COMPANY_STATUS_IS_NULL(100003,"商户状态不能为空"),
-	        COMPANY_USCC_IS_NULL(100004,"商户统一社会信用代码不能为空"),
-	        COMPANY_FULL_NAME_IS_NULL(100005,"商户营业执照名称不能为空"),
-	        COMPANY_100006(100006,"该订单已被后台取消");
+	        COMPANY_100101(100101,"商户名称不能为空"),
+	        COMPANY_100102(100102,"商户类型不能为空"),
+	        COMPANY_100103(100103,"商户状态不能为空"),
+	        COMPANY_100104(100104,"商户统一社会信用代码不能为空"),
+	        COMPANY_100105(100105,"商户营业执照名称不能为空"),
+	        COMPANY_100106(100106,"该订单已被后台取消");
 	        private Integer key;
 	        private String value;
             public Integer getKey() {
@@ -413,6 +413,32 @@ public interface ConstantInterface {
                 this.value = value;
             }
             private CompanyValidate(Integer key, String value) {
+                this.key = key;
+                this.value = value;
+            }
+            @Override
+            public String toString() {
+                return "[" + this.key + "]" + this.value;
+            }
+	    }
+	    
+	    enum OrderValidate{
+	    	ORDER_100201(100201,"取消：运营后台取消");
+	        private Integer key;
+	        private String value;
+            public Integer getKey() {
+                return key;
+            }
+            public void setKey(Integer key) {
+                this.key = key;
+            }
+            public String getValue() {
+                return value;
+            }
+            public void setValue(String value) {
+                this.value = value;
+            }
+            private OrderValidate(Integer key, String value) {
                 this.key = key;
                 this.value = value;
             }

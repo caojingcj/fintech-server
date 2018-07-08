@@ -49,7 +49,7 @@ public class LogHandlerInterceptor implements HandlerInterceptor {
 	    * @throws 
 	    */
 	    private boolean redisIsNull(HttpServletRequest request,HttpServletResponse response) throws Exception{
-	         logger.info("拦截器tokenIsNull>>>token[{}]",request.getParameter("token"));
+	         logger.info("EK>APP系统日志：拦截器tokenIsNull>>>token[{}]",request.getParameter("token"));
 	        PrintWriter out = null;
 	        response.setContentType(ConstantInterface.Enum.CONTENT_TYPE.CONTENT_TYPE_APPLICATION_JSON.getValue());
 	        out = response.getWriter();

@@ -25,16 +25,16 @@ public class ObjectEmptyUtil  {
     */
     public static void CompanyEmpty(CompanyBaseinfo companyBaseinfo) {
     		if (StringUtil.isEmpty(companyBaseinfo.getCompanyName())) {
-                throw new FinTechException(ConstantInterface.ValidateConfig.CompanyValidate.COMPANY_NAME_IS_NULL.toString());
+                throw new FinTechException(ConstantInterface.WebValidateConfig.CompanyValidate.COMPANY_100101.toString());
             }
             if (StringUtil.isEmpty(companyBaseinfo.getCompanyStatus())) {
-                throw new FinTechException(ConstantInterface.ValidateConfig.CompanyValidate.COMPANY_STATUS_IS_NULL.toString());
+                throw new FinTechException(ConstantInterface.WebValidateConfig.CompanyValidate.COMPANY_100103.toString());
             }
             if (StringUtil.isEmpty(companyBaseinfo.getCompanyUscc())) {
-                throw new FinTechException(ConstantInterface.ValidateConfig.CompanyValidate.COMPANY_USCC_IS_NULL.toString());
+                throw new FinTechException(ConstantInterface.WebValidateConfig.CompanyValidate.COMPANY_100104.toString());
             }
             if (StringUtil.isEmpty(companyBaseinfo.getCompanyFullName())) {
-                throw new FinTechException(ConstantInterface.ValidateConfig.CompanyValidate.COMPANY_FULL_NAME_IS_NULL.toString());
+                throw new FinTechException(ConstantInterface.WebValidateConfig.CompanyValidate.COMPANY_100105.toString());
             }
     }
     
