@@ -128,6 +128,7 @@ public class CompanyBaseinfoController {
     public @ResponseBody BaseResult selectCompanyBaseInfoDetails(CompanyBaseinfoVo vo) {
         logger.info("EK运营系统日志：方法名[{}]参数[{}]操作时间[{}]",Thread.currentThread().getStackTrace()[1].getMethodName(),vo,DateUtils.getDateTime());
     	try {
+    		redisService.tokenValidate(vo.getToken());
     		return ResultUtils.success(ResultUtils.SUCCESS_CODE_MSG,companyBaseinfoService.selectCompanyBaseInfoDetails(vo.getCompanyId()));
     	} catch (Exception e) {
             logger.error("ERROR EK运营系统日志：方法名[{}]报错[{}] 参数[{}] 报错时间[{}]",Thread.currentThread().getStackTrace()[1].getMethodName(),e.getMessage(),vo,DateUtils.getDateTime());
