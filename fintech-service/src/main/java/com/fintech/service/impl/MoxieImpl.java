@@ -13,7 +13,9 @@ import com.fintech.common.moxie.MoxieUtil;
 import com.fintech.common.properties.AppConfig;
 import com.fintech.dao.LogMoxieinfoMapper;
 import com.fintech.dao.LogMozhanginfoMapper;
+import com.fintech.dao.LogOrderMapper;
 import com.fintech.dao.OrderBaseinfoMapper;
+import com.fintech.enm.CreditVettingResultEnum;
 import com.fintech.model.LogMoxieinfo;
 import com.fintech.model.LogMozhanginfo;
 import com.fintech.model.LogOrder;
@@ -58,7 +60,8 @@ public class MoxieImpl implements MoxieService {
     private LogOrderService logOrderService;
     @Autowired
     private CreditVettingService creditVettingService;
-
+    @Autowired
+    private LogOrderMapper logOrderMapper;
     /*
      * (非 Javadoc) <p>Title: insertSelective</p> <p>Description: </p>
      * 
@@ -183,6 +186,10 @@ public class MoxieImpl implements MoxieService {
                 logMoxieinfo.setMoxieStatus(ConstantInterface.Enum.ConstantNumber.THREE.getKey());
                 logMoxieinfo.setUpdateTime(new Date());
                 logMoxieinfoMapper.updateByPrimaryKeySelective(logMoxieinfo);
+                OrderBaseinfo baseinfo= orderBaseinfoMapper.selectByPrimaryKey(logMoxieinfo.getOrderId());
+                baseinfo.setOrderStatus(ConstantInterface.Enum.OrderStatus.ORDER_STATUS03.getKey());
+                orderBaseinfoMapper.updateByPrimaryKeySelective(baseinfo);
+                logOrderMapper.insertSelective(new LogOrder(logMoxieinfo.getOrderId(),ConstantInterface.Enum.OrderLogStatus.ORDER_STATUS91.getKey(), ConstantInterface.Enum.OrderStatus.ORDER_STATUS03.getKey(), "拒绝 - 魔蝎回调失败！"));
             }
         }
     }

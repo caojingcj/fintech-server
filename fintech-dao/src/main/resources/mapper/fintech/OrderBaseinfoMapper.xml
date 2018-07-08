@@ -299,5 +299,17 @@ WHERE
     from order_baseinfo where to_days(CREATE_TIME) - to_days(now()) and ORDER_STATUS=00;
   </select>
   
+   <select id="selectQuarteOrderStatus04" resultMap="BaseResultMap" >
+    select 
+    <include refid="Base_Column_List" />
+    from order_baseinfo WHERE DATEDIFF(CREATE_TIME,NOW())=-3 and ORDER_STATUS=04
+  </select>
+  
+   <select id="selectScanPiece" resultMap="BaseResultMap" parameterType="java.util.Map">
+    select 
+    <include refid="Base_Column_List" />
+    from order_baseinfo
+    where CUST_CELLPHONE=#{custCellphone} and ORDER_STATUS=#{orderStatus}
+  </select>
   
 </mapper>

@@ -17,7 +17,7 @@ import com.fintech.util.enumerator.ConstantInterface;
  */
 public class JsonTools {
 	@JsonSerialize(include=JsonSerialize.Inclusion.NON_NULL) //类头部注解，空不生成json节点
-	private static String jsonStr = "{\"api\":\"2.1\",\"message\":[\"产品\",\"tokken\"],\"request\":{\"ptype\":\"\",\"tokken\":\"A#daDSFkiwi239sdls#dsd\"},\"response\":{\"status\":{\"statusCode\":\"500\",\"statusMessage\":[\"产品类型错误\",\"tokken失效\"]},\"page\":{\"pageSize\":\"100\",\"pageIndex\":\"1\"},\"data\":{\"ptitle\":\"all product lists\",\"sDate\":\"2014-12-01\",\"eDate\":\"2016-12-01\",\"productList\":[{\"pid\":\"RA001\",\"pname\":\"产品1\"},{\"pid\":\"RA002\",\"pname\":\"产品2\"}]}},\"args\":[{\"tit\":\"RA001\",\"val\":\"产品1\"},{\"tit\":\"RA002\",\"val\":\"产品2\"}]}";
+	private static String jsonStr = "{\"fund_infos\": [], \"person_info\": {\"age\": 26, \"name\": \"戚**\", \"gender\": \"男\", \"idcard\": \"32083019920718****\", \"mobile\": \"1381394****\", \"carrier\": \"中国移动\", \"idcard_location\": \"江苏省/淮安市/盱眙县\", \"mobile_location\": \"江苏/南京\"}, \"update_date\": \"2018-07-05\", \"mobile_infos\": [], \"register_info\": {\"org_count\": 2, \"org_types\": [\"DATA_PLATFORM\", \"CUSTOMER_FINANCE\"]}, \"queried_detail\": {\"org_count\": 2, \"queried_infos\": [{\"date\": \"2018-07-05\", \"is_self\": true, \"org_type\": \"DATA_PLATFORM\"}, {\"date\": \"2017-08-03\", \"is_self\": false, \"org_type\": \"CUSTOMER_FINANCE\"}], \"queried_analyze\": [{\"org_type\": \"DATA_PLATFORM\", \"loan_cnt_15d\": 1, \"loan_cnt_30d\": 1, \"loan_cnt_90d\": 1, \"loan_cnt_180d\": 1}, {\"org_type\": \"CUSTOMER_FINANCE\", \"loan_cnt_15d\": 0, \"loan_cnt_30d\": 0, \"loan_cnt_90d\": 0, \"loan_cnt_180d\": 0}]}, \"debit_card_info\": {}, \"credit_card_info\": {}, \"gray_info_detail\": {\"gray_types\": [], \"idcard_name_in_gray\": false, \"mobile_name_in_gray\": false}, \"black_info_detail\": {\"black_types\": [], \"match_score\": 51, \"direct_black_type\": \"信贷逾期\", \"direct_black_count\": 1, \"direct_contact_count\": 360, \"indirect_black_count\": 51, \"introduce_black_count\": 9, \"introduce_black_ratio\": 250, \"idcard_name_in_blacklist\": false, \"mobile_name_in_blacklist\": false, \"direct_intimate_black_count\": 0, \"direct_intimate_contact_count\": 39, \"indirect_intimate_black_count\": 0, \"introduce_intimate_black_count\": 0, \"introduce_intimate_black_ratio\": 0}, \"suspicious_idcard\": {\"other_names\": [{\"name\": \"溉**\", \"latest_used_time\": \"2018-07-04 03:07:34\"}], \"other_mobiles\": [{\"mobile\": \"1826792****\", \"carrier\": \"中国移动\", \"mobile_location\": \"浙江/金华\", \"latest_used_time\": \"2018-07-05 07:44:27\"}], \"information_sources\": [{\"org_type\": \"DATA_PLATFORM\", \"latest_used_time\": \"2018-07-05 10:31:49\"}, {\"org_type\": \"CUSTOMER_FINANCE\", \"latest_used_time\": \"2017-08-03 16:39:27\"}]}, \"suspicious_mobile\": {\"other_names\": [{\"name\": \"方*\", \"latest_used_time\": \"2018-07-01 13:16:58\"}], \"other_idcards\": [{\"idcard\": \"34082719920915****\", \"latest_used_time\": \"2018-07-01 13:16:58\"}], \"information_sources\": [{\"org_type\": \"DATA_PLATFORM\", \"latest_used_time\": \"2018-07-05 10:31:49\"}, {\"org_type\": \"CUSTOMER_FINANCE\", \"latest_used_time\": \"2017-08-03 16:39:27\"}]}, \"verification_info\": {\"has_fund_data\": false, \"has_carrier_data\": true, \"has_onlinebank_data\": false}}";
 	private static ObjectMapper mapper = new ObjectMapper();
 	
 	public static void main(String[] args) throws Exception {
@@ -26,11 +26,11 @@ public class JsonTools {
 		if(jv.validate(jsonStr)){
 			JsonTools jsonTools=new JsonTools();
 			//测试通过json获取Object对象
-//			Object obj = jsonTools.getObjectByJson(jsonStr,"request.tokken",ConstantInterface.Enum.TypeEnum.string); //层级递归String
+//			Object obj = jsonTools.getObjectByJson(jsonStr,"black_info_detail.direct_black_type",ConstantInterface.Enum.TypeEnum.string); //层级递归String
 //			System.out.println("API:"+obj.toString());
 			
-			Object obj = jsonTools.getObjectByJson(jsonStr,"response.page",ConstantInterface.Enum.TypeEnum.map);  //层级递归Map
-			System.out.println("API:"+obj.toString()+((Map<String, Object>)obj).get("pageSize"));
+			Object obj = jsonTools.getObjectByJson(jsonStr,"black_info_detail",ConstantInterface.Enum.TypeEnum.map);  //层级递归Map
+			System.out.println("API:"+obj.toString()+((Map<String, Object>)obj).get("mobile_name_in_blacklist"));
 			
 //			Object obj = jsonTools.getObjectByJson(jsonStr,"response.status.statusMessage",ConstantInterface.Enum.TypeEnum.arrayList); //层级递归ArrayList
 //			System.out.println("API:"+obj.toString()+((List)obj).get(0));

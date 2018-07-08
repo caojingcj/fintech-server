@@ -188,9 +188,7 @@ public class MoxieController {
             String orderId=request.getParameter("orderId");
             if(userId!=null) {
                 redisService.setVal(userId,"000000", 60*60L);
-            }
-            if(!StringUtil.isEmpty(orderId)) {
-            	logOrderService.insertSelective(new LogOrder(orderId, ConstantInterface.Enum.OrderLogStatus.ORDER_STATUS03.getKey(), ConstantInterface.Enum.OrderStatus.ORDER_STATUS00.getKey(), null));
+                logOrderService.insertSelective(new LogOrder(userId, ConstantInterface.Enum.OrderLogStatus.ORDER_STATUS03.getKey(), ConstantInterface.Enum.OrderStatus.ORDER_STATUS00.getKey(), null));
             }
             return ResultUtils.success(ResultUtils.SUCCESS_CODE_MSG,redisService.get(orderId==null?userId:orderId));
             } catch (Exception e) {

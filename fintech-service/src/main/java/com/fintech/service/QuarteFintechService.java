@@ -18,4 +18,6 @@ public interface QuarteFintechService {
     void quarteOverdueList();
     
     void quarteOverDueInfo()throws FintechException;
+    
+    void quarteOrderStatus04();
 }

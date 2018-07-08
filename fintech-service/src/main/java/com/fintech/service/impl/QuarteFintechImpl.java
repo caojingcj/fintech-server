@@ -54,7 +54,7 @@ public class QuarteFintechImpl implements QuarteFintechService {
     * <p>Description: </p> 
     * @throws Exception 
     * @see com.fintech.service.QuarteFintechService#wxAuthentication() 
-    * 服务器启动时执行一次，之后每隔一个小时59分执行一次。
+    * 系统定时任务：服务器启动时执行一次，之后每隔一个小时59分执行一次。
     */
     @Scheduled(fixedRate = 1000 * 60 * 59 * 2) 
     @Override
@@ -81,10 +81,10 @@ public class QuarteFintechImpl implements QuarteFintechService {
     * <p>Description: </p> 
     * @throws Exception 
     * @see com.fintech.service.QuarteFintechService#cancelOrder() 
-    * 每天凌晨12:01执行 把前一天所有订单取消
+    * 系统定时任务：每天凌晨12:01执行 把前一天所有订单取消
     * 0 01 00 * * ?
     */
-    @Scheduled(cron = "0 01 00 * * ?")
+    @Scheduled(cron = "0 13 05 * * ?")
     @Override
     public void cancelOrder() throws Exception {
         logger.info("EK定时任务：自定清除当天未完成的订单》操作时间[{}]", DateUtils.getDateTime());
@@ -100,7 +100,7 @@ public class QuarteFintechImpl implements QuarteFintechService {
     * <p>Title: quarteOverdueList</p> 
     * <p>Description: </p>  
     * @see com.fintech.service.QuarteFintechService#quarteOverdueList() 
-    * 判断身份认证信息 是否失效
+    * 系统定时任务：判断身份认证信息 是否失效
     * 0 05 00 * * ?
     */
     @Scheduled(cron = "0 05 00 * * ?")
@@ -119,7 +119,7 @@ public class QuarteFintechImpl implements QuarteFintechService {
     * <p>Description: </p> 
     * @throws FintechException 
     * @see com.fintech.service.QuarteFintechService#quarteOverDueInfo() 
-    * 更新逾期数据
+    * 系统定时任务：更新逾期数据
     * 0 10 00 * * ?
     */
     @Scheduled(cron = "0 10 00 * * ?")
@@ -127,6 +127,24 @@ public class QuarteFintechImpl implements QuarteFintechService {
     public void quarteOverDueInfo() throws FintechException {
         logger.info("EK定时任务：更新逾期数据》操作时间[{}]", DateUtils.getDateTime());
         returnPlanService.updateOverDueInfo();
+    }
+    
+    /* (非 Javadoc) 
+    * <p>Title: quarteOrderStatus04</p> 
+    * <p>Description: </p>  
+    * @see com.fintech.service.QuarteFintechService#quarteOrderStatus04() 
+    * 系统定时任务：自动取消三天前待用户签署的订单
+    */
+    @Scheduled(cron = "0 12 00 * * ?")
+    @Override
+    public void quarteOrderStatus04() {
+    	logger.info("EK定时任务：自定取消三天前待签署的订单》操作时间[{}]", DateUtils.getDateTime());
+        List<OrderBaseinfo> orderBaseinfo=orderBaseinfoMapper.selectQuarteOrderStatus04();
+        for (OrderBaseinfo baseinfo : orderBaseinfo) {
+            baseinfo.setOrderStatus(ConstantInterface.Enum.OrderStatus.ORDER_STATUS11.getKey());
+           orderBaseinfoMapper.updateByPrimaryKeySelective(baseinfo);
+            logOrderMapper.insertSelective(new LogOrder(baseinfo.getOrderId(), ConstantInterface.Enum.OrderLogStatus.ORDER_STATUS11.getKey(), ConstantInterface.Enum.OrderStatus.ORDER_STATUS11.getKey(), "系统取消：三天前待签署订单"));
+        }
     }
 
 }

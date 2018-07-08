@@ -31,7 +31,10 @@ public interface OrderBaseinfoMapper {
     
     List<OrderBaseinfo> selectQuarteCancelOrder();
     
+    List<OrderBaseinfo> selectQuarteOrderStatus04();
+    
     Integer selectOrderStatusCount(@Param("custCellphone")String custCellphone);
     
+    OrderBaseinfo selectScanPiece(Map<String, Object> parms);
     
 }

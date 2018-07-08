@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
 import java.net.HttpURLConnection;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -41,6 +42,7 @@ import com.fintech.model.CompanyBaseinfo;
 import com.fintech.model.CompanyChannel;
 import com.fintech.model.CompanyPeriodFee;
 import com.fintech.model.CustBaseinfo;
+import com.fintech.model.LogMoxieinfo;
 import com.fintech.model.LogMozhanginfo;
 import com.fintech.model.LogOcridcard;
 import com.fintech.model.LogOrder;
@@ -66,6 +68,7 @@ import com.fintech.util.CommonUtil;
 import com.fintech.util.DateUtils;
 import com.fintech.util.FinTechException;
 import com.fintech.util.HttpClient;
+import com.fintech.util.SensitiveInfoUtils;
 import com.fintech.util.enumerator.ConstantInterface;
 import com.fintech.xcpt.FintechException;
 import com.github.pagehelper.PageHelper;
@@ -188,10 +191,8 @@ public class OrderBaseinfoImpl implements OrderBaseinfoService {
         if(orderCount>0) {
             throw new FinTechException(ConstantInterface.AppValidateConfig.OrderValidate.ORDER_200010.toString());
         }
-        Map<String, Object>omap=new HashMap<>();
-        omap.put("custCellphone", mobile);
-        List<OrderBaseinfoVo> orderBaseinfos= orderBaseinfoMapper.selectByPrimaryKeyList(omap);
-        if(orderBaseinfos.size()==0) {
+        OrderBaseinfo orderBaseinfos= orderBaseinfoMapper.selectScanPiece(mapOrder);
+        if(orderBaseinfos==null) {
             orderBaseinfo.setCompanyId(companyId);
             orderBaseinfo.setCustCellphone(mobile);
             orderBaseinfo.setOrderStatus(ConstantInterface.Enum.OrderStatus.ORDER_STATUS00.getKey());
@@ -201,14 +202,16 @@ public class OrderBaseinfoImpl implements OrderBaseinfoService {
             OrderDetailinfo detailinfo=new OrderDetailinfo();
             detailinfo.setOrderId(orderBaseinfo.getOrderId());
             orderDetailinfoMapper.insertSelective(detailinfo);
+            if(custBaseinfoMapper.selectByPrimaryKey(mobile)==null) {
+            	custBaseinfoMapper.insertSelective(new CustBaseinfo(mobile, String.valueOf(0), null, null, null, null, null, null, null, null, null, null, null));
+            }
             logOrderMapper.insertSelective(new LogOrder(orderBaseinfo.getOrderId(),ConstantInterface.Enum.OrderLogStatus.ORDER_STATUS00.getKey(), ConstantInterface.Enum.OrderStatus.ORDER_STATUS00.getKey(), null));
         }
-            OrderBaseinfo info=orderBaseinfoMapper.selectByPrimaryKeySelective(mapOrder);
             reslutMap.put("channels", channels);
             reslutMap.put("periodFees", periodFees);
             reslutMap.put("items", items);
             reslutMap.put("baseinfo", baseinfo);
-            reslutMap.put("order", info==null?orderBaseinfo:info);
+            reslutMap.put("order", orderBaseinfos==null?orderBaseinfo:orderBaseinfos);
             return reslutMap;
     }
     
@@ -253,7 +256,7 @@ public class OrderBaseinfoImpl implements OrderBaseinfoService {
         BeanUtils.copyProperties(orderDetailinfo, detailinfo);
         Map<String, Object>map=new HashMap<>();
         map.put("custCellphone", detailinfo.getContactPhone());
-        if(orderBaseinfoMapper.selectByPrimaryKeySelective(map)!=null) {
+        if(orderBaseinfoMapper.selectByPrimaryKeyList(map).size()>0) {
             throw new FinTechException(ConstantInterface.AppValidateConfig.OrderValidate.ORDER_200011.toString());
         }
         orderDetailinfoMapper.updateByPrimaryKeySelective(detailinfo);
@@ -509,6 +512,17 @@ public class OrderBaseinfoImpl implements OrderBaseinfoService {
         LegalityVerification(faceidVo.getLegality());
         return custBaseinfo;
     }
+    /* (非 Javadoc) 
+    * <p>Title: saveIdentitySide</p> 
+    * <p>Description: </p> 
+    * @param serverId
+    * @param token
+    * @param orderId
+    * @return
+    * @throws Exception 
+    * @see com.fintech.service.OrderBaseinfoService#saveIdentitySide(java.lang.String, java.lang.String, java.lang.String) 
+    *faceId身份证反面扫
+    */
     @Override
     public CustBaseinfo saveIdentitySide(String serverId,String token,String orderId) throws Exception {
         Date date=new Date();
@@ -537,7 +551,7 @@ public class OrderBaseinfoImpl implements OrderBaseinfoService {
         oss = new OSSEntity();
         oss=sample.uploadFile(ossStream, path);
         String [] idTime=faceidVo.getValid_date().split("-");
-        CustBaseinfo custBaseinfo=new CustBaseinfo(mobile, null, null, null, null, null, DateUtils.parse(idTime[0].replace(".", "-")), DateUtils.parse(idTime[1].replace(".", "-")), oss.getUrl(), null, date, null, null);
+        CustBaseinfo custBaseinfo=new CustBaseinfo(mobile, null, null, null, null, null, DateUtils.parse(idTime[0].replace(".", "-")), DateUtils.parse(idTime[1].replace(".", "-")), null, oss.getUrl(), date, null, null);
         OrderBaseinfo orderBaseinfo=orderBaseinfoMapper.selectByPrimaryKey(orderId);
         logOcridcardMapper.insertSelective(new LogOcridcard(orderBaseinfo.getCustCellphone(), orderBaseinfo.getCustRealname(), faceidVo.getRequest_id(), gson.toJson(faceidVo.getLegality()), faceidVo.getSide(), orderBaseinfo.getCustIdCardNo(), result.toString(), orderId));
         custBaseinfoMapper.updateByPrimaryKeySelective(custBaseinfo);
@@ -586,8 +600,8 @@ public class OrderBaseinfoImpl implements OrderBaseinfoService {
         PageHelper.startPage(orderBaseinfoVo.getPageIndex(), orderBaseinfoVo.getPageSize());
         List<OrderBaseinfoVo> orderBaseinfoVos=orderBaseinfoMapper.selectByPrimaryKeyList(parms);
         for (OrderBaseinfoVo oBaseinfoVo : orderBaseinfoVos) {
-			orderBaseinfoVo.setCustCellphone(oBaseinfoVo.getCustCellphone().replaceAll("(\\d{3})\\d{4}(\\d{4})", "$1****$2"));
-		}
+        	oBaseinfoVo.setCustCellphone(SensitiveInfoUtils.mobilePhone(oBaseinfoVo.getCustCellphone()));
+        }
         PageInfo<OrderBaseinfoVo> pageLists=new PageInfo<OrderBaseinfoVo>(orderBaseinfoVos);
         return pageLists;
     }
@@ -596,12 +610,25 @@ public class OrderBaseinfoImpl implements OrderBaseinfoService {
 	public Map<String, Object> selectOrderDetails(String orderId) {
 	    Map<String, Object>parms=new HashMap<>();
 	   OrderBaseinfo baseinfo= orderBaseinfoMapper.selectByPrimaryKey(orderId);
+	   baseinfo.setCustCellphone(SensitiveInfoUtils.mobilePhone(baseinfo.getCustCellphone()));
+	   baseinfo.setCustIdCardNo(SensitiveInfoUtils.idCardNum(baseinfo.getCustIdCardNo()));
 	   CustBaseinfo custBaseinfo= custBaseinfoMapper.selectByPrimaryKey(baseinfo.getCustCellphone());
+	   if(custBaseinfo!=null) {
+		   custBaseinfo.setCustCellphone(SensitiveInfoUtils.mobilePhone(custBaseinfo.getCustCellphone()));
+		   custBaseinfo.setCustIdCardNo(SensitiveInfoUtils.idCardNum(custBaseinfo.getCustIdCardNo()));
+	   }
 	   OrderDetailinfo orderDetailinfo= orderDetailinfoMapper.selectByPrimaryKey(orderId);
 	  OrderAttachment orderAttachment= orderAttachmentMapper.selectByPrimaryKey(orderId);
 	  Map<String, Object>map=new HashMap<>();
 	  map.put("orderId", orderId);
 	  List<UserReturnplan> userReturnplans=userReturnplanMapper.selectByPrimaryKeyList(map);
+	  for (UserReturnplan userReturnplan : userReturnplans) {
+		  userReturnplan.setCustCellphone(SensitiveInfoUtils.mobilePhone(userReturnplan.getCustCellphone()));
+	}
+	  Map<String, Object>moxieMap=new HashMap<>();
+	  moxieMap.put("orderId", orderId);
+	  LogMoxieinfo moxieinfo= logMoxieinfoMapper.selectByPrimaryKeySelective(parms);
+	  parms.put("moxie",moxieinfo.getMoxieOnlineUrl());
 	  parms.put("baseinfo", baseinfo);
 	  parms.put("custBaseinfo", custBaseinfo);
 	  parms.put("orderDetailinfo", orderDetailinfo);

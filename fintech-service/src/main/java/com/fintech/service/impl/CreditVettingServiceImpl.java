@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import com.fintech.dao.CustBaseinfoMapper;
 import com.fintech.dao.LogMoxieinfoMapper;
+import com.fintech.dao.LogMozhanginfoMapper;
 import com.fintech.dao.LogOrderMapper;
 import com.fintech.dao.OrderBaseinfoMapper;
 import com.fintech.dao.OrderDetailinfoMapper;
@@ -22,6 +23,7 @@ import com.fintech.enm.OrderOperationEnum;
 import com.fintech.enm.OrderStatusEnum;
 import com.fintech.model.CustBaseinfo;
 import com.fintech.model.LogMoxieinfo;
+import com.fintech.model.LogMozhanginfo;
 import com.fintech.model.LogOrder;
 import com.fintech.model.OrderBaseinfo;
 import com.fintech.model.OrderDetailinfo;
@@ -47,8 +49,10 @@ public class CreditVettingServiceImpl implements CreditVettingService {
 
     @Autowired
     private LogOrderMapper logOrderMapper;
-@Autowired
-private LogMoxieinfoMapper logMoxieinfoMapper;
+	@Autowired
+	private LogMoxieinfoMapper logMoxieinfoMapper;
+	@Autowired
+	private LogMozhanginfoMapper logMozhanginfoMapper;
 @SuppressWarnings("unchecked")
 	@Override
     public CreditVettingResultEnum creditVetting(String orderId) {
@@ -106,6 +110,7 @@ private LogMoxieinfoMapper logMoxieinfoMapper;
         		logOrder(orderId, CreditVettingResultEnum.拒绝.getValue(), "拒绝 - 学生（年龄18-21岁；学历 专科/本科/硕士及以上）");
         		return CreditVettingResultEnum.拒绝;
         	}
+        }
         	// 拒绝 - 同一申请人申请超过3笔
         	Map<String, Object> amount = orderBaseinfoMapper.selectByOrderAmountJudge(orderBaseInfo.getCustCellphone());
         	if (Integer.parseInt(amount.get("statusCount").toString()) > 3) {
@@ -120,6 +125,7 @@ private LogMoxieinfoMapper logMoxieinfoMapper;
         	Map<String, Object>parms=new HashMap<>();
         	parms.put("orderId", orderId);
         	LogMoxieinfo logMoxieinfo=logMoxieinfoMapper.selectByPrimaryKeySelective(parms);
+        	//拒绝 - 报告为空！或者获取失败
         	if(logMoxieinfo.getMoxieStatus()==null||logMoxieinfo.getMoxieStatus()!=5) {
         		logOrder(orderId, CreditVettingResultEnum.拒绝.getValue(), "拒绝 - 报告为空！或者获取失败");
         		return CreditVettingResultEnum.拒绝;
@@ -173,6 +179,7 @@ private LogMoxieinfoMapper logMoxieinfoMapper;
         				}
         			}
         		}
+        	}
         		// 拒绝 - 魔蝎运营商报告  1.6活跃分析摘要   通话活跃天数  近3个月-通话活跃天数 <=30天 4.1分析点枚举（近1/3/6月）(active_degree)/call_day
         		if(logMoxieinfo.getMoxieStatus()==5&&jv.validate(logMoxieinfo.getMoxieContent())){
         			Object object1=jsonTools.getObjectByJson(logMoxieinfo.getMoxieContent(), "active_degree", ConstantInterface.Enum.TypeEnum.arrayList);
@@ -191,12 +198,27 @@ private LogMoxieinfoMapper logMoxieinfoMapper;
         				}
         			}
         		}
-        		
+        		LogMozhanginfo logMozhanginfo=logMozhanginfoMapper.selectByPrimaryKeySelective(parms);
+        		// 拒绝 - 魔杖运营商报告 手机和姓名在黑名单black_info_detail.mobile_name_in_blacklist
+        		if(jv.validate(logMozhanginfo.getMozhangContent())){
+        			Object object=jsonTools.getObjectByJson(logMozhanginfo.getMozhangContent(), "black_info_detail", ConstantInterface.Enum.TypeEnum.map);
+        			if(object!=null&&((Map<String, Object>)object).get("mobile_name_in_blacklist").equals(true)) {
+        				logOrder(orderId, CreditVettingResultEnum.拒绝.getValue(), "拒绝 - 魔杖运营商报告 手机和姓名在黑名单");
+						return CreditVettingResultEnum.拒绝;
+        			}
+        		}
+        		// 拒绝 - 魔杖运营商报告 身份证和姓名在黑名单 black_info_detail.idcard_name_in_blacklist
+        		if(jv.validate(logMozhanginfo.getMozhangContent())){
+        			Object object=jsonTools.getObjectByJson(logMozhanginfo.getMozhangContent(), "black_info_detail", ConstantInterface.Enum.TypeEnum.map);
+        			if(object!=null&&((Map<String, Object>)object).get("idcard_name_in_blacklist").equals(true)) {
+        				logOrder(orderId, CreditVettingResultEnum.拒绝.getValue(), "拒绝 - 魔杖运营商报告 身份证和姓名在黑名单");
+        				return CreditVettingResultEnum.拒绝;
+        			}
+        		}
         		// 拒绝 - 联系人联系电话不在手机报告或通讯录中
         		
         		// 通过(且) - 近三月通话号码>=10
         		// 通过(且) - 近三月互通电话>=3 互通定义，主叫和被叫都有记录
-        		// 通过(且) - 通讯录号码>=10 
         		if(logMoxieinfo.getMoxieStatus()==5&&jv.validate(logMoxieinfo.getMoxieContent())){
         			Object dial_cnt=jsonTools.getObjectByJson(logMoxieinfo.getMoxieContent(), "call_service_analysis.analysis_point", ConstantInterface.Enum.TypeEnum.map);
         			Object cnt=jsonTools.getObjectByJson(logMoxieinfo.getMoxieContent(), "call_service_analysis.analysis_point", ConstantInterface.Enum.TypeEnum.map);
@@ -210,16 +232,13 @@ private LogMoxieinfoMapper logMoxieinfoMapper;
 //						}
         			}
         		}
-        	}
-        	
-        }
 //        logOrder(orderId, CreditVettingResultEnum.拒绝.getValue(), "拒绝 - 其它原因");
 //        return CreditVettingResultEnum.拒绝;
         logOrder(orderId, CreditVettingResultEnum.通过.getValue(), "");
         return CreditVettingResultEnum.通过;
     }
 
-    private void logOrder(String orderId, String result, String note) {
+    public void logOrder(String orderId, String result, String note) {
         // 新增订单操作日志
         LogOrder log = new LogOrder();
         // 订单基本信息
