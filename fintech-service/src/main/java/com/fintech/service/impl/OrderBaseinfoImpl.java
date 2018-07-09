@@ -610,15 +610,15 @@ public class OrderBaseinfoImpl implements OrderBaseinfoService {
 	public Map<String, Object> selectOrderDetails(String orderId) {
 	    Map<String, Object>parms=new HashMap<>();
 	   OrderBaseinfo baseinfo= orderBaseinfoMapper.selectByPrimaryKey(orderId);
+	   CustBaseinfo custBaseinfo= custBaseinfoMapper.selectByPrimaryKey(baseinfo.getCustCellphone());
 	   baseinfo.setCustCellphone(SensitiveInfoUtils.mobilePhone(baseinfo.getCustCellphone()));
 	   baseinfo.setCustIdCardNo(SensitiveInfoUtils.idCardNum(baseinfo.getCustIdCardNo()));
-	   CustBaseinfo custBaseinfo= custBaseinfoMapper.selectByPrimaryKey(baseinfo.getCustCellphone());
 	   if(custBaseinfo!=null) {
 		   custBaseinfo.setCustCellphone(SensitiveInfoUtils.mobilePhone(custBaseinfo.getCustCellphone()));
 		   custBaseinfo.setCustIdCardNo(SensitiveInfoUtils.idCardNum(custBaseinfo.getCustIdCardNo()));
 	   }
 	   OrderDetailinfo orderDetailinfo= orderDetailinfoMapper.selectByPrimaryKey(orderId);
-	  OrderAttachment orderAttachment= orderAttachmentMapper.selectByPrimaryKey(orderId);
+	  List<OrderAttachment> orderAttachments= orderAttachmentMapper.selectByPrimaryKeyList(orderId);
 	  Map<String, Object>map=new HashMap<>();
 	  map.put("orderId", orderId);
 	  List<UserReturnplan> userReturnplans=userReturnplanMapper.selectByPrimaryKeyList(map);
@@ -627,12 +627,12 @@ public class OrderBaseinfoImpl implements OrderBaseinfoService {
 	}
 	  Map<String, Object>moxieMap=new HashMap<>();
 	  moxieMap.put("orderId", orderId);
-	  LogMoxieinfo moxieinfo= logMoxieinfoMapper.selectByPrimaryKeySelective(parms);
+	  LogMoxieinfo moxieinfo= logMoxieinfoMapper.selectByPrimaryKeySelective(moxieMap);
 	  parms.put("moxie",moxieinfo.getMoxieOnlineUrl());
 	  parms.put("baseinfo", baseinfo);
 	  parms.put("custBaseinfo", custBaseinfo);
 	  parms.put("orderDetailinfo", orderDetailinfo);
-	  parms.put("orderAttachment", orderAttachment);
+	  parms.put("orderAttachment", orderAttachments);
 	  parms.put("userReturnplans", userReturnplans);
 	    return parms;
 	}
@@ -644,5 +644,6 @@ public class OrderBaseinfoImpl implements OrderBaseinfoService {
 		orderBaseinfoMapper.updateByPrimaryKey(baseinfo);
 		logOrderMapper.insertSelective(new LogOrder(vo.getOrderId(), ConstantInterface.Enum.OrderLogStatus.ORDER_STATUS11.getKey(), ConstantInterface.Enum.OrderStatus.ORDER_STATUS11.getKey(), ConstantInterface.WebValidateConfig.OrderValidate.ORDER_100201.getValue()));
 	}
+
 
 }

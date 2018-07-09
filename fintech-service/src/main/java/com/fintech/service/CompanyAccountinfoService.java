@@ -9,7 +9,8 @@ import com.fintech.model.CompanyAccountinfo;
 import com.fintech.model.vo.CompanyAccountinfoVo;
 @Transactional(rollbackFor = Exception.class)
 public interface CompanyAccountinfoService {
-List<CompanyAccountinfo> selectByPrimaryKeyList(Map<String, Object>parms);
+	
+List<CompanyAccountinfo> selectByPrimaryKeyList(Map<String, Object> parms);
 
 void insertSelective(CompanyAccountinfoVo vo);
 

@@ -29,6 +29,16 @@
     </if>
   </select>
   
+  <select id="selectByPrimaryKeyList" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from order_attachment
+    where 1=1
+      <if test="orderId != null and orderId !=''">
+    	and ORDER_ID = #{orderId}
+    </if>
+  </select>
+  
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from order_attachment
     where ID = #{id,jdbcType=INTEGER}

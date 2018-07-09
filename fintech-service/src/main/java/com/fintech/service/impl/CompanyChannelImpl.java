@@ -7,10 +7,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.fintech.dao.CompanyChannelMapper;
+import com.fintech.model.CompanyBaseinfo;
 import com.fintech.model.CompanyChannel;
 import com.fintech.model.vo.CompanyChannelVo;
 import com.fintech.service.CompanyChannelService;
 import com.fintech.util.BeanUtils;
+import com.fintech.util.CommonUtil;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 
 /**   
 * @Title: CompanyChannelImpl.java 
@@ -32,8 +36,12 @@ public class CompanyChannelImpl implements CompanyChannelService {
 	* @see com.fintech.service.CompanyChannelService#selectByPrimaryKeyList(java.util.Map) 
 	*/
 	@Override
-	public List<CompanyChannel> selectByPrimaryKeyList(Map<String, Object> parms) {
-		return companyChannelMapper.selectByPrimaryKeyList(parms);
+	public PageInfo<CompanyChannel> selectByPrimaryKeyList(CompanyChannelVo vo) throws Exception {
+		Map<String, Object> parms = CommonUtil.object2Map(vo);
+        PageHelper.startPage(vo.getPageIndex(), vo.getPageSize());
+        List<CompanyChannel> companyChannels=companyChannelMapper.selectByPrimaryKeyList(parms);
+        PageInfo<CompanyChannel> pageLists=new PageInfo<CompanyChannel>(companyChannels);
+        return pageLists;
 	}
 	/* (非 Javadoc) 
 	* <p>Title: insertSelective</p> 

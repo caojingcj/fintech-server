@@ -16,7 +16,7 @@ public class OrderBaseInfoTest {
     
     @Autowired
     private OrderBaseinfoService orderBaseinfoService;
-    String orderId = "ODR000000231";
+    String orderId = "ODR000000324";
     
     /**
      * @throws Exception  

@@ -84,7 +84,7 @@ public class QuarteFintechImpl implements QuarteFintechService {
     * 系统定时任务：每天凌晨12:01执行 把前一天所有订单取消
     * 0 01 00 * * ?
     */
-    @Scheduled(cron = "0 13 05 * * ?")
+    @Scheduled(cron = "0 01 00 * * ?")
     @Override
     public void cancelOrder() throws Exception {
         logger.info("EK定时任务：自定清除当天未完成的订单》操作时间[{}]", DateUtils.getDateTime());
@@ -92,7 +92,10 @@ public class QuarteFintechImpl implements QuarteFintechService {
         for (OrderBaseinfo baseinfo : orderBaseinfo) {
             baseinfo.setOrderStatus(ConstantInterface.Enum.OrderStatus.ORDER_STATUS11.getKey());
            orderBaseinfoMapper.updateByPrimaryKeySelective(baseinfo);
-            logOrderMapper.insertSelective(new LogOrder(baseinfo.getOrderId(), ConstantInterface.Enum.OrderLogStatus.ORDER_STATUS11.getKey(), ConstantInterface.Enum.OrderStatus.ORDER_STATUS11.getKey(), "系统取消：当天未完成的订单"));
+           LogOrder logOrder= logOrderMapper.selectByPrimaryKeyStatus(baseinfo.getOrderId());
+           if(!logOrder.getOrderOperation().equals(ConstantInterface.Enum.OrderLogStatus.ORDER_STATUS11.getKey())) {
+        	   logOrderMapper.insertSelective(new LogOrder(baseinfo.getOrderId(), ConstantInterface.Enum.OrderLogStatus.ORDER_STATUS11.getKey(), ConstantInterface.Enum.OrderStatus.ORDER_STATUS11.getKey(), "系统取消：当天未完成的订单"));
+           }
         }
     }
     
@@ -143,8 +146,17 @@ public class QuarteFintechImpl implements QuarteFintechService {
         for (OrderBaseinfo baseinfo : orderBaseinfo) {
             baseinfo.setOrderStatus(ConstantInterface.Enum.OrderStatus.ORDER_STATUS11.getKey());
            orderBaseinfoMapper.updateByPrimaryKeySelective(baseinfo);
-            logOrderMapper.insertSelective(new LogOrder(baseinfo.getOrderId(), ConstantInterface.Enum.OrderLogStatus.ORDER_STATUS11.getKey(), ConstantInterface.Enum.OrderStatus.ORDER_STATUS11.getKey(), "系统取消：三天前待签署订单"));
+           LogOrder logOrder= logOrderMapper.selectByPrimaryKeyStatus(baseinfo.getOrderId());
+           if(!logOrder.getOrderOperation().equals(ConstantInterface.Enum.OrderLogStatus.ORDER_STATUS11.getKey())) {
+        	   logOrderMapper.insertSelective(new LogOrder(baseinfo.getOrderId(), ConstantInterface.Enum.OrderLogStatus.ORDER_STATUS11.getKey(), ConstantInterface.Enum.OrderStatus.ORDER_STATUS11.getKey(), "系统取消：三天前待签署订单"));
+           }
         }
     }
+    
+    @Scheduled(cron = "0 49 14 * * ?")
+    public void test() {
+    	logger.info("EK定时任务：TEST》操作时间[{}]", DateUtils.getDateTime());
+    }
+
 
 }

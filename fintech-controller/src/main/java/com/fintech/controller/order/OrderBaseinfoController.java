@@ -65,6 +65,20 @@ public class OrderBaseinfoController {
         try {
             redisService.tokenValidate(vo.getToken());
             logger.info("EK运营系统日志： 方法名[{}]参数[{}]操作时间[{}]操作人[{}]",Thread.currentThread().getStackTrace()[1].getMethodName(),vo,DateUtils.getDateTime(),redisService.get(vo.getToken()));
+            orderBaseinfoService.cancelOrder(vo);
+            return ResultUtils.success(ResultUtils.SUCCESS_CODE_MSG);
+        } catch (Exception e) {
+            logger.error("ERROR EK运营系统日志： 方法名[{}]报错[{}] 参数[{}] 报错时间[{}]",Thread.currentThread().getStackTrace()[1].getMethodName(),e.getMessage(),vo,DateUtils.getDateTime());
+            return ResultUtils.error(ResultUtils.ERROR_CODE,e.getMessage());
+        }
+    }
+    
+    @RequestMapping(value = "signOrder",method = RequestMethod.GET)
+    public @ResponseBody Object signOrder(OrderBaseinfoVo vo){
+        try {
+            redisService.tokenValidate(vo.getToken());
+            logger.info("EK运营系统日志： 方法名[{}]参数[{}]操作时间[{}]操作人[{}]",Thread.currentThread().getStackTrace()[1].getMethodName(),vo,DateUtils.getDateTime(),redisService.get(vo.getToken()));
+            orderBaseinfoService.remoteSignCaOrder(vo);
             return ResultUtils.success(ResultUtils.SUCCESS_CODE_MSG);
         } catch (Exception e) {
             logger.error("ERROR EK运营系统日志： 方法名[{}]报错[{}] 参数[{}] 报错时间[{}]",Thread.currentThread().getStackTrace()[1].getMethodName(),e.getMessage(),vo,DateUtils.getDateTime());

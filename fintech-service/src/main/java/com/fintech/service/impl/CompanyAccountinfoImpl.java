@@ -11,6 +11,7 @@ import com.fintech.model.CompanyAccountinfo;
 import com.fintech.model.vo.CompanyAccountinfoVo;
 import com.fintech.service.CompanyAccountinfoService;
 import com.fintech.util.BeanUtils;
+import com.fintech.util.CommonUtil;
 /**   
 * @Title: CompanyAccountinfoImpl.java 
 * @Package com.fintech.service.impl 
@@ -31,7 +32,7 @@ public class CompanyAccountinfoImpl implements CompanyAccountinfoService {
 	* @see com.fintech.service.CompanyAccountinfoService#selectByPrimaryKeyList(java.util.Map) 
 	*/
 	@Override
-	public List<CompanyAccountinfo> selectByPrimaryKeyList(Map<String, Object>parms) {
+	public List<CompanyAccountinfo> selectByPrimaryKeyList(Map<String, Object> parms) {
 		return companyAccountinfoMapper.selectByPrimaryKeyList(parms);
 	}
 

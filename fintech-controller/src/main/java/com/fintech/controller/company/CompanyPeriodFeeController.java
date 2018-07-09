@@ -1,6 +1,7 @@
 package com.fintech.controller.company;
 
 import java.util.Date;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.fintech.model.vo.CompanyPeriodFeeVo;
 import com.fintech.service.CompanyPeriodFeeService;
 import com.fintech.service.RedisService;
+import com.fintech.util.CommonUtil;
 import com.fintech.util.DateUtils;
 import com.fintech.util.result.BaseResult;
 import com.fintech.util.result.ResultUtils;
@@ -104,6 +106,19 @@ public class CompanyPeriodFeeController {
             logger.error("ERROR EK运营系统日志：方法名[{}]报错[{}] 参数[{}] 报错时间[{}]",Thread.currentThread().getStackTrace()[1].getMethodName(),e.getMessage(),id,DateUtils.getDateTime());
             return ResultUtils.error(ResultUtils.ERROR_CODE,e.getMessage());
         }
+    }
+    
+    @RequestMapping(value ="selectCompanyPeriodFeeList",method = RequestMethod.GET)
+    public @ResponseBody BaseResult selectCompanyPeriodFeeList(CompanyPeriodFeeVo vo) throws Exception {
+    	try {
+    		redisService.tokenValidate(vo.getToken());
+    		Map<String, Object>parms=CommonUtil.object2Map(vo);
+    		logger.info("EK运营系统日志：方法名[{}]参数[{}]操作时间[{}]操作人[{}]",Thread.currentThread().getStackTrace()[1].getMethodName(),vo.getCompanyId(),DateUtils.getDateTime(),redisService.get(vo.getToken()));
+    		return ResultUtils.success(ResultUtils.SUCCESS_CODE_MSG,companyPeriodFeeService.selectByPrimaryKeyList(parms));
+    	} catch (Exception e) {
+    		logger.error("ERROR EK运营系统日志：方法名[{}]报错[{}] 参数[{}] 报错时间[{}]",Thread.currentThread().getStackTrace()[1].getMethodName(),e.getMessage(),vo.getCompanyId(),DateUtils.getDateTime());
+    		return ResultUtils.error(ResultUtils.ERROR_CODE,e.getMessage());
+    	}
     }
     
    
