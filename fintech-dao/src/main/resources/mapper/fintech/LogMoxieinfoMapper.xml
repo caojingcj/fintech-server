@@ -38,6 +38,8 @@
       <if test="orderId != null and orderId !=''">
     	and ORDER_ID = #{orderId}
     </if>
+    and MOXIE_STATUS=5
+    order by CREATE_TIME limit 1
   </select>
   
  <insert id="insertSelective" parameterType="com.fintech.model.LogMoxieinfo" >

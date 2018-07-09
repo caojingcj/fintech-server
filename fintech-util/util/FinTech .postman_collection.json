@@ -1,7 +1,7 @@
 {
 	"info": {
-		"_postman_id": "2033b1bb-5c77-4de7-a890-103b1f406f5e",
-		"name": "FinTech copy",
+		"_postman_id": "cb024b6d-bede-4cd7-90f1-86543c133e71",
+		"name": "FinTech",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
@@ -48,6 +48,35 @@
 								}
 							},
 							"response": []
+						},
+						{
+							"name": "登出",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "localhost:8084/manage/loginout?token=123qweqwfr32r2d2",
+									"host": [
+										"localhost"
+									],
+									"port": "8084",
+									"path": [
+										"manage",
+										"loginout"
+									],
+									"query": [
+										{
+											"key": "token",
+											"value": "123qweqwfr32r2d2"
+										}
+									]
+								}
+							},
+							"response": []
 						}
 					],
 					"_postman_isSubFolder": true
@@ -56,6 +85,622 @@
 					"name": "商户模块",
 					"description": null,
 					"item": [
+						{
+							"name": "财务信息",
+							"description": "",
+							"item": [
+								{
+									"name": "新增",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"token\": \"s8uGiHnjPshP5fcqqjZ8QBRdlF1L6W-M\",\n    \"companyId\": \"000001\",\n    \"companyAccountName\": \"青岛红房子妇科医院支行\",\n    \"companyAccountNo\": \"467658192600\",\n    \"companyAccountBranch\": \"中国银行\",\n    \"bankCode\": \"01020000\",\n    \"accountType\": \"1\"\n}"
+										},
+										"url": {
+											"raw": "localhost:8084/manage/company/accountinfo/insertAccountInfo",
+											"host": [
+												"localhost"
+											],
+											"port": "8084",
+											"path": [
+												"manage",
+												"company",
+												"accountinfo",
+												"insertAccountInfo"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "更新",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"token\": \"s8uGiHnjPshP5fcqqjZ8QBRdlF1L6W-M\",\n    \"id\": \"12\",\n    \"companyId\": \"000001\",\n    \"companyAccountName\": \"青岛红房子妇科医院支行123123\",\n    \"companyAccountNo\": \"467658192600\",\n    \"companyAccountBranch\": \"中国银行\",\n    \"bankCode\": \"01020000\",\n    \"accountType\": \"1\"\n}"
+										},
+										"url": {
+											"raw": "localhost:8084/manage/company/accountinfo/updateAccountInfo",
+											"host": [
+												"localhost"
+											],
+											"port": "8084",
+											"path": [
+												"manage",
+												"company",
+												"accountinfo",
+												"updateAccountInfo"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "删除",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": ""
+										},
+										"url": {
+											"raw": "localhost:8084/manage/company/accountinfo/deleteAccountInfo?id=12&token=s8uGiHnjPshP5fcqqjZ8QBRdlF1L6W-M",
+											"host": [
+												"localhost"
+											],
+											"port": "8084",
+											"path": [
+												"manage",
+												"company",
+												"accountinfo",
+												"deleteAccountInfo"
+											],
+											"query": [
+												{
+													"key": "id",
+													"value": "12"
+												},
+												{
+													"key": "token",
+													"value": "s8uGiHnjPshP5fcqqjZ8QBRdlF1L6W-M"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "启用\\禁用",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"token\": \"s8uGiHnjPshP5fcqqjZ8QBRdlF1L6W-M\",\n    \"id\": \"12\",\n    \"isEnabled\": true\n}"
+										},
+										"url": {
+											"raw": "localhost:8084/manage/company/accountinfo/updateAccountInfo",
+											"host": [
+												"localhost"
+											],
+											"port": "8084",
+											"path": [
+												"manage",
+												"company",
+												"accountinfo",
+												"updateAccountInfo"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "列表",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": ""
+										},
+										"url": {
+											"raw": "localhost:8084/manage/company/accountinfo/selectCompanyAccountInfoList?companyId=000001&token=s8uGiHnjPshP5fcqqjZ8QBRdlF1L6W-M",
+											"host": [
+												"localhost"
+											],
+											"port": "8084",
+											"path": [
+												"manage",
+												"company",
+												"accountinfo",
+												"selectCompanyAccountInfoList"
+											],
+											"query": [
+												{
+													"key": "companyId",
+													"value": "000001"
+												},
+												{
+													"key": "token",
+													"value": "s8uGiHnjPshP5fcqqjZ8QBRdlF1L6W-M"
+												}
+											]
+										}
+									},
+									"response": []
+								}
+							],
+							"_postman_isSubFolder": true
+						},
+						{
+							"name": "渠道信息",
+							"description": "",
+							"item": [
+								{
+									"name": "新增",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"token\": \"s8uGiHnjPshP5fcqqjZ8QBRdlF1L6W-M\",\n    \"companyId\": \"000001\",\n    \"channelName\": \"尔康\",\n    \"channelPhone\": \"13813948485\"\n}"
+										},
+										"url": {
+											"raw": "localhost:8084/manage/company/channel/insertChannel",
+											"host": [
+												"localhost"
+											],
+											"port": "8084",
+											"path": [
+												"manage",
+												"company",
+												"channel",
+												"insertChannel"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "更新",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"token\": \"s8uGiHnjPshP5fcqqjZ8QBRdlF1L6W-M\",\n    \"id\":\"4\",\n    \"companyId\": \"000001\",\n    \"channelName\": \"尔康123\",\n    \"channelPhone\": \"13813948485\"\n}"
+										},
+										"url": {
+											"raw": "localhost:8084/manage/company/channel/updateChannel",
+											"host": [
+												"localhost"
+											],
+											"port": "8084",
+											"path": [
+												"manage",
+												"company",
+												"channel",
+												"updateChannel"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "删除",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": ""
+										},
+										"url": {
+											"raw": "localhost:8084/manage/company/channel/deleteChannel?id=4&token=s8uGiHnjPshP5fcqqjZ8QBRdlF1L6W-M",
+											"host": [
+												"localhost"
+											],
+											"port": "8084",
+											"path": [
+												"manage",
+												"company",
+												"channel",
+												"deleteChannel"
+											],
+											"query": [
+												{
+													"key": "id",
+													"value": "4"
+												},
+												{
+													"key": "token",
+													"value": "s8uGiHnjPshP5fcqqjZ8QBRdlF1L6W-M"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "启用\\禁用",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"token\": \"s8uGiHnjPshP5fcqqjZ8QBRdlF1L6W-M\",\n    \"id\":\"4\",\n    \"companyId\": \"000001\",\n    \"channelName\": \"尔康123\",\n    \"channelPhone\": \"13813948485\"\n}"
+										},
+										"url": {
+											"raw": "localhost:8084/manage/company/channel/updateChannel",
+											"host": [
+												"localhost"
+											],
+											"port": "8084",
+											"path": [
+												"manage",
+												"company",
+												"channel",
+												"updateChannel"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "列表",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": ""
+										},
+										"url": {
+											"raw": "localhost:8084/manage/company/channel/selectCompanyChannelList?companyId=000001&pageNum=1&pageSize=10&token=s8uGiHnjPshP5fcqqjZ8QBRdlF1L6W-M",
+											"host": [
+												"localhost"
+											],
+											"port": "8084",
+											"path": [
+												"manage",
+												"company",
+												"channel",
+												"selectCompanyChannelList"
+											],
+											"query": [
+												{
+													"key": "companyId",
+													"value": "000001"
+												},
+												{
+													"key": "pageNum",
+													"value": "1"
+												},
+												{
+													"key": "pageSize",
+													"value": "10"
+												},
+												{
+													"key": "token",
+													"value": "s8uGiHnjPshP5fcqqjZ8QBRdlF1L6W-M"
+												}
+											]
+										}
+									},
+									"response": []
+								}
+							],
+							"_postman_isSubFolder": true
+						},
+						{
+							"name": "项目配置",
+							"description": "",
+							"item": [
+								{
+									"name": "新增",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"token\": \"s8uGiHnjPshP5fcqqjZ8QBRdlF1L6W-M\",\n    \"companyId\": \"000001\",\n    \"itemCode\": \"1004\"\n}"
+										},
+										"url": {
+											"raw": "localhost:8084/manage/company/item/insertItem",
+											"host": [
+												"localhost"
+											],
+											"port": "8084",
+											"path": [
+												"manage",
+												"company",
+												"item",
+												"insertItem"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "更新",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"token\": \"s8uGiHnjPshP5fcqqjZ8QBRdlF1L6W-M\",\n    \"id\": \"5\",\n    \"companyId\": \"000001\",\n    \"itemCode\": \"1005\"\n}"
+										},
+										"url": {
+											"raw": "localhost:8084/manage/company/item/updateItem",
+											"host": [
+												"localhost"
+											],
+											"port": "8084",
+											"path": [
+												"manage",
+												"company",
+												"item",
+												"updateItem"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "删除",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": ""
+										},
+										"url": {
+											"raw": "localhost:8084/manage/company/item/deleteItem?id=5&token=s8uGiHnjPshP5fcqqjZ8QBRdlF1L6W-M",
+											"host": [
+												"localhost"
+											],
+											"port": "8084",
+											"path": [
+												"manage",
+												"company",
+												"item",
+												"deleteItem"
+											],
+											"query": [
+												{
+													"key": "id",
+													"value": "5"
+												},
+												{
+													"key": "token",
+													"value": "s8uGiHnjPshP5fcqqjZ8QBRdlF1L6W-M"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "列表",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": ""
+										},
+										"url": {
+											"raw": "localhost:8084/manage/company/item/selectCompanyItemList?companyId=000001&token=s8uGiHnjPshP5fcqqjZ8QBRdlF1L6W-M",
+											"host": [
+												"localhost"
+											],
+											"port": "8084",
+											"path": [
+												"manage",
+												"company",
+												"item",
+												"selectCompanyItemList"
+											],
+											"query": [
+												{
+													"key": "companyId",
+													"value": "000001"
+												},
+												{
+													"key": "token",
+													"value": "s8uGiHnjPshP5fcqqjZ8QBRdlF1L6W-M"
+												}
+											]
+										}
+									},
+									"response": []
+								}
+							],
+							"_postman_isSubFolder": true
+						},
+						{
+							"name": "费率信息",
+							"description": "",
+							"item": [
+								{
+									"name": "新增",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"token\": \"s8uGiHnjPshP5fcqqjZ8QBRdlF1L6W-M\",\n    \"companyId\": \"000001\",\n    \"period\": \"24\",\n    \"rateTotal\": \"24\",\n    \"rateManage\": \"3\"\n}"
+										},
+										"url": {
+											"raw": "localhost:8084/manage/company/periodfee/insertPeriodFee",
+											"host": [
+												"localhost"
+											],
+											"port": "8084",
+											"path": [
+												"manage",
+												"company",
+												"periodfee",
+												"insertPeriodFee"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "更新",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"token\": \"s8uGiHnjPshP5fcqqjZ8QBRdlF1L6W-M\",\n    \"id\": \"8\",\n    \"companyId\": \"000001\",\n    \"period\": \"24\",\n    \"rateTotal\": \"24\",\n    \"rateManage\": \"4\"\n}"
+										},
+										"url": {
+											"raw": "localhost:8084/manage/company/periodfee/updatePeriodFee",
+											"host": [
+												"localhost"
+											],
+											"port": "8084",
+											"path": [
+												"manage",
+												"company",
+												"periodfee",
+												"updatePeriodFee"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "删除",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": ""
+										},
+										"url": {
+											"raw": "localhost:8084/manage/company/periodfee/deletePeriodFee?id=8&token=s8uGiHnjPshP5fcqqjZ8QBRdlF1L6W-M",
+											"host": [
+												"localhost"
+											],
+											"port": "8084",
+											"path": [
+												"manage",
+												"company",
+												"periodfee",
+												"deletePeriodFee"
+											],
+											"query": [
+												{
+													"key": "id",
+													"value": "8"
+												},
+												{
+													"key": "token",
+													"value": "s8uGiHnjPshP5fcqqjZ8QBRdlF1L6W-M"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "列表",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": ""
+										},
+										"url": {
+											"raw": "localhost:8084/manage/company/periodfee/selectCompanyPeriodFeeList?companyId=000001&token=s8uGiHnjPshP5fcqqjZ8QBRdlF1L6W-M",
+											"host": [
+												"localhost"
+											],
+											"port": "8084",
+											"path": [
+												"manage",
+												"company",
+												"periodfee",
+												"selectCompanyPeriodFeeList"
+											],
+											"query": [
+												{
+													"key": "companyId",
+													"value": "000001"
+												},
+												{
+													"key": "token",
+													"value": "s8uGiHnjPshP5fcqqjZ8QBRdlF1L6W-M"
+												}
+											]
+										}
+									},
+									"response": []
+								}
+							],
+							"_postman_isSubFolder": true
+						},
 						{
 							"name": "商户新增",
 							"request": {
@@ -92,13 +737,14 @@
 									]
 								},
 								"url": {
-									"raw": "localhost:8084/companyBaseinfo/insertCompanyBaseInfo",
+									"raw": "localhost:8084/manage/company/insertCompanyBaseInfo",
 									"host": [
 										"localhost"
 									],
 									"port": "8084",
 									"path": [
-										"companyBaseinfo",
+										"manage",
+										"company",
 										"insertCompanyBaseInfo"
 									]
 								}
@@ -115,19 +761,20 @@
 									"raw": ""
 								},
 								"url": {
-									"raw": "localhost:8084/companyBaseinfo/selectCompanyBaseInfos?searchObject=0000&pageIndex=1&pageSize=5",
+									"raw": "localhost:8084/manage/company/selectCompanyBaseInfos?searchObject=000&pageIndex=1&pageSize=5&token=s8uGiHnjPshP5fcqqjZ8QBRdlF1L6W-M",
 									"host": [
 										"localhost"
 									],
 									"port": "8084",
 									"path": [
-										"companyBaseinfo",
+										"manage",
+										"company",
 										"selectCompanyBaseInfos"
 									],
 									"query": [
 										{
 											"key": "searchObject",
-											"value": "0000"
+											"value": "000"
 										},
 										{
 											"key": "pageIndex",
@@ -136,6 +783,10 @@
 										{
 											"key": "pageSize",
 											"value": "5"
+										},
+										{
+											"key": "token",
+											"value": "s8uGiHnjPshP5fcqqjZ8QBRdlF1L6W-M"
 										}
 									]
 								}
@@ -143,7 +794,7 @@
 							"response": []
 						},
 						{
-							"name": "商户登录",
+							"name": "商户详情",
 							"request": {
 								"method": "GET",
 								"header": [],
@@ -152,28 +803,86 @@
 									"raw": ""
 								},
 								"url": {
-									"raw": "localhost:8084/order/queryOrderByKeyPage?companyIds=000001&PagepageIndex=1&pageSize=10",
+									"raw": "localhost:8084/manage/company/selectCompanyBaseInfoDetails?companyId=000001&token=s8uGiHnjPshP5fcqqjZ8QBRdlF1L6W-M",
 									"host": [
 										"localhost"
 									],
 									"port": "8084",
 									"path": [
-										"order",
-										"queryOrderByKeyPage"
+										"manage",
+										"company",
+										"selectCompanyBaseInfoDetails"
 									],
 									"query": [
 										{
-											"key": "companyIds",
+											"key": "companyId",
 											"value": "000001"
 										},
 										{
-											"key": "PagepageIndex",
-											"value": "1"
+											"key": "token",
+											"value": "s8uGiHnjPshP5fcqqjZ8QBRdlF1L6W-M"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "商户禁用\\启用",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "localhost:8084/manage/company/updateCompanyBaseInfoStatus?companyId=000001&companyStatus=0&token=s8uGiHnjPshP5fcqqjZ8QBRdlF1L6W-M",
+									"host": [
+										"localhost"
+									],
+									"port": "8084",
+									"path": [
+										"manage",
+										"company",
+										"updateCompanyBaseInfoStatus"
+									],
+									"query": [
+										{
+											"key": "companyId",
+											"value": "000001"
 										},
 										{
-											"key": "pageSize",
-											"value": "10"
+											"key": "companyStatus",
+											"value": "0"
+										},
+										{
+											"key": "token",
+											"value": "s8uGiHnjPshP5fcqqjZ8QBRdlF1L6W-M"
 										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "商户新增",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\n}"
+								},
+								"url": {
+									"raw": "localhost:8084/companyBaseinfo/insertCompanyBaseInfo",
+									"host": [
+										"localhost"
+									],
+									"port": "8084",
+									"path": [
+										"companyBaseinfo",
+										"insertCompanyBaseInfo"
 									]
 								}
 							},
@@ -225,19 +934,90 @@
 									"raw": ""
 								},
 								"url": {
-									"raw": "localhost:8084/masterArea/queryMasterAreaByKey?parentAreaId=110100",
+									"raw": "localhost:8084/logsms/selectByPrimaryKeyList?sendMobile=932&token=s8uGiHnjPshP5fcqqjZ8QBRdlF1L6W-M",
 									"host": [
 										"localhost"
 									],
 									"port": "8084",
 									"path": [
-										"masterArea",
-										"queryMasterAreaByKey"
+										"logsms",
+										"selectByPrimaryKeyList"
 									],
 									"query": [
 										{
-											"key": "parentAreaId",
-											"value": "110100"
+											"key": "sendMobile",
+											"value": "932"
+										},
+										{
+											"key": "token",
+											"value": "s8uGiHnjPshP5fcqqjZ8QBRdlF1L6W-M"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "查询项目列表",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "localhost:8084/manage/company/item/selectMasterCompanyItemList?token=s8uGiHnjPshP5fcqqjZ8QBRdlF1L6W-M",
+									"host": [
+										"localhost"
+									],
+									"port": "8084",
+									"path": [
+										"manage",
+										"company",
+										"item",
+										"selectMasterCompanyItemList"
+									],
+									"query": [
+										{
+											"key": "token",
+											"value": "s8uGiHnjPshP5fcqqjZ8QBRdlF1L6W-M"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "查询银行列表",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"token\": \"s8uGiHnjPshP5fcqqjZ8QBRdlF1L6W-M\",\n    \"id\": \"12\",\n    \"isEnabled\": true\n}"
+								},
+								"url": {
+									"raw": "localhost:8084/manage/company/accountinfo/selectMasterBankList?token=s8uGiHnjPshP5fcqqjZ8QBRdlF1L6W-M",
+									"host": [
+										"localhost"
+									],
+									"port": "8084",
+									"path": [
+										"manage",
+										"company",
+										"accountinfo",
+										"selectMasterBankList"
+									],
+									"query": [
+										{
+											"key": "token",
+											"value": "s8uGiHnjPshP5fcqqjZ8QBRdlF1L6W-M"
 										}
 									]
 								}
@@ -261,7 +1041,7 @@
 									"raw": ""
 								},
 								"url": {
-									"raw": "localhost:8084/manage/order/queryOrderByKeyPage?token=WZW-AusBPs43otpdrMPiWljqZjwT5a79",
+									"raw": "localhost:8084/manage/order/queryOrderByKeyPage?token=WZW-AusBPs43otpdrMPiWljqZjwT5a79&pageIndex=1&pageSize=5",
 									"host": [
 										"localhost"
 									],
@@ -275,6 +1055,14 @@
 										{
 											"key": "token",
 											"value": "WZW-AusBPs43otpdrMPiWljqZjwT5a79"
+										},
+										{
+											"key": "pageIndex",
+											"value": "1"
+										},
+										{
+											"key": "pageSize",
+											"value": "5"
 										}
 									]
 								}
@@ -291,23 +1079,58 @@
 									"raw": ""
 								},
 								"url": {
-									"raw": "https://www.duodingfen.com/fintech-web/manage/order/queryOrderByKeyPage?token=oAgrBkHS0zF3GkSHRGPmHVWXtrBunihm",
-									"protocol": "https",
+									"raw": "localhost:8084/manage/order/selectOrderDetails?token=s8uGiHnjPshP5fcqqjZ8QBRdlF1L6W-M&orderId=ODR000000231",
 									"host": [
-										"www",
-										"duodingfen",
-										"com"
+										"localhost"
 									],
+									"port": "8084",
 									"path": [
-										"fintech-web",
 										"manage",
 										"order",
-										"queryOrderByKeyPage"
+										"selectOrderDetails"
 									],
 									"query": [
 										{
 											"key": "token",
-											"value": "oAgrBkHS0zF3GkSHRGPmHVWXtrBunihm"
+											"value": "s8uGiHnjPshP5fcqqjZ8QBRdlF1L6W-M"
+										},
+										{
+											"key": "orderId",
+											"value": "ODR000000231"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "订单取消",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "localhost:8084/manage/order/cancelOrder?token=s8uGiHnjPshP5fcqqjZ8QBRdlF1L6W-M&orderId=ODR000000231",
+									"host": [
+										"localhost"
+									],
+									"port": "8084",
+									"path": [
+										"manage",
+										"order",
+										"cancelOrder"
+									],
+									"query": [
+										{
+											"key": "token",
+											"value": "s8uGiHnjPshP5fcqqjZ8QBRdlF1L6W-M"
+										},
+										{
+											"key": "orderId",
+											"value": "ODR000000231"
 										}
 									]
 								}
@@ -1484,7 +2307,7 @@
 									]
 								},
 								"url": {
-									"raw": "localhost:8084/app/orderbaseinfo/remoteSignCaOrder?token=0UsKBPtoQDX7i8kEGorm8s3OyTG8WqCS&orderId=ODR000000231",
+									"raw": "localhost:8084/app/orderbaseinfo/remoteSignCaOrder?token=0UsKBPtoQDX7i8kEGorm8s3OyTG8WqCS&orderId=ODR000000317",
 									"host": [
 										"localhost"
 									],
@@ -1501,7 +2324,7 @@
 										},
 										{
 											"key": "orderId",
-											"value": "ODR000000231"
+											"value": "ODR000000317"
 										}
 									]
 								}

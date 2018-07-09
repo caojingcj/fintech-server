@@ -119,10 +119,6 @@ public class CompanyBaseinfoImpl implements CompanyBaseinfoService {
 		parms.put("companyId", companyId);
 		Map<String, Object>companyInfo=new HashMap<>();
 		companyInfo.put("baseInfo", companyBaseinfoMapper.selectByPrimaryKeyInfo(companyId));
-		companyInfo.put("accountinfo", companyAccountinfoMapper.selectByPrimaryKeyList(parms));
-		companyInfo.put("periodFeeInfo", companyPeriodFeeMapper.selectByPrimaryKeyList(parms));
-		companyInfo.put("itemInfo", companyItemMapper.selectByPrimaryKeyList(parms));
-		companyInfo.put("channelInfo", companyChannelMapper.selectByPrimaryKeyList(parms));
 		return companyInfo;
 	}
 

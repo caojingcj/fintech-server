@@ -628,7 +628,7 @@ public class OrderBaseinfoImpl implements OrderBaseinfoService {
 	  Map<String, Object>moxieMap=new HashMap<>();
 	  moxieMap.put("orderId", orderId);
 	  LogMoxieinfo moxieinfo= logMoxieinfoMapper.selectByPrimaryKeySelective(moxieMap);
-	  parms.put("moxie",moxieinfo.getMoxieOnlineUrl());
+	  parms.put("moxie",moxieinfo!=null?moxieinfo.getMoxieOnlineUrl():"无数据");
 	  parms.put("baseinfo", baseinfo);
 	  parms.put("custBaseinfo", custBaseinfo);
 	  parms.put("orderDetailinfo", orderDetailinfo);
