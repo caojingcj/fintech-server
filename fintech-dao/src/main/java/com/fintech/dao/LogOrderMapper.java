@@ -1,5 +1,7 @@
 package com.fintech.dao;
 
+import java.util.List;
+
 import com.fintech.model.LogOrder;
 
 public interface LogOrderMapper {
@@ -16,4 +18,6 @@ public interface LogOrderMapper {
     int updateByPrimaryKeySelective(LogOrder record);
 
     int updateByPrimaryKey(LogOrder record);
+    
+    List<LogOrder>selectByPrimaryKeyList(String orderId);
 }

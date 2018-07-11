@@ -73,11 +73,21 @@ public class OrderBaseinfoController {
         }
     }
     
+    /** 
+    * @Title: OrderBaseinfoController.java 
+    * @author qierkang xyqierkang@163.com   
+    * @date 2018年7月12日 上午1:19:19  
+    * @param @param vo
+    * @param @return    设定文件 
+    * @Description: TODO[ 运营系统签约 ]
+    * @throws 
+    */
     @RequestMapping(value = "signOrder",method = RequestMethod.GET)
     public @ResponseBody Object signOrder(OrderBaseinfoVo vo){
         try {
             redisService.tokenValidate(vo.getToken());
             logger.info("EK运营系统日志： 方法名[{}]参数[{}]操作时间[{}]操作人[{}]",Thread.currentThread().getStackTrace()[1].getMethodName(),vo,DateUtils.getDateTime(),redisService.get(vo.getToken()));
+            vo.setOrderNote("通过 - 运营系统>人工通过");
             orderBaseinfoService.remoteSignCaOrder(vo);
             return ResultUtils.success(ResultUtils.SUCCESS_CODE_MSG);
         } catch (Exception e) {

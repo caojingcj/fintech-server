@@ -39,6 +39,23 @@ public class OrderBaseinfoVo extends BaseVO {
 	private String searchOrderName;
 	
 	private String searchCompanyName;
+	
+	private String orderNote;
+	
+
+	/**
+	 * @return the orderNote
+	 */
+	public String getOrderNote() {
+		return orderNote;
+	}
+
+	/** 
+	* @param orderNote 要设置的 orderNote 
+	*/
+	public void setOrderNote(String orderNote) {
+		this.orderNote = orderNote;
+	}
 
 	public String getSearchOrderName() {
 		return searchOrderName;

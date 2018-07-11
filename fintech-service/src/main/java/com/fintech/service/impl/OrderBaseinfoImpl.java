@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import org.apache.commons.collections.map.MultiValueMap;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -339,7 +340,7 @@ public class OrderBaseinfoImpl implements OrderBaseinfoService {
         orderBaseinfoMapper.updateByPrimaryKeySelective(orderBaseinfo);
         returnPlanService.generateReturnPlan(vo.getOrderId());//生成还款计划
         orderAttachmentMapper.insertSelective(new OrderAttachment(vo.getOrderId(), String.valueOf(4), oss.getUrl()));
-        logOrderMapper.insertSelective(new LogOrder(vo.getOrderId(),ConstantInterface.Enum.OrderLogStatus.ORDER_STATUS06.getKey(), ConstantInterface.Enum.OrderStatus.ORDER_STATUS05.getKey(), null));
+        logOrderMapper.insertSelective(new LogOrder(vo.getOrderId(),ConstantInterface.Enum.OrderLogStatus.ORDER_STATUS06.getKey(), ConstantInterface.Enum.OrderStatus.ORDER_STATUS05.getKey(), vo.getOrderNote()));
         return oss.getUrl();
     }
     
@@ -613,12 +614,18 @@ public class OrderBaseinfoImpl implements OrderBaseinfoService {
 	   CustBaseinfo custBaseinfo= custBaseinfoMapper.selectByPrimaryKey(baseinfo.getCustCellphone());
 	   baseinfo.setCustCellphone(SensitiveInfoUtils.mobilePhone(baseinfo.getCustCellphone()));
 	   baseinfo.setCustIdCardNo(SensitiveInfoUtils.idCardNum(baseinfo.getCustIdCardNo()));
+	   MultiValueMap muMap = new MultiValueMap();
 	   if(custBaseinfo!=null) {
 		   custBaseinfo.setCustCellphone(SensitiveInfoUtils.mobilePhone(custBaseinfo.getCustCellphone()));
 		   custBaseinfo.setCustIdCardNo(SensitiveInfoUtils.idCardNum(custBaseinfo.getCustIdCardNo()));
 	   }
 	   OrderDetailinfo orderDetailinfo= orderDetailinfoMapper.selectByPrimaryKey(orderId);
 	  List<OrderAttachment> orderAttachments= orderAttachmentMapper.selectByPrimaryKeyList(orderId);
+	  if(orderAttachments.size()>0) {
+			for (OrderAttachment maps : orderAttachments) {
+	            muMap.put(maps.getAtthType(), maps);
+	        }
+	  }
 	  Map<String, Object>map=new HashMap<>();
 	  map.put("orderId", orderId);
 	  List<UserReturnplan> userReturnplans=userReturnplanMapper.selectByPrimaryKeyList(map);
@@ -628,12 +635,23 @@ public class OrderBaseinfoImpl implements OrderBaseinfoService {
 	  Map<String, Object>moxieMap=new HashMap<>();
 	  moxieMap.put("orderId", orderId);
 	  LogMoxieinfo moxieinfo= logMoxieinfoMapper.selectByPrimaryKeySelective(moxieMap);
+	  List<LogOrder> logOrders=logOrderMapper.selectByPrimaryKeyList(orderId);
+	  List<String>logRecord=new ArrayList<>();
+	  for (LogOrder logOrder : logOrders) {
+		  for (ConstantInterface.Enum.OrderLogStatus logstatus : ConstantInterface.Enum.OrderLogStatus.values()) {
+			  if(logOrder.getOrderOperation().equals(logstatus.getKey())) {
+				  String mes=logOrder.getOrderNote()==null?"":logOrder.getOrderNote();
+				  logRecord.add("订单号【"+orderId+"】"+DateUtils.parseDateTime(logOrder.getCreateTime())+" 操作日志："+logstatus.toString()+mes);
+			  }
+		}
+	}
 	  parms.put("moxie",moxieinfo!=null?moxieinfo.getMoxieOnlineUrl():"无数据");
 	  parms.put("baseinfo", baseinfo);
 	  parms.put("custBaseinfo", custBaseinfo);
 	  parms.put("orderDetailinfo", orderDetailinfo);
-	  parms.put("orderAttachment", orderAttachments);
+	  parms.put("orderAttachment", muMap);
 	  parms.put("userReturnplans", userReturnplans);
+	  parms.put("logRecord", logRecord);
 	    return parms;
 	}
 

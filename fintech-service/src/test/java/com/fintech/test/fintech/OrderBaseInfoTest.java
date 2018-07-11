@@ -31,6 +31,7 @@ public class OrderBaseInfoTest {
     public void testRemoteSignCaOrder() throws Exception {
     	OrderBaseinfoVo vo=new OrderBaseinfoVo();
     	vo.setOrderId(orderId);
+    	 vo.setOrderNote("通过 - 运营系统>人工通过");
         System.out.println(orderBaseinfoService.remoteSignCaOrder(vo));
     }
 

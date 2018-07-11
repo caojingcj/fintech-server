@@ -2,6 +2,7 @@ package com.fintech.service.impl;
 
 import java.util.List;
 
+import org.apache.tools.ant.taskdefs.Sleep;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -89,6 +90,7 @@ public class QuarteFintechImpl implements QuarteFintechService {
     public void cancelOrder() throws Exception {
         logger.info("EK定时任务：自定清除当天未完成的订单》操作时间[{}]", DateUtils.getDateTime());
         List<OrderBaseinfo> orderBaseinfo=orderBaseinfoMapper.selectQuarteCancelOrder();
+        Thread.sleep(500);
         for (OrderBaseinfo baseinfo : orderBaseinfo) {
             baseinfo.setOrderStatus(ConstantInterface.Enum.OrderStatus.ORDER_STATUS11.getKey());
            orderBaseinfoMapper.updateByPrimaryKeySelective(baseinfo);
