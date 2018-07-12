@@ -662,6 +662,48 @@ public class OrderBaseinfoImpl implements OrderBaseinfoService {
 		orderBaseinfoMapper.updateByPrimaryKeySelective(baseinfo);
 		logOrderMapper.insertSelective(new LogOrder(vo.getOrderId(), ConstantInterface.Enum.OrderLogStatus.ORDER_STATUS11.getKey(), ConstantInterface.Enum.OrderStatus.ORDER_STATUS11.getKey(), ConstantInterface.WebValidateConfig.OrderValidate.ORDER_100201.getValue()));
 	}
+	
+	
+	/* (非 Javadoc) 
+	* <p>Title: orderBaseInfoTotalByToday</p> 
+	* <p>Description: </p> 
+	* @param param
+	* @return 
+	* @see com.fintech.service.OrderBaseinfoService#orderBaseInfoTotalByToday(java.util.Map) 
+	*/
+	@Override
+    public List<Map<String, Object>> selectOrderBaseInfoTotalByToday(OrderBaseinfoVo vo) throws Exception {
+		Map<String, Object>parms=CommonUtil.object2Map(vo);
+		List<Map<String, Object>> list =orderBaseinfoMapper.selectOrderBaseInfoTotalByToday(parms);
+		if (list != null && list.size() > 0) {
+			BigDecimal zero = new BigDecimal("0.00");
+			BigDecimal zero0 = new BigDecimal("0.0");
+			BigDecimal zeroNum = new BigDecimal("0");
+			BigDecimal hundred = new BigDecimal("100.00");
+			BigDecimal targetMoney;
+			BigDecimal successLoansMoney;
+			BigDecimal refuseMoney;
+			BigDecimal reqCount;
+			BigDecimal successCount;
+			BigDecimal successLoansMoneyRate;
+			BigDecimal refuseMoneyRate;
+			BigDecimal successCountRate;
+			for (Map<String, Object> m : list) {
+				targetMoney =new BigDecimal(m.get("targetMoney").toString());
+				successLoansMoney = new BigDecimal(m.get("successLoansMoney").toString());
+				refuseMoney = new BigDecimal(m.get("refuseMoney").toString());
+				reqCount = new BigDecimal(m.get("reqCount").toString());
+				successCount = new BigDecimal(m.get("successCount").toString());
+				successLoansMoneyRate = targetMoney.equals(zero0) ? zero0: successLoansMoney.divide(targetMoney, 4, BigDecimal.ROUND_HALF_EVEN).multiply(hundred);
+				refuseMoneyRate = refuseMoney.equals(zero) ? zero: refuseMoney.divide(targetMoney, 4, BigDecimal.ROUND_HALF_EVEN).multiply(hundred);
+				successCountRate = reqCount.equals(zeroNum) ? zeroNum: successCount.divide(reqCount, 4, BigDecimal.ROUND_HALF_EVEN).multiply(hundred);
+				m.put("successLoansMoneyRate", successLoansMoneyRate);
+				m.put("successCountRate", successCountRate);
+				m.put("refuseMoneyRate", refuseMoneyRate);
+			}
+		}
+		return list;
+	}
 
 
 }

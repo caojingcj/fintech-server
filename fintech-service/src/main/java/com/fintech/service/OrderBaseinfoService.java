@@ -57,4 +57,6 @@ public interface OrderBaseinfoService {
     Map<String, Object>selectOrderDetails(String orderId);
     
     void cancelOrder(OrderBaseinfoVo vo);
+    
+    public List<Map<String, Object>> selectOrderBaseInfoTotalByToday(OrderBaseinfoVo vo)throws Exception;
 }

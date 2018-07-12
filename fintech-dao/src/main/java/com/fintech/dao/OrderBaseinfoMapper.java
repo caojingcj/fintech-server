@@ -37,4 +37,6 @@ public interface OrderBaseinfoMapper {
     
     OrderBaseinfo selectScanPiece(Map<String, Object> parms);
     
+    List<Map<String, Object>> selectOrderBaseInfoTotalByToday(Map<String, Object> parms);
+    
 }

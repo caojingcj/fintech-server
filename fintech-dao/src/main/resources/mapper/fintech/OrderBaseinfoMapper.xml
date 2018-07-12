@@ -312,4 +312,22 @@ WHERE
     where CUST_CELLPHONE=#{custCellphone} and ORDER_STATUS=#{orderStatus}
   </select>
   
+  <select id="selectOrderBaseInfoTotalByToday" resultType="java.util.Map" parameterType="java.util.Map">
+        select
+        '总计' companyName,
+        ifnull( sum(o.ORDER_STATUS),0) as targetMoney ,
+        ifnull(sum(case when o.ORDER_STATUS in (04,05) then o.ORDER_AMOUNT else 0 end ),0) successLoansMoney,
+        ifnull(sum(case when 03 then o.ORDER_AMOUNT else 0 end ),0) refuseMoney,
+        ifnull(sum(case when 03 then 1 else 0 end ),0) refuseCount,
+        count(1) reqCount,
+        ifnull(sum(case when o.ORDER_STATUS in (04,05) then 1 else 0 end ),0) successCount
+        from order_baseinfo o where 1=1
+        <if test="beginDate != null and beginDate !=''">
+            and o.CREATE_TIME >=DATE_FORMAT(DATE_SUB(#{beginDate},INTERVAL 0 DAY),'%Y-%m-%d')
+        </if>
+        <if test="endDate != null and endDate !=''">
+            and o.CREATE_TIME &lt;= DATE_FORMAT(DATE_SUB(#{endDate},INTERVAL -1 DAY),'%Y-%m-%d')
+        </if>
+    </select>
+  
 </mapper>

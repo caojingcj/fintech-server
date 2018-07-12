@@ -293,12 +293,12 @@ public class CreditVettingServiceImpl implements CreditVettingService {
         order.setOrderId(orderId);
         log.setOrderId(orderId);
         log.setOrderOperation(OrderOperationEnum.审批.getValue());
+        log.setOrderNote(note);
         if (result.equals(CreditVettingResultEnum.通过.getValue())) {
             log.setOrderStatus(OrderStatusEnum.待用户签署.getValue());
             order.setOrderStatus(OrderStatusEnum.待用户签署.getValue());
         }
         if (result.equals(CreditVettingResultEnum.拒绝.getValue())) {
-            log.setOrderNote(note);
             log.setOrderStatus(OrderStatusEnum.审批拒绝.getValue());
             order.setOrderStatus(OrderStatusEnum.审批拒绝.getValue());
         }
