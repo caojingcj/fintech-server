@@ -9,4 +9,7 @@ public interface CreditVettingService {
      * @return
      */
     public CreditVettingResultEnum creditVetting(String orderId);
+    
+    
+    void logOrder(String orderId, String result, String note);
 }

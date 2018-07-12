@@ -659,7 +659,7 @@ public class OrderBaseinfoImpl implements OrderBaseinfoService {
 	public void cancelOrder(OrderBaseinfoVo vo) {
 		OrderBaseinfo baseinfo=orderBaseinfoMapper.selectByPrimaryKey(vo.getOrderId());
 		baseinfo.setOrderStatus(ConstantInterface.Enum.OrderStatus.ORDER_STATUS11.getKey());
-		orderBaseinfoMapper.updateByPrimaryKey(baseinfo);
+		orderBaseinfoMapper.updateByPrimaryKeySelective(baseinfo);
 		logOrderMapper.insertSelective(new LogOrder(vo.getOrderId(), ConstantInterface.Enum.OrderLogStatus.ORDER_STATUS11.getKey(), ConstantInterface.Enum.OrderStatus.ORDER_STATUS11.getKey(), ConstantInterface.WebValidateConfig.OrderValidate.ORDER_100201.getValue()));
 	}
 

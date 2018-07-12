@@ -284,8 +284,8 @@ public class CreditVettingServiceImpl implements CreditVettingService {
         logOrder(orderId, CreditVettingResultEnum.拒绝.getValue(), "拒绝 - 其它原因");
         return CreditVettingResultEnum.拒绝;
     }
-
-    public void logOrder(String orderId, String result, String note) {
+	@Override
+	public void logOrder(String orderId, String result, String note) {
         // 新增订单操作日志
         LogOrder log = new LogOrder();
         // 订单基本信息

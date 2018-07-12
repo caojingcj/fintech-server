@@ -87,7 +87,7 @@ public class OrderBaseinfoController {
         try {
             redisService.tokenValidate(vo.getToken());
             logger.info("EK运营系统日志： 方法名[{}]参数[{}]操作时间[{}]操作人[{}]",Thread.currentThread().getStackTrace()[1].getMethodName(),vo,DateUtils.getDateTime(),redisService.get(vo.getToken()));
-            vo.setOrderNote("通过 - 运营系统>人工通过");
+            vo.setOrderNote("通过 - 运营系统>人工签署");
             orderBaseinfoService.remoteSignCaOrder(vo);
             return ResultUtils.success(ResultUtils.SUCCESS_CODE_MSG);
         } catch (Exception e) {
