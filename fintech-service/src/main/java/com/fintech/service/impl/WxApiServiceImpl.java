@@ -75,7 +75,6 @@ public class WxApiServiceImpl implements WxApiService {
                 parms.put("mobile", mobile);
                 Map<String, Object> mapOrder = new HashMap<>();
                 mapOrder.put("custCellphone", mobile);
-                mapOrder.put("orderStatus", ConstantInterface.Enum.OrderStatus.ORDER_STATUS05.getKey());
                 OrderBaseinfo baseinfo = orderBaseinfoMapper.selectByPrimaryKeyWx(mapOrder);
                 if (baseinfo != null) {
                     logger.info("EK 有录入定单 baseinfo[{}]操作时间[{}]", baseinfo, DateUtils.getDateTime());
@@ -125,7 +124,6 @@ public class WxApiServiceImpl implements WxApiService {
                 parms.put("mobile", mobile);
                 Map<String, Object> mapOrder = new HashMap<>();
                 mapOrder.put("custCellphone", mobile);
-                mapOrder.put("orderStatus", ConstantInterface.Enum.OrderStatus.ORDER_STATUS05.getKey());
                 OrderBaseinfo baseinfo = orderBaseinfoMapper.selectByPrimaryKeyWx(mapOrder);
                 if (baseinfo != null) {
                     logger.info("EK 有录入定单 baseinfo[{}]操作时间[{}]", baseinfo, DateUtils.getDateTime());

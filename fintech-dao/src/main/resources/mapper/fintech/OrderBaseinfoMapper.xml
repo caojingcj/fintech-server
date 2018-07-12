@@ -99,7 +99,7 @@
     select 
     <include refid="Base_Column_List" />
     from order_baseinfo
-    where  CUST_CELLPHONE=#{custCellphone} and ORDER_STATUS <![CDATA[ < ]]> #{orderStatus}
+    where  CUST_CELLPHONE=#{custCellphone} and ORDER_STATUS  in (00,01,02,04)
   </select>
   
   
