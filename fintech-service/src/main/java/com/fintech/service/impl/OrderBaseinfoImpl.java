@@ -704,6 +704,4 @@ public class OrderBaseinfoImpl implements OrderBaseinfoService {
 		}
 		return list;
 	}
-
-
 }

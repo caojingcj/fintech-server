@@ -65,7 +65,7 @@ public class CreditVettingServiceImpl implements CreditVettingService {
 		BigDecimal depositAmount = orderDetailinfo.getDepositAmount();
 		BigDecimal totalAmount = orderAmount.add(depositAmount);
 		BigDecimal depositPercent = depositAmount.divide(totalAmount, 4, BigDecimal.ROUND_DOWN);
-		if (orderAmount != null && depositAmount != null && depositPercent.doubleValue() >= 0.3) {
+		if (orderAmount != null && depositAmount != null && depositPercent.doubleValue() >= 0.2) {
 		    logOrder(orderId, CreditVettingResultEnum.通过.getValue(), "通过 - 首付比30%以上");
             return CreditVettingResultEnum.通过;
 		}
