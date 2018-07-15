@@ -23,7 +23,7 @@ public class OrderBaseInfoTest {
     @Autowired
     private CreditVettingService creditVettingService;
     
-    String orderId = "ODR000000350";
+    String orderId = "ODR000000382";
     
     /**
      * @throws Exception  

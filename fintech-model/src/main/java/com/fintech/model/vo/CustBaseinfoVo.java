@@ -32,9 +32,19 @@ public class CustBaseinfoVo extends BaseVO {
     private Date createTime;
 
     private Date updatetime;
-    
+
     private String orderId;
-    
+
+    private Integer age;
+
+    public Integer getAge() {
+        return age;
+    }
+
+    public void setAge(Integer age) {
+        this.age = age;
+    }
+
     public String getOrderId() {
         return orderId;
     }

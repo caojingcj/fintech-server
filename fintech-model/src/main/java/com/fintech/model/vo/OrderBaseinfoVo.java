@@ -42,8 +42,18 @@ public class OrderBaseinfoVo extends BaseVO {
 	
 	private String orderNote;
 	
+	private String companyChannelName;
+	
 
-	/**
+	public String getCompanyChannelName() {
+        return companyChannelName;
+    }
+
+    public void setCompanyChannelName(String companyChannelName) {
+        this.companyChannelName = companyChannelName;
+    }
+
+    /**
 	 * @return the orderNote
 	 */
 	public String getOrderNote() {

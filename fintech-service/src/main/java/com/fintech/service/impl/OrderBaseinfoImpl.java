@@ -53,6 +53,7 @@ import com.fintech.model.OrderDetailinfo;
 import com.fintech.model.UserContract;
 import com.fintech.model.UserReturnplan;
 import com.fintech.model.domain.CompanyItemDo;
+import com.fintech.model.vo.CustBaseinfoVo;
 import com.fintech.model.vo.OrderBaseinfoVo;
 import com.fintech.model.vo.OrderDetailinfoVo;
 import com.fintech.model.vo.ProjectVo;
@@ -612,12 +613,15 @@ public class OrderBaseinfoImpl implements OrderBaseinfoService {
 	    Map<String, Object>parms=new HashMap<>();
 	   OrderBaseinfo baseinfo= orderBaseinfoMapper.selectByPrimaryKey(orderId);
 	   CustBaseinfo custBaseinfo= custBaseinfoMapper.selectByPrimaryKey(baseinfo.getCustCellphone());
+	   CustBaseinfoVo custBaseinfoVo=new CustBaseinfoVo();
 	   baseinfo.setCustCellphone(SensitiveInfoUtils.mobilePhone(baseinfo.getCustCellphone()));
 	   baseinfo.setCustIdCardNo(SensitiveInfoUtils.idCardNum(baseinfo.getCustIdCardNo()));
 	   MultiValueMap muMap = new MultiValueMap();
 	   if(custBaseinfo!=null) {
-		   custBaseinfo.setCustCellphone(SensitiveInfoUtils.mobilePhone(custBaseinfo.getCustCellphone()));
-		   custBaseinfo.setCustIdCardNo(SensitiveInfoUtils.idCardNum(custBaseinfo.getCustIdCardNo()));
+	       BeanUtils.copyProperties(custBaseinfo, custBaseinfoVo);
+	       custBaseinfoVo.setCustCellphone(SensitiveInfoUtils.mobilePhone(custBaseinfoVo.getCustCellphone()));
+	       custBaseinfoVo.setCustIdCardNo(SensitiveInfoUtils.idCardNum(custBaseinfoVo.getCustIdCardNo()));
+	       custBaseinfoVo.setAge(SensitiveInfoUtils.IdNOToAge(custBaseinfoVo.getCustIdCardNo()));
 	   }
 	   OrderDetailinfo orderDetailinfo= orderDetailinfoMapper.selectByPrimaryKey(orderId);
 	  List<OrderAttachment> orderAttachments= orderAttachmentMapper.selectByPrimaryKeyList(orderId);
@@ -631,7 +635,7 @@ public class OrderBaseinfoImpl implements OrderBaseinfoService {
 	  List<UserReturnplan> userReturnplans=userReturnplanMapper.selectByPrimaryKeyList(map);
 	  for (UserReturnplan userReturnplan : userReturnplans) {
 		  userReturnplan.setCustCellphone(SensitiveInfoUtils.mobilePhone(userReturnplan.getCustCellphone()));
-	}
+	  }
 	  Map<String, Object>moxieMap=new HashMap<>();
 	  moxieMap.put("orderId", orderId);
 	  LogMoxieinfo moxieinfo= logMoxieinfoMapper.selectByPrimaryKeySelective(moxieMap);
@@ -641,13 +645,13 @@ public class OrderBaseinfoImpl implements OrderBaseinfoService {
 		  for (ConstantInterface.Enum.OrderLogStatus logstatus : ConstantInterface.Enum.OrderLogStatus.values()) {
 			  if(logOrder.getOrderOperation().equals(logstatus.getKey())) {
 				  String mes=logOrder.getOrderNote()==null?"":logOrder.getOrderNote();
-				  logRecord.add("订单号【"+orderId+"】"+DateUtils.parseDateTime(logOrder.getCreateTime())+" 操作日志："+logstatus.toString()+mes);
+				  logRecord.add(DateUtils.parseDateTime(logOrder.getCreateTime())+" 操作日志："+logstatus.toString()+mes);
 			  }
 		}
 	}
 	  parms.put("moxie",moxieinfo!=null?moxieinfo.getMoxieOnlineUrl():"无数据");
 	  parms.put("baseinfo", baseinfo);
-	  parms.put("custBaseinfo", custBaseinfo);
+	  parms.put("custBaseinfo", custBaseinfoVo);
 	  parms.put("orderDetailinfo", orderDetailinfo);
 	  parms.put("orderAttachment", muMap);
 	  parms.put("userReturnplans", userReturnplans);
@@ -673,6 +677,11 @@ public class OrderBaseinfoImpl implements OrderBaseinfoService {
 	*/
 	@Override
     public List<Map<String, Object>> selectOrderBaseInfoTotalByToday(OrderBaseinfoVo vo) throws Exception {
+	    Gson gson=new Gson();
+	    UserBaseinfoVo baseinfoVo=gson.fromJson(redisService.get(vo.getToken()),new TypeToken<FaceidIDCardPositiveVo>() {}.getType());
+	    if(!baseinfoVo.getUserCompanyId().equals("ALL")) {
+	        vo.setCompanyId(baseinfoVo.getUserCompanyId());
+	    }
 		Map<String, Object>parms=CommonUtil.object2Map(vo);
 		List<Map<String, Object>> list =orderBaseinfoMapper.selectOrderBaseInfoTotalByToday(parms);
 		if (list != null && list.size() > 0) {
