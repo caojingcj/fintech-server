@@ -678,7 +678,7 @@ public class OrderBaseinfoImpl implements OrderBaseinfoService {
 	@Override
     public List<Map<String, Object>> selectOrderBaseInfoTotalByToday(OrderBaseinfoVo vo) throws Exception {
 	    Gson gson=new Gson();
-	    UserBaseinfoVo baseinfoVo=gson.fromJson(redisService.get(vo.getToken()),new TypeToken<FaceidIDCardPositiveVo>() {}.getType());
+	    UserBaseinfoVo baseinfoVo=gson.fromJson(redisService.get(vo.getToken()),new TypeToken<UserBaseinfoVo>() {}.getType());
 	    if(!baseinfoVo.getUserCompanyId().equals("ALL")) {
 	        vo.setCompanyId(baseinfoVo.getUserCompanyId());
 	    }
