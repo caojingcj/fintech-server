@@ -614,14 +614,12 @@ public class OrderBaseinfoImpl implements OrderBaseinfoService {
 	   OrderBaseinfo baseinfo= orderBaseinfoMapper.selectByPrimaryKey(orderId);
 	   CustBaseinfo custBaseinfo= custBaseinfoMapper.selectByPrimaryKey(baseinfo.getCustCellphone());
 	   CustBaseinfoVo custBaseinfoVo=new CustBaseinfoVo();
-	   baseinfo.setCustCellphone(SensitiveInfoUtils.mobilePhone(baseinfo.getCustCellphone()));
-	   baseinfo.setCustIdCardNo(SensitiveInfoUtils.idCardNum(baseinfo.getCustIdCardNo()));
 	   MultiValueMap muMap = new MultiValueMap();
 	   if(custBaseinfo!=null) {
 	       BeanUtils.copyProperties(custBaseinfo, custBaseinfoVo);
+	       custBaseinfoVo.setAge(SensitiveInfoUtils.IdNOToAge(custBaseinfoVo.getCustIdCardNo()));
 	       custBaseinfoVo.setCustCellphone(SensitiveInfoUtils.mobilePhone(custBaseinfoVo.getCustCellphone()));
 	       custBaseinfoVo.setCustIdCardNo(SensitiveInfoUtils.idCardNum(custBaseinfoVo.getCustIdCardNo()));
-	       custBaseinfoVo.setAge(SensitiveInfoUtils.IdNOToAge(custBaseinfoVo.getCustIdCardNo()));
 	   }
 	   OrderDetailinfo orderDetailinfo= orderDetailinfoMapper.selectByPrimaryKey(orderId);
 	  List<OrderAttachment> orderAttachments= orderAttachmentMapper.selectByPrimaryKeyList(orderId);

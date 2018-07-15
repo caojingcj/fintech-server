@@ -162,6 +162,7 @@ public class SensitiveInfoUtils {
     }
 
     public static void main(String[] args) {
-       System.out.println(IdNOToAge("320830199207180035"));
+       System.out.println(idCardNum("522725199807115221"));
+       System.out.println(IdNOToAge("522725199807115221"));
     }
 }
