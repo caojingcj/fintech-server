@@ -614,6 +614,8 @@ public class OrderBaseinfoImpl implements OrderBaseinfoService {
 	   OrderBaseinfo baseinfo= orderBaseinfoMapper.selectByPrimaryKey(orderId);
 	   CustBaseinfo custBaseinfo= custBaseinfoMapper.selectByPrimaryKey(baseinfo.getCustCellphone());
 	   CustBaseinfoVo custBaseinfoVo=new CustBaseinfoVo();
+	   baseinfo.setCustCellphone(SensitiveInfoUtils.mobilePhone(baseinfo.getCustCellphone()));
+	   baseinfo.setCustIdCardNo(SensitiveInfoUtils.idCardNum(baseinfo.getCustIdCardNo()));
 	   MultiValueMap muMap = new MultiValueMap();
 	   if(custBaseinfo!=null) {
 	       BeanUtils.copyProperties(custBaseinfo, custBaseinfoVo);
