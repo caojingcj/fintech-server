@@ -13,8 +13,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.fintech.common.properties.AppConfig;
+import com.fintech.dao.CompanyBaseinfoMapper;
 import com.fintech.dao.LogOrderMapper;
 import com.fintech.dao.OrderBaseinfoMapper;
+import com.fintech.model.CompanyBaseinfo;
 import com.fintech.model.LogOrder;
 import com.fintech.model.OrderBaseinfo;
 import com.fintech.service.RedisService;
@@ -40,6 +42,8 @@ public class WxApiServiceImpl implements WxApiService {
     private LogOrderMapper logOrderMapper;
     @Autowired
     private AppConfig appConfig;
+    @Autowired
+    private CompanyBaseinfoMapper companyBaseinfoMapper;
 
     @Override
     public Map<String, Object> wxOpenId(HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -160,5 +164,35 @@ public class WxApiServiceImpl implements WxApiService {
         map.put("str", str);
         map.put("jsapi_ticket", jsapi_ticket);
         return map;
+    }
+
+
+    @Override
+    public String qrCodeCompany(String companyId) {
+        CompanyBaseinfo baseinfo= companyBaseinfoMapper.selectByPrimaryKeyInfo(companyId);
+        if(baseinfo.getWeixinCodeUrl()!=null) {
+            return baseinfo.getWeixinCodeUrl();
+        }
+        try {
+           String accessToken= redisService.get("WEIXIN_ACCESS_TOKEN");
+           String codeUrl= appConfig.getWEIXIN_API_QRCODE_URL().replace("{access_token}", accessToken);
+           Map<String, Object>params=new HashMap<>();
+           Map<String, Object>action_info=new HashMap<>();
+           Map<String, Object>scene=new HashMap<>();
+           params.put("action_name", "QR_LIMIT_SCENE");
+           scene.put("scene_id", baseinfo.getCompanyId());
+           scene.put("scene_str", baseinfo.getCompanyName());
+           action_info.put("scene", scene);
+           params.put("action_info", action_info);
+           String result=HttpClient.jsonPost(codeUrl, params);
+           JSONObject json = JSONObject.fromObject(result);
+           if(json.containsKey("ticket")) {
+               baseinfo.setWeixinCodeUrl(appConfig.getWEIXIN_API_SHOWQRCODE_URL().replace("{ticket}", json.getString("ticket")));
+               companyBaseinfoMapper.updateByPrimaryKeySelective(baseinfo);
+           }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return baseinfo.getWeixinCodeUrl();
     }
 }

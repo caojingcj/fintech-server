@@ -14,6 +14,7 @@
     <result column="COMPANY_FULL_NAME" property="companyFullName" jdbcType="VARCHAR" />
     <result column="CORPORATE_NAME" property="corporateName" jdbcType="VARCHAR" />
     <result column="CORPORATE_ID_CODE" property="corporateIdCode" jdbcType="VARCHAR" />
+    <result column="WEIXIN_CODE_URL" property="weixinCodeUrl" jdbcType="VARCHAR" />
     <result column="CORPORATE_PHONE" property="corporatePhone" jdbcType="CHAR" />
     <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
     <result column="UPDATETIME" property="updatetime" jdbcType="TIMESTAMP" />
@@ -21,7 +22,7 @@
   <sql id="Base_Column_List" >
     COMPANY_ID, COMPANY_NAME, COMPANY_TYPE, COMPANY_STATUS, COMPANY_ADDR_PROVINCE, COMPANY_ADDR_CITY, 
     COMPANY_ADDR_DISTRICT, COMPANY_ADDR, COMPANY_USCC, COMPANY_FULL_NAME, CORPORATE_NAME, 
-    CORPORATE_ID_CODE, CORPORATE_PHONE, CREATE_TIME, UPDATETIME
+    CORPORATE_ID_CODE, CORPORATE_PHONE, CREATE_TIME, UPDATETIME,WEIXIN_CODE_URL
   </sql>
 
   <select id="selectByPrimaryKey" resultMap="BaseResultMap"  parameterType="java.util.Map">
@@ -125,6 +126,9 @@
       <if test="updatetime != null" >
         UPDATETIME,
       </if>
+      <if test="weixinCodeUrl != null" >
+        WEIXIN_CODE_URL,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="companyId != null" >
@@ -172,6 +176,9 @@
       <if test="updatetime != null" >
         #{updatetime,jdbcType=TIMESTAMP},
       </if>
+      <if test="weixinCodeUrl != null" >
+        #{weixinCodeUrl},
+      </if>
     </trim>
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.fintech.model.CompanyBaseinfo" >
@@ -218,6 +225,9 @@
       </if>
       <if test="updatetime != null" >
         UPDATETIME = #{updatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="weixinCodeUrl != null" >
+        WEIXIN_CODE_URL = #{weixinCodeUrl},
       </if>
     </set>
     where COMPANY_ID = #{companyId,jdbcType=CHAR}

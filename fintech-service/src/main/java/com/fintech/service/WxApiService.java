@@ -11,4 +11,6 @@ public interface WxApiService {
     Map<String, Object> wxOrderList(HttpServletRequest request, HttpServletResponse response) throws Exception;
 
     Map<String, Object>wxJSSignature() throws Exception;
+    
+    String qrCodeCompany(String companyId);
 }

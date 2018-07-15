@@ -149,36 +149,56 @@ public class AppConfig {
     private String tmpFile;
     @Value("${QYS_OSS_PATH}")
     private String QYS_OSS_PATH;
-    
+    @Value("${WEIXIN_API_QRCODE_URL}")
+    private String WEIXIN_API_QRCODE_URL;
+    @Value("${WEIXIN_API_SHOWQRCODE_URL}")
+    private String WEIXIN_API_SHOWQRCODE_URL;
+
+    public String getWEIXIN_API_SHOWQRCODE_URL() {
+        return WEIXIN_API_SHOWQRCODE_URL;
+    }
+
+    public void setWEIXIN_API_SHOWQRCODE_URL(String wEIXIN_API_SHOWQRCODE_URL) {
+        WEIXIN_API_SHOWQRCODE_URL = wEIXIN_API_SHOWQRCODE_URL;
+    }
+
+    public String getWEIXIN_API_QRCODE_URL() {
+        return WEIXIN_API_QRCODE_URL;
+    }
+
+    public void setWEIXIN_API_QRCODE_URL(String wEIXIN_API_QRCODE_URL) {
+        WEIXIN_API_QRCODE_URL = wEIXIN_API_QRCODE_URL;
+    }
+
     /**
-	 * @return the qYS_OSS_PATH
-	 */
-	public String getQYS_OSS_PATH() {
-		return QYS_OSS_PATH;
-	}
+     * @return the qYS_OSS_PATH
+     */
+    public String getQYS_OSS_PATH() {
+        return QYS_OSS_PATH;
+    }
 
-	/** 
-	* @param qYS_OSS_PATH 要设置的 qYS_OSS_PATH 
-	*/
-	public void setQYS_OSS_PATH(String qYS_OSS_PATH) {
-		QYS_OSS_PATH = qYS_OSS_PATH;
-	}
+    /** 
+    * @param qYS_OSS_PATH 要设置的 qYS_OSS_PATH 
+    */
+    public void setQYS_OSS_PATH(String qYS_OSS_PATH) {
+        QYS_OSS_PATH = qYS_OSS_PATH;
+    }
 
-	/**
-	 * @return the tmpFile
-	 */
-	public String getTmpFile() {
-		return tmpFile;
-	}
+    /**
+     * @return the tmpFile
+     */
+    public String getTmpFile() {
+        return tmpFile;
+    }
 
-	/** 
-	* @param tmpFile 要设置的 tmpFile 
-	*/
-	public void setTmpFile(String tmpFile) {
-		this.tmpFile = tmpFile;
-	}
+    /** 
+    * @param tmpFile 要设置的 tmpFile 
+    */
+    public void setTmpFile(String tmpFile) {
+        this.tmpFile = tmpFile;
+    }
 
-	public String getMOXIE_REPORT_DATA() {
+    public String getMOXIE_REPORT_DATA() {
         return MOXIE_REPORT_DATA;
     }
 

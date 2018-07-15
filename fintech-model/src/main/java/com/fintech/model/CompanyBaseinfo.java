@@ -33,6 +33,16 @@ public class CompanyBaseinfo {
 
     private Date updatetime;
 
+    private String weixinCodeUrl;
+
+    public String getWeixinCodeUrl() {
+        return weixinCodeUrl;
+    }
+
+    public void setWeixinCodeUrl(String weixinCodeUrl) {
+        this.weixinCodeUrl = weixinCodeUrl;
+    }
+
     public String getCompanyId() {
         return companyId;
     }
