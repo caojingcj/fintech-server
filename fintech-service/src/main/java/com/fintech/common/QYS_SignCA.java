@@ -374,6 +374,7 @@ public class QYS_SignCA {
             SimpleDateFormat day = new SimpleDateFormat("dd");
             String nowDateTime = new SimpleDateFormat("yyyyMMddHHmmssSSS").format(nowDate);
             String path = redisService.get("tmpFile");
+            System.out.println("合同目录位置："+path);
             String fileName = contractId + "_EKQYS" + nowDateTime;
             String fileUrl = appConfig.getQYS_OSS_PATH() +year.format(nowDate) + "/" + day.format(nowDate)+"/" + fileName;
             File downToLocalFile = new File(path + "/" + contractId + ".pdf");
