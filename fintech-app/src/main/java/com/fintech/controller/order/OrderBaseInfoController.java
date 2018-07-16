@@ -24,6 +24,7 @@ import com.fintech.service.OrderBaseinfoService;
 import com.fintech.service.RedisService;
 import com.fintech.util.BeanUtils;
 import com.fintech.util.DateUtils;
+import com.fintech.util.StringUtil;
 import com.fintech.util.result.BaseResult;
 import com.fintech.util.result.ResultUtils;
 
@@ -64,21 +65,28 @@ public class OrderBaseInfoController {
     * @Description: TODO[ 进件扫码 ]
     * @throws 
     */
-    @RequestMapping(value = "scanPiece",method = RequestMethod.GET)
-    public @ResponseBody BaseResult appLogin(String mobile,String token) {
+    @RequestMapping("scanPiece")
+    public @ResponseBody BaseResult appLogin(String mobile,String token,String companyId,String openId) {
         try {
-            redisService.tokenValidate(token);
+        	redisService.tokenValidate(token);
             logger.info("EK 客户扫码进件[mobile[{}]token[{}]]方法名[{}]操作时间[{}]",mobile,token,Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
+//            String token=redisService.get(openId);
+            System.out.println("token>>>>>"+token);
+//            if(StringUtil.isEmpty(token)) {
+//            	
+//            }
+//           String mobile= redisService.get(token);
+//            logger.info("EK 客户扫码进件[mobile[{}]token[{}]companyId[{}]openId[{}]]方法名[{}]操作时间[{}]",mobile,token,companyId,openId,Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
             // Map<String, Object>params=CommonUtil.object2Map(vo);
             // Map<String, Object>params=new HashMap<String, Object>();
             // params.put("companyId", "999999");
             // 拿商户999999测试 generateVerifyCode
-            String companyId = "000001";
             // 客户已经有过记录 直接跑出商户信息
-          Map<String, Object>resultMap=orderBaseinfoService.scanPiece(companyId,mobile);
+          Map<String, Object>resultMap=orderBaseinfoService.scanPiece(companyId==null?"000001":companyId,mobile);
             return ResultUtils.success(ResultUtils.SUCCESS_CODE_MSG, resultMap);
+//            return ResultUtils.success(ResultUtils.SUCCESS_CODE_MSG, null);
         } catch (Exception e) {
-            logger.error("ERROR EK参数[{}] 报错[{}] 方法名[{}]报错时间[{}]", mobile,e.getMessage(),
+            logger.error("ERROR EK参数[{}] 报错[{}] 方法名[{}]报错时间[{}]",e.getMessage(),
                     Thread.currentThread().getStackTrace()[1].getMethodName(), DateUtils.getDateTime());
             return ResultUtils.error(e.getMessage());
         }

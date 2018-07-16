@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLDecoder;
 import java.nio.charset.Charset;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -429,4 +430,52 @@ public class HttpClient {
                 }
                 return null;
         	}
+        	
+        	  /**
+             * post请求
+             *
+             * @param url            url地址
+             * @param jsonParam      参数
+             * @param noNeedResponse 不需要返回结果
+             *
+             * @return
+             */
+            public static JSONObject httpPost(String url, JSONObject jsonParam, boolean noNeedResponse) {
+                //post请求返回结果
+                CloseableHttpClient client = HttpClients.createDefault();
+                HttpPost method = new HttpPost(url);
+                JSONObject jsonResult = new JSONObject();
+                method.setHeader("Cookie", "JSESSIONID=EEA363D891561607B51C96884F2839ED; token=eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiJhNjAzNTI1Ni1mMmI3LTRmODctYjUzNy0yZTMzN2VhNDY1MjEiLCJpcCI6IjE5Mi4xNjguMC4xIiwiaWF0IjoxNTI0NjY1ODc0LCJpc3MiOiJqdWZhbi5jb20iLCJleHAiOjE1MjQ2NzY2NzR9.SmV0ojIxcYpsxdMeyDG778NOaemQ3E4xpaoGW0I6G0I");
+                try {
+                    if (null != jsonParam) {
+                        //解决中文乱码问题
+                        StringEntity entity = new StringEntity(jsonParam.toString(), DEFAULT_CHARSET);
+                        entity.setContentEncoding("UTF-8");
+                        entity.setContentType("application/json");
+                        method.setEntity(entity);
+                    }
+                    CloseableHttpResponse result = client.execute(method);
+                    url = URLDecoder.decode(url, "UTF-8");
+                    /**请求发送成功，并得到响应**/
+                    if (result.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
+                        String str = "";
+                        try {
+                            /**读取服务器返回过来的json字符串数据**/
+                            str = EntityUtils.toString(result.getEntity());
+                            if (noNeedResponse) {
+                                return null;
+                            }
+                            /**把json字符串转换成json对象**/
+                            jsonResult = JSONObject.fromObject(str);
+                        } catch (Exception e) {
+                            logger.error("POST请求提交失败  {}", e);
+                        }
+                    } else {
+                        logger.warn("POST请求服务器返回  「{} {}」", result.getStatusLine().getStatusCode(), url);
+                    }
+                } catch (IOException e) {
+                    logger.error("POST请求提交失败  {}", e);
+                }
+                return jsonResult;
+            }
 }

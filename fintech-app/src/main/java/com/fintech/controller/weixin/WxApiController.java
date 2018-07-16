@@ -1,9 +1,7 @@
 package com.fintech.controller.weixin;
 
-import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.Map;
-import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -22,7 +20,6 @@ import com.fintech.service.WxApiService;
 import com.fintech.util.DateUtils;
 import com.fintech.util.enumerator.ConstantInterface;
 import com.fintech.util.result.ResultUtils;
-import com.fintech.util.sign.ParamSignUtils;
 import com.google.gson.Gson;
 
 /**   
@@ -36,7 +33,6 @@ import com.google.gson.Gson;
 @RequestMapping("app/weixin")
 public class WxApiController {
     private static final Logger logger = LoggerFactory.getLogger(WxApiController.class);
-
     @Autowired
     private WxApiService wxApiService;
     @Autowired
@@ -244,6 +240,26 @@ public class WxApiController {
             logger.error("ERROR EK>APP系统日志：参数[{}] 报错[{}] 方法名[{}]报错时间[{}]", token,e.getMessage(),
                     Thread.currentThread().getStackTrace()[1].getMethodName(), DateUtils.getDateTime());
             return ResultUtils.error(ResultUtils.ERROR_CODE, e.getMessage());
+        }
+    }
+    
+    /** 
+    * @Title: WxApiController.java 
+    * @author qierkang xyqierkang@163.com   
+    * @date 2018年7月17日 上午2:55:29  
+    * @param @param request
+    * @param @param response    设定文件 
+    * @Description: TODO[ 服务器配置 扫码 其他时间响应]
+    * @throws 
+    */
+    @RequestMapping("wxQrCode")
+    public void wxQrCode(HttpServletRequest request, HttpServletResponse response) {
+        try {
+        	wxApiService.wxQrCode(request, response);
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.error("ERROR EK>APP系统日志： 报错[{}] 方法名[{}]报错时间[{}]", e.getMessage(),
+                    Thread.currentThread().getStackTrace()[1].getMethodName(), DateUtils.getDateTime());
         }
     }
 }
