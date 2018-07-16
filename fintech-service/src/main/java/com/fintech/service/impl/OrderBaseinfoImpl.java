@@ -645,7 +645,7 @@ public class OrderBaseinfoImpl implements OrderBaseinfoService {
 		  for (ConstantInterface.Enum.OrderLogStatus logstatus : ConstantInterface.Enum.OrderLogStatus.values()) {
 			  if(logOrder.getOrderOperation().equals(logstatus.getKey())) {
 				  String mes=logOrder.getOrderNote()==null?"":logOrder.getOrderNote();
-				  logRecord.add(DateUtils.parseDateTime(logOrder.getCreateTime())+" 操作日志："+logstatus.toString()+mes);
+				  logRecord.add(DateUtils.parseDateTime(logOrder.getCreateTime())+" "+logstatus.toString()+mes);
 			  }
 		}
 	}
