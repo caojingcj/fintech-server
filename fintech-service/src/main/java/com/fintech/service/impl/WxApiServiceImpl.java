@@ -226,17 +226,17 @@ public class WxApiServiceImpl implements WxApiService {
 	@Override
 	public void wxQrCode(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		//接收微验证消息
-        String signature = request.getParameter("signature");// 微信加密签名
-        String echo = request.getParameter("echostr");// 随机字符串
-        String timestamp = request.getParameter("timestamp");// 时间戳
-        String nonce = request.getParameter("nonce");// 随机数
-        logger.info("接受微信推送过来参数  signature[{}]echo[{}]timestamp[{}]nonce[{}]", signature, echo, timestamp, nonce);
-        String[] str = {WEIXIN_AUTH_TOKEN, timestamp, nonce};
-        Arrays.sort(str); // 字典序排序
-        String bigStr = str[0] + str[1] + str[2];
-        String digest = EncryptUtil.sha(bigStr).toLowerCase();
-        logger.info("微信授权加密后参数 [{}]", digest);
-        ResponseUtil.setOutputString(response, echo);
+//        String signature = request.getParameter("signature");// 微信加密签名
+//        String echo = request.getParameter("echostr");// 随机字符串
+//        String timestamp = request.getParameter("timestamp");// 时间戳
+//        String nonce = request.getParameter("nonce");// 随机数
+//        logger.info("接受微信推送过来参数  signature[{}]echo[{}]timestamp[{}]nonce[{}]", signature, echo, timestamp, nonce);
+//        String[] str = {WEIXIN_AUTH_TOKEN, timestamp, nonce};
+//        Arrays.sort(str); // 字典序排序
+//        String bigStr = str[0] + str[1] + str[2];
+//        String digest = EncryptUtil.sha(bigStr).toLowerCase();
+//        logger.info("微信授权加密后参数 [{}]", digest);
+//        ResponseUtil.setOutputString(response, echo);
         //进行事件操作
         BufferedReader bis = new BufferedReader(new InputStreamReader(request.getInputStream()));
         String line;
@@ -390,17 +390,17 @@ public class WxApiServiceImpl implements WxApiService {
 	        order.setType(WeiXinButtonEnum.MY_CHILDREN_ORDER_BUTTON.getButtonType());
 	        button.add(order);
 	        // 我的订单
-	        WeiXinButtonBean buttonAppDownload = new WeiXinButtonBean();
-	        buttonAppDownload.setType(WeiXinButtonEnum.APP_DOWNLOAD_BUTTON.getButtonType());
-	        buttonAppDownload.setName(WeiXinButtonEnum.APP_DOWNLOAD_BUTTON.getButtonName());
-	        buttonAppDownload.setUrl(webRootName + WeiXinButtonEnum.APP_DOWNLOAD_BUTTON.getButtonUrl());
-	        button.add(buttonAppDownload);
-	        //我要还款
 	        WeiXinButtonBean buttonMyProblem = new WeiXinButtonBean();
 	        buttonMyProblem.setType(WeiXinButtonEnum.MY_PROBLEM_BUTTON.getButtonType());
 	        buttonMyProblem.setName(WeiXinButtonEnum.MY_PROBLEM_BUTTON.getButtonName());
 	        buttonMyProblem.setUrl(webRootName + WeiXinButtonEnum.MY_PROBLEM_BUTTON.getButtonUrl());
 	        button.add(buttonMyProblem);
+	        //我要还款
+	        WeiXinButtonBean buttonAppDownload = new WeiXinButtonBean();
+	        buttonAppDownload.setType(WeiXinButtonEnum.APP_DOWNLOAD_BUTTON.getButtonType());
+	        buttonAppDownload.setName(WeiXinButtonEnum.APP_DOWNLOAD_BUTTON.getButtonName());
+	        buttonAppDownload.setUrl(webRootName + WeiXinButtonEnum.APP_DOWNLOAD_BUTTON.getButtonUrl());
+	        button.add(buttonAppDownload);
 	        //请求链接
 	        String requestButtonTableBarUrl = "https://api.weixin.qq.com/cgi-bin/menu/create?access_token=" + redisService.get("WEIXIN_ACCESS_TOKEN");
 	        //table bar数据
