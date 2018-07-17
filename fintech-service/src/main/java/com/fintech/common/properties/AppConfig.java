@@ -153,6 +153,36 @@ public class AppConfig {
     private String WEIXIN_API_QRCODE_URL;
     @Value("${WEIXIN_API_SHOWQRCODE_URL}")
     private String WEIXIN_API_SHOWQRCODE_URL;
+    @Value("${WEIXIN_API_CALLBACK_SCANPIECE}")
+    private String WEIXIN_API_CALLBACK_SCANPIECE;
+    @Value("${FINTECH_URL}")
+    private String FINTECH_URL;
+    @Value("${WEIXIN_API_MENU_CREATE}")
+    private String WEIXIN_API_MENU_CREATE;
+
+    public String getWEIXIN_API_MENU_CREATE() {
+        return WEIXIN_API_MENU_CREATE;
+    }
+
+    public void setWEIXIN_API_MENU_CREATE(String wEIXIN_API_MENU_CREATE) {
+        WEIXIN_API_MENU_CREATE = wEIXIN_API_MENU_CREATE;
+    }
+
+    public String getFINTECH_URL() {
+        return FINTECH_URL;
+    }
+
+    public void setFINTECH_URL(String fINTECH_URL) {
+        FINTECH_URL = fINTECH_URL;
+    }
+
+    public String getWEIXIN_API_CALLBACK_SCANPIECE() {
+        return WEIXIN_API_CALLBACK_SCANPIECE;
+    }
+
+    public void setWEIXIN_API_CALLBACK_SCANPIECE(String wEIXIN_API_CALLBACK_SCANPIECE) {
+        WEIXIN_API_CALLBACK_SCANPIECE = wEIXIN_API_CALLBACK_SCANPIECE;
+    }
 
     public String getWEIXIN_API_SHOWQRCODE_URL() {
         return WEIXIN_API_SHOWQRCODE_URL;
