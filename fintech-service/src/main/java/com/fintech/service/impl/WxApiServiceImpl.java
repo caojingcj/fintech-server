@@ -381,9 +381,6 @@ public class WxApiServiceImpl implements WxApiService {
 	public void buildWxTableBar() throws Exception {
 		 List<WeiXinButtonBean> button = new ArrayList<>();
 	        //我要进件
-	        WeiXinButtonBean buttonMyOrder = new WeiXinButtonBean();
-//	        buttonMyOrder.setName(WeiXinButtonEnum.MY_BUTTON.getButtonName());
-	        List<WeiXinButtonBean> listSubWeiXinButton = new ArrayList<>();
 	        WeiXinButtonBean order = new WeiXinButtonBean();
 	        order.setUrl(webRootName + WeiXinButtonEnum.MY_CHILDREN_ORDER_BUTTON.getButtonUrl());
 	        order.setName(WeiXinButtonEnum.MY_CHILDREN_ORDER_BUTTON.getButtonName());
@@ -397,9 +394,9 @@ public class WxApiServiceImpl implements WxApiService {
 	        button.add(buttonMyProblem);
 	        //我要还款
 	        WeiXinButtonBean buttonAppDownload = new WeiXinButtonBean();
-	        buttonAppDownload.setType(WeiXinButtonEnum.APP_DOWNLOAD_BUTTON.getButtonType());
-	        buttonAppDownload.setName(WeiXinButtonEnum.APP_DOWNLOAD_BUTTON.getButtonName());
-	        buttonAppDownload.setUrl(webRootName + WeiXinButtonEnum.APP_DOWNLOAD_BUTTON.getButtonUrl());
+	        buttonAppDownload.setType(WeiXinButtonEnum.MY_RETURN_BUTTON.getButtonType());
+	        buttonAppDownload.setName(WeiXinButtonEnum.MY_RETURN_BUTTON.getButtonName());
+	        buttonAppDownload.setUrl(webRootName + WeiXinButtonEnum.MY_RETURN_BUTTON.getButtonUrl());
 	        button.add(buttonAppDownload);
 	        //请求链接
 	        String requestButtonTableBarUrl = "https://api.weixin.qq.com/cgi-bin/menu/create?access_token=" + redisService.get("WEIXIN_ACCESS_TOKEN");

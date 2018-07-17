@@ -2,10 +2,9 @@ package com.fintech.model.domain.weixin;
 
 public enum WeiXinButtonEnum {
 
-//    MY_BUTTON(WeiXinButtonBean.TYPE_CLICK_HTML, "我的", ""),
     MY_CHILDREN_ORDER_BUTTON(WeiXinButtonBean.TYPE_CLICK_HTML, "我要进件","/app/weixin/wxCode"),
     MY_PROBLEM_BUTTON(WeiXinButtonBean.TYPE_CLICK_HTML, "我的订单", "/app/weixin/wxOrderCode"),
-    APP_DOWNLOAD_BUTTON(WeiXinButtonBean.TYPE_CLICK_HTML, "我要还款", "/app/weixin/wxReturnCode");
+    MY_RETURN_BUTTON(WeiXinButtonBean.TYPE_CLICK_HTML, "我要还款", "/app/weixin/wxReturnCode");
 
     private String buttonType;
     private String buttonName;
