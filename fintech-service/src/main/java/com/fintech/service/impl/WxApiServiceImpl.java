@@ -288,8 +288,13 @@ public class WxApiServiceImpl implements WxApiService {
 	    public String pushImgAndTextMessage(DataXmlPackageDo dataXmlPackageDO, CompanyBaseinfo baseinfo) throws Exception {
 	        StringBuffer stringBuffer = new StringBuffer();
 	        stringBuffer.append("<xml>");
-	        stringBuffer.append("<ToUserName>" + dataXmlPackageDO.getToUserName() + "</ToUserName>");
-	        stringBuffer.append("<FromUserName>" + dataXmlPackageDO.getFromUserName() + "</FromUserName>");
+	        // 因为是要往客户微信上发送消息，所以formUserName应该是微信公众号的ID，ToUserName 才是用户的OpenId
+	        // 接收方帐号（收到的OpenID）
+	        stringBuffer.append("<ToUserName>" + dataXmlPackageDO.getFromUserName() + "</ToUserName>");
+	        // 开发者微信号
+	        stringBuffer.append("<FromUserName>" + dataXmlPackageDO.getToUserName() + "</FromUserName>");
+//	        stringBuffer.append("<ToUserName>" + dataXmlPackageDO.getToUserName() + "</ToUserName>");
+//	        stringBuffer.append("<FromUserName>" + dataXmlPackageDO.getFromUserName() + "</FromUserName>");
 	        stringBuffer.append("<CreateTime>" + System.currentTimeMillis() + "</CreateTime>");
 	        if (baseinfo == null || !"1".equals(baseinfo.getCompanyStatus())) {
 	            String messageContent = "商户是禁用或还未开通，请联系运营人员！";
