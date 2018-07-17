@@ -30,7 +30,7 @@
     <include refid="Base_Column_List" />
     from log_order
     where ORDER_ID = #{orderId}
-    order by ORDER_STATUS desc
+    order by CREATE_TIME desc
   </select>
   
   
