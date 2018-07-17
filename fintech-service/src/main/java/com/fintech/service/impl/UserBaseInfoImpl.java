@@ -1,6 +1,7 @@
 package com.fintech.service.impl;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -20,11 +21,13 @@ import com.fintech.dao.UserContractMapper;
 import com.fintech.model.LogOrder;
 import com.fintech.model.OrderBaseinfo;
 import com.fintech.model.UserBaseinfo;
+import com.fintech.model.UserReturnplan;
 import com.fintech.model.vo.UserBaseinfoVo;
 import com.fintech.service.RedisService;
 import com.fintech.service.UserBaseinfoService;
 import com.fintech.service.WxApiService;
 import com.fintech.util.BeanUtils;
+import com.fintech.util.CommonUtil;
 import com.fintech.util.DateUtils;
 import com.fintech.util.FinTechException;
 import com.fintech.util.HttpClient;
@@ -34,6 +37,8 @@ import com.fintech.util.StringUtil;
 import com.fintech.util.enumerator.ConstantInterface;
 import com.fintech.util.sign.ParamSignUtils;
 import com.fintech.util.sign.TokenUtil;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.google.gson.Gson;
 
 import net.sf.json.JSONObject;
@@ -63,6 +68,15 @@ public class UserBaseInfoImpl implements UserBaseinfoService {
 		baseinfoVo.setToken(token);
 		redisService.set(token,gson.toJson(baseinfoVo));
 		return baseinfoVo;
+	}
+
+	@Override
+	public PageInfo<UserBaseinfo> selectByPrimaryKeyList(UserBaseinfoVo vo) throws Exception {
+		Map<String, Object> parms = CommonUtil.object2Map(vo);
+        PageHelper.startPage(vo.getPageIndex(), vo.getPageSize());
+        List<UserBaseinfo> list=userBaseinfoMapper.selectByPrimaryKeyList(parms);
+        PageInfo<UserBaseinfo> pageLists=new PageInfo<UserBaseinfo>(list);
+        return pageLists;
 	}
 
 }

@@ -20,7 +20,7 @@
     from user_contract
     where CONTRACT_ID = #{contractId,jdbcType=VARCHAR}
   </select>
-  <select id="selectByOrderId" resultMap="BaseResultMap" parameterType="java.lang.String" >
+  <select id="selectByOrderId" resultMap="BaseResultMap" parameterType="java.util.Map" >
     select 
     <include refid="Base_Column_List" />
     from user_contract

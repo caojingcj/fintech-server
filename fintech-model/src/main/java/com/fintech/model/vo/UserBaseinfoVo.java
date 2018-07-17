@@ -2,7 +2,7 @@ package com.fintech.model.vo;
 
 import java.util.Date;
 
-public class UserBaseinfoVo {
+public class UserBaseinfoVo extends BaseVO {
 	private Integer id;
 
 	private String userRealname;
