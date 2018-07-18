@@ -85,7 +85,7 @@ public class IDCardUtil {
     }
     
     public static  void  main(String [] a){
-        String idcard="310110198407234413";
+        String idcard="31011019840723441X";
         String sex= getGenderByIdCard(idcard);
         System.out.println("性别:" + sex);
         int age= getAgeByIdCard(idcard);

@@ -70,6 +70,7 @@ import com.fintech.util.CommonUtil;
 import com.fintech.util.DateUtils;
 import com.fintech.util.FinTechException;
 import com.fintech.util.HttpClient;
+import com.fintech.util.IDCardUtil;
 import com.fintech.util.SensitiveInfoUtils;
 import com.fintech.util.enumerator.ConstantInterface;
 import com.fintech.xcpt.FintechException;
@@ -619,7 +620,7 @@ public class OrderBaseinfoImpl implements OrderBaseinfoService {
 	   MultiValueMap muMap = new MultiValueMap();
 	   if(custBaseinfo!=null) {
 	       BeanUtils.copyProperties(custBaseinfo, custBaseinfoVo);
-	       custBaseinfoVo.setAge(SensitiveInfoUtils.IdNOToAge(custBaseinfoVo.getCustIdCardNo()));
+	       custBaseinfoVo.setAge(IDCardUtil.getAgeByIdCard(custBaseinfoVo.getCustIdCardNo()));
 	       custBaseinfoVo.setCustCellphone(SensitiveInfoUtils.mobilePhone(custBaseinfoVo.getCustCellphone()));
 	       custBaseinfoVo.setCustIdCardNo(SensitiveInfoUtils.idCardNum(custBaseinfoVo.getCustIdCardNo()));
 	   }

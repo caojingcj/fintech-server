@@ -144,25 +144,7 @@ public class SensitiveInfoUtils {
         return StringUtils.rightPad(StringUtils.left(code, 2), StringUtils.length(code), "*");
     }
 
-    // 根据身份证号输出年龄
-    public static int IdNOToAge(String IdNO) {
-        int leh = IdNO.length();
-        String dates = "";
-        if (leh == 18) {
-            int se = Integer.valueOf(IdNO.substring(leh - 1)) % 2;
-            dates = IdNO.substring(6, 10);
-            SimpleDateFormat df = new SimpleDateFormat("yyyy");
-            String year = df.format(new Date());
-            int u = Integer.parseInt(year) - Integer.parseInt(dates);
-            return u;
-        } else {
-            dates = IdNO.substring(6, 8);
-            return Integer.parseInt(dates);
-        }
-    }
-
     public static void main(String[] args) {
        System.out.println(idCardNum("522725199807115221"));
-       System.out.println(IdNOToAge("522725199807115221"));
     }
 }

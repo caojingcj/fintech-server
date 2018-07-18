@@ -8,7 +8,7 @@
     </parent>
      <modelVersion>4.0.0</modelVersion>
     <artifactId>fintech-app</artifactId>
-    <packaging>war</packaging>
+    <packaging>jar</packaging>
     
   <dependencies>
   
@@ -112,6 +112,12 @@
 
     <build>
         <finalName>fintech-app</finalName>
+         <plugins>
+          <!-- 需要引用的jar包 -->
+      		<plugin> 
+                <groupId>org.springframework.boot</groupId> 
+                <artifactId>spring-boot-maven-plugin</artifactId> 
+            </plugin> 
+  		 </plugins>
     </build>
-    
 </project>
