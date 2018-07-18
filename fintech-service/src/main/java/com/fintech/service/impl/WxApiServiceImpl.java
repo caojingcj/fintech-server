@@ -32,7 +32,6 @@ import com.fintech.model.LogOrder;
 import com.fintech.model.OrderBaseinfo;
 import com.fintech.model.domain.weixin.DataXmlPackageDo;
 import com.fintech.model.domain.weixin.WeiXinButtonBean;
-import com.fintech.model.domain.weixin.WeiXinButtonEnum;
 import com.fintech.service.RedisService;
 import com.fintech.service.WxApiService;
 import com.fintech.util.DateUtils;
@@ -51,7 +50,6 @@ import net.sf.json.JSONObject;
 public class WxApiServiceImpl implements WxApiService {
     private static final Logger logger = LoggerFactory.getLogger(WxApiServiceImpl.class);
     private static String WEIXIN_AUTH_TOKEN = "FINTECH";
-    private static String webRootName = "https://www.duodingfen.com/fintech-app/";
     @Autowired
     private RedisService redisService;
     @Autowired
@@ -86,7 +84,7 @@ public class WxApiServiceImpl implements WxApiService {
 //         openid = "as65d4a65dw56ad48q6d4";
         parms.put("openId", openid);
         String token = redisService.get(openid);
-        logger.info("EK 微信授权 openid[{}]token[{}]操作时间[{}]", openid, token==null?"第一次登陆 NULL":token, DateUtils.getDateTime());
+        logger.info("EK 微信授权 openid[{}]token[{}]操作时间[{}]", request.getParameter("openId"), token==null?"第一次登陆 NULL":token, DateUtils.getDateTime());
         if (!StringUtil.isEmpty(token)) {
             loginFlag = true;
             logger.info("EK 微信授权 有 token[{}]操作时间[{}]", token, DateUtils.getDateTime());
@@ -197,9 +195,8 @@ public class WxApiServiceImpl implements WxApiService {
            Map<String, Object>params=new HashMap<>();
            Map<String, Object>action_info=new HashMap<>();
            Map<String, Object>scene=new HashMap<>();
-           params.put("action_name", "QR_LIMIT_SCENE");
-           scene.put("scene_id", baseinfo.getCompanyId());
-           scene.put("scene_str", baseinfo.getCompanyName());
+           params.put("action_name", "QR_LIMIT_STR_SCENE");
+           scene.put("scene_str", baseinfo.getCompanyId());
            action_info.put("scene", scene);
            params.put("action_info", action_info);
            String result=HttpClient.jsonPost(codeUrl, params);
@@ -226,27 +223,32 @@ public class WxApiServiceImpl implements WxApiService {
 	@Override
 	public void wxQrCode(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		//接收微验证消息
-//        String signature = request.getParameter("signature");// 微信加密签名
-//        String echo = request.getParameter("echostr");// 随机字符串
-//        String timestamp = request.getParameter("timestamp");// 时间戳
-//        String nonce = request.getParameter("nonce");// 随机数
-//        logger.info("接受微信推送过来参数  signature[{}]echo[{}]timestamp[{}]nonce[{}]", signature, echo, timestamp, nonce);
-//        String[] str = {WEIXIN_AUTH_TOKEN, timestamp, nonce};
-//        Arrays.sort(str); // 字典序排序
-//        String bigStr = str[0] + str[1] + str[2];
-//        String digest = EncryptUtil.sha(bigStr).toLowerCase();
-//        logger.info("微信授权加密后参数 [{}]", digest);
-//        ResponseUtil.setOutputString(response, echo);
+        String signature = request.getParameter("signature");// 微信加密签名
+        String echo = request.getParameter("echostr");// 随机字符串
+        String timestamp = request.getParameter("timestamp");// 时间戳
+        String nonce = request.getParameter("nonce");// 随机数
+        logger.info("接受微信推送过来参数  signature[{}]echo[{}]timestamp[{}]nonce[{}]", signature, echo, timestamp, nonce);
+        String[] str = {WEIXIN_AUTH_TOKEN, timestamp, nonce};
+        Arrays.sort(str); // 字典序排序
+        String bigStr = str[0] + str[1] + str[2];
+        String digest = EncryptUtil.sha(bigStr).toLowerCase();
+        logger.info("微信授权加密后参数 [{}]", digest);
+        ResponseUtil.setOutputString(response, echo);
         //进行事件操作
         BufferedReader bis = new BufferedReader(new InputStreamReader(request.getInputStream()));
         String line;
         String result = "";
-        while ((line = bis.readLine()) != null) {
-            result += line + "\r\n";
-        }
+        while ((line = bis.readLine()) != null) {result += line + "\r\n";}
         logger.info("EK>APP获取二维码微信参数：XML result [{}]方法名[{}]操作时间[{}]",result,Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
         //解析数据
         DataXmlPackageDo dataXmlPackageDO = dataXmlAnalytical(result);
+        if(!StringUtil.isEmpty(dataXmlPackageDO.getEvent())&&dataXmlPackageDO.getEvent().equals(ConstantInterface.WeiXinApiConfig.WeiXinType.UNSUBSCRIBE.getKey())) {
+            logger.info("EK>微信[{}]openId [{}] 方法名[{}]操作时间[{}]",ConstantInterface.WeiXinApiConfig.WeiXinType.UNSUBSCRIBE,dataXmlPackageDO.getFromUserName(),Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
+            return;
+        }
+        if(!StringUtil.isEmpty(dataXmlPackageDO.getEvent())&&dataXmlPackageDO.getEvent().equals(ConstantInterface.WeiXinApiConfig.WeiXinType.SUBSCRIBE.getKey())) {
+            logger.info("EK>微信[{}]openId [{}] 方法名[{}]操作时间[{}]",ConstantInterface.WeiXinApiConfig.WeiXinType.SUBSCRIBE,dataXmlPackageDO.getFromUserName(),Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
+        }
         //添加微信 table bar 菜单
         buildWxTableBar();
         pushMessageByUser(dataXmlPackageDO, response);
@@ -288,41 +290,36 @@ public class WxApiServiceImpl implements WxApiService {
 	    public String pushImgAndTextMessage(DataXmlPackageDo dataXmlPackageDO, CompanyBaseinfo baseinfo) throws Exception {
 	        StringBuffer stringBuffer = new StringBuffer();
 	        stringBuffer.append("<xml>");
-	        // 因为是要往客户微信上发送消息，所以formUserName应该是微信公众号的ID，ToUserName 才是用户的OpenId
-	        // 接收方帐号（收到的OpenID）
+	        // 因为是要往客户微信上发送消息，所以formUserName应该是微信公众号的ID，ToUserName 才是用户的OpenId 接收方帐号（收到的OpenID）
 	        stringBuffer.append("<ToUserName>" + dataXmlPackageDO.getFromUserName() + "</ToUserName>");
 	        // 开发者微信号
 	        stringBuffer.append("<FromUserName>" + dataXmlPackageDO.getToUserName() + "</FromUserName>");
-//	        stringBuffer.append("<ToUserName>" + dataXmlPackageDO.getToUserName() + "</ToUserName>");
-//	        stringBuffer.append("<FromUserName>" + dataXmlPackageDO.getFromUserName() + "</FromUserName>");
 	        stringBuffer.append("<CreateTime>" + System.currentTimeMillis() + "</CreateTime>");
 	        if (baseinfo == null || !"1".equals(baseinfo.getCompanyStatus())) {
-	            String messageContent = "商户是禁用或还未开通，请联系运营人员！";
 	            stringBuffer.append("<MsgType>text</MsgType>");
-	            stringBuffer.append("<Content>" + messageContent + "</Content>");
+	            stringBuffer.append("<Content>" + ConstantInterface.WeiXinApiConfig.WeiXinValidate.WEIXIN_200400 + "</Content>");
 	        } else {
-	        	String url="https://www.duodingfen.com/fintech-app/app/orderbaseinfo/scanPiece?companyId="+baseinfo.getCompanyId()+"&openId="+dataXmlPackageDO.getFromUserName();
-	        	String applyUrl = URLEncoder.encode(url, "utf-8");
+	            String applyUrl = appConfig.getWEIXIN_API_CALLBACK_SCANPIECE().replace("{companyId}", baseinfo.getCompanyId()).replace("{openId}", dataXmlPackageDO.getFromUserName()).replace("{toUserName}", dataXmlPackageDO.getToUserName());
 	            stringBuffer.append("<MsgType>news</MsgType>");
-	            stringBuffer.append("<ArticleCount>1</ArticleCount>");
+	            stringBuffer.append("<ArticleCount>2</ArticleCount>");
 	            stringBuffer.append("<Articles>");
 	            stringBuffer.append("<item>");
 	            stringBuffer.append("<Title>"+baseinfo.getCompanyName()+"</Title>");
 	            stringBuffer.append("<Description>点击申请</Description>");
-	            stringBuffer.append("<PicUrl>https://www.duodingfen.com/fintech-manage/img/icon/logo.png</PicUrl>");
+	            stringBuffer.append("<PicUrl>https://www.duodingfen.com/fintech-manage/img/icon/default_hos_img.png</PicUrl>");
 	            stringBuffer.append("<Url>"+applyUrl+"</Url>");
 	            stringBuffer.append("</item>");
-//	            stringBuffer.append("<item>");
-//	            stringBuffer.append("<Title>" + baseinfo.getCompanyName() + "</Title>");
-//	            stringBuffer.append("<Description>点击申请</Description>");
-//	            stringBuffer.append("<PicUrl>https://www.duodingfen.com/fintech-manage/img/icon/logo.png</PicUrl>");
-//	            stringBuffer.append("<Url>" + applyUrl + "</Url>");
-//	            stringBuffer.append("</item>");
+	            stringBuffer.append("<item>");
+	            stringBuffer.append("<Title>" + baseinfo.getCompanyName() + "</Title>");
+	            stringBuffer.append("<Description>点击申请</Description>");
+	            stringBuffer.append("<PicUrl>https://www.duodingfen.com/fintech-manage/img/icon/news_click.jpg</PicUrl>");
+	            stringBuffer.append("<Url>" + applyUrl + "</Url>");
+	            stringBuffer.append("</item>");
 	            stringBuffer.append("</Articles>");
 	        }
 	        stringBuffer.append("</xml>");
 	        String sendDataContent = stringBuffer.toString();
-	        logger.info("weChat message push {}", sendDataContent);
+	        logger.info("Wx message push {}", sendDataContent);
 	        return sendDataContent;
 	    }
 	    
@@ -385,33 +382,30 @@ public class WxApiServiceImpl implements WxApiService {
 	@Override
 	public void buildWxTableBar() throws Exception {
 		 List<WeiXinButtonBean> button = new ArrayList<>();
-	        //我要进件
-	        WeiXinButtonBean order = new WeiXinButtonBean();
-	        order.setUrl(webRootName + WeiXinButtonEnum.MY_CHILDREN_ORDER_BUTTON.getButtonUrl());
-	        order.setName(WeiXinButtonEnum.MY_CHILDREN_ORDER_BUTTON.getButtonName());
-	        order.setType(WeiXinButtonEnum.MY_CHILDREN_ORDER_BUTTON.getButtonType());
-	        button.add(order);
+//	        //我要进件
+//	        WeiXinButtonBean order = new WeiXinButtonBean();
+//	        order.setUrl(appConfig.getFINTECH_URL() + ConstantInterface.WeiXinApiConfig.WeiXinButtonEnum.MY_ENTRY_BUTTON.getButtonUrl());
+//	        order.setName(ConstantInterface.WeiXinApiConfig.WeiXinButtonEnum.MY_ENTRY_BUTTON.getButtonName());
+//	        order.setType(ConstantInterface.WeiXinApiConfig.WeiXinButtonEnum.MY_ENTRY_BUTTON.getButtonType());
+//	        button.add(order);
 	        // 我的订单
-	        WeiXinButtonBean buttonMyProblem = new WeiXinButtonBean();
-	        buttonMyProblem.setType(WeiXinButtonEnum.MY_PROBLEM_BUTTON.getButtonType());
-	        buttonMyProblem.setName(WeiXinButtonEnum.MY_PROBLEM_BUTTON.getButtonName());
-	        buttonMyProblem.setUrl(webRootName + WeiXinButtonEnum.MY_PROBLEM_BUTTON.getButtonUrl());
-	        button.add(buttonMyProblem);
+	        WeiXinButtonBean buttonWxOrderList = new WeiXinButtonBean();
+	        buttonWxOrderList.setUrl(appConfig.getFINTECH_URL() + ConstantInterface.WeiXinApiConfig.WeiXinButtonEnum.MY_ORDER_BUTTON.getButtonUrl());
+	        buttonWxOrderList.setType(ConstantInterface.WeiXinApiConfig.WeiXinButtonEnum.MY_ORDER_BUTTON.getButtonType());
+	        buttonWxOrderList.setName(ConstantInterface.WeiXinApiConfig.WeiXinButtonEnum.MY_ORDER_BUTTON.getButtonName());
+	        button.add(buttonWxOrderList);
 	        //我要还款
-	        WeiXinButtonBean buttonAppDownload = new WeiXinButtonBean();
-	        buttonAppDownload.setType(WeiXinButtonEnum.MY_RETURN_BUTTON.getButtonType());
-	        buttonAppDownload.setName(WeiXinButtonEnum.MY_RETURN_BUTTON.getButtonName());
-	        buttonAppDownload.setUrl(webRootName + WeiXinButtonEnum.MY_RETURN_BUTTON.getButtonUrl());
-	        button.add(buttonAppDownload);
-	        //请求链接
-	        String requestButtonTableBarUrl = "https://api.weixin.qq.com/cgi-bin/menu/create?access_token=" + redisService.get("WEIXIN_ACCESS_TOKEN");
+	        WeiXinButtonBean buttonWxOrderReturn = new WeiXinButtonBean();
+	        buttonWxOrderReturn.setUrl(appConfig.getFINTECH_URL() + ConstantInterface.WeiXinApiConfig.WeiXinButtonEnum.MY_RETURN_BUTTON.getButtonUrl());
+	        buttonWxOrderReturn.setType(ConstantInterface.WeiXinApiConfig.WeiXinButtonEnum.MY_RETURN_BUTTON.getButtonType());
+	        buttonWxOrderReturn.setName(ConstantInterface.WeiXinApiConfig.WeiXinButtonEnum.MY_RETURN_BUTTON.getButtonName());
+	        button.add(buttonWxOrderReturn);
 	        //table bar数据
 	        JSONArray requestButtonTableBarArray = JSONArray.fromObject(button);
 	        JSONObject requestButtonTableBar = new JSONObject();
+	        String requestButtonTableBarUrl=appConfig.getWEIXIN_API_MENU_CREATE().replace("{access_token}", redisService.get("WEIXIN_ACCESS_TOKEN"));
 	        requestButtonTableBar.put("button", requestButtonTableBarArray);
 	        JSONObject response = HttpClient.httpPost(requestButtonTableBarUrl, requestButtonTableBar,false);
-	        logger.info("微信执行 TABLE BAR 地址 {}", requestButtonTableBarUrl);
-	        logger.info("微信执行 TABLE BAR 数据 {}", String.valueOf(requestButtonTableBar));
-	        logger.info("微信执行 TABLE BAR 返回 {}", response.toString());
+            logger.info("EK>微信日志： 方法名[{}]请求地址[{}]数据[{}]返回[{}]操作时间[{}]操作人[{}]",Thread.currentThread().getStackTrace()[1].getMethodName(),requestButtonTableBarUrl,String.valueOf(requestButtonTableBar),response.toString(),DateUtils.getDateTime());
 	}
 }

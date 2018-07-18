@@ -18,7 +18,7 @@ public class CreditVettingTest {
     
     @Test
     public void testCreditVetting() {
-        String orderId = "ODR000000231";
+        String orderId = "ODR000000271"; 
         System.out.println(creditVettingService.creditVetting(orderId));
     }
 

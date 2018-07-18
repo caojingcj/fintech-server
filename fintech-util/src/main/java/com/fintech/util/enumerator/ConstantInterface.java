@@ -584,6 +584,104 @@ public interface ConstantInterface {
 	        }
 	}
 	
-	
+	public interface WeiXinApiConfig{
+	    enum WeiXinValidate{
+            WEIXIN_200400(200400,"商户是禁用或还未开通，请联系运营人员！"),
+            WEIXIN_200401(200401,"请走扫码流程，详情咨询客服人员！");
+            private Integer key;
+            private String value;
+            public Integer getKey() {
+                return key;
+            }
+            public void setKey(Integer key) {
+                this.key = key;
+            }
+            public String getValue() {
+                return value;
+            }
+            public void setValue(String value) {
+                this.value = value;
+            }
+            private WeiXinValidate(Integer key, String value) {
+                this.key = key;
+                this.value = value;
+            }
+            @Override
+            public String toString() {
+                return "[" + this.key + "]" + this.value;
+            }
+        }
+	    enum WeiXinButtonEnum{
+	        MY_ENTRY_BUTTON("view", "我要进件","/app/weixin/wxCode"),
+	        MY_ORDER_BUTTON("view", "我的订单", "/app/weixin/wxOrderCode"),
+	        MY_RETURN_BUTTON("view", "我要还款", "/app/weixin/wxReturnCode");
+	        private String buttonType;
+	        private String buttonName;
+	        private String buttonUrl;
+	        WeiXinButtonEnum(String buttonType, String buttonName, String buttonUrl) {
+	            this.buttonType = buttonType;
+	            this.buttonName = buttonName;
+	            this.buttonUrl = buttonUrl;
+	        }
 
+            public String getButtonType() {
+                return buttonType;
+            }
+
+            public void setButtonType(String buttonType) {
+                this.buttonType = buttonType;
+            }
+
+            public String getButtonName() {
+                return buttonName;
+            }
+
+            public void setButtonName(String buttonName) {
+                this.buttonName = buttonName;
+            }
+
+            public String getButtonUrl() {
+                return buttonUrl;
+            }
+
+            public void setButtonUrl(String buttonUrl) {
+                this.buttonUrl = buttonUrl;
+            }
+	    }
+	    
+	    /**   
+	    * @Title: ConstantInterface.java 
+	    * @Package com.fintech.util.enumerator 
+	    * @author qierkang xyqierkang@163.com   
+	    * @date 2018年7月18日 上午1:15:54  
+	    * @Description: TODO[ 微信事件类型 ]
+	    */
+	    enum WeiXinType{
+            UNSUBSCRIBE("unsubscribe","用户取消了关注公众号!"),
+            SUBSCRIBE("subscribe","用户关注了公众号!");
+            private String key;
+            private String value;
+            public String getKey() {
+                return key;
+            }
+            public void setKey(String key) {
+                this.key = key;
+            }
+            public String getValue() {
+                return value;
+            }
+            public void setValue(String value) {
+                this.value = value;
+            }
+            private WeiXinType(String key, String value) {
+                this.key = key;
+                this.value = value;
+            }
+            @Override
+            public String toString() {
+                return "[" + this.key + "]" + this.value;
+            }
+        }
+	}
+	
 }

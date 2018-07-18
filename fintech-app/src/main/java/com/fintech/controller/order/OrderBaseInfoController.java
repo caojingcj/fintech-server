@@ -2,6 +2,9 @@ package com.fintech.controller.order;
 
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,28 +68,41 @@ public class OrderBaseInfoController {
     * @Description: TODO[ 进件扫码 ]
     * @throws 
     */
-    @RequestMapping("scanPiece")
-    public @ResponseBody BaseResult appLogin(String mobile,String token,String companyId,String openId) {
-        try {
-        	redisService.tokenValidate(token);
-            logger.info("EK 客户扫码进件[mobile[{}]token[{}]]方法名[{}]操作时间[{}]",mobile,token,Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
-//            String token=redisService.get(openId);
-            System.out.println("token>>>>>"+token);
-//            if(StringUtil.isEmpty(token)) {
-//            	
-//            }
+//    @RequestMapping("scanPiece")
+//    public @ResponseBody BaseResult scanPiece(HttpServletRequest request, HttpServletResponse response) {
+//        try {
+//           String token=redisService.get(request.getParameter("openId"));
 //           String mobile= redisService.get(token);
-//            logger.info("EK 客户扫码进件[mobile[{}]token[{}]companyId[{}]openId[{}]]方法名[{}]操作时间[{}]",mobile,token,companyId,openId,Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
+//           logger.info("EK 客户扫码进件mobile[{}]token[{}]openId[{}]toUserName[{}]方法名[{}]操作时间[{}]",mobile,token,request.getParameter("openId"),request.getParameter("toUserName"),Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
+//            // Map<String, Object>params=CommonUtil.object2Map(vo);
+//            // Map<String, Object>params=new HashMap<String, Object>();
+//            // params.put("companyId", "999999");
+//            // 拿商户999999测试 generateVerifyCode
+//            // 客户已经有过记录 直接跑出商户信息
+//          Map<String, Object>resultMap=orderBaseinfoService.scanPiece(request.getParameter("companyId"),mobile);
+//            return ResultUtils.success(ResultUtils.SUCCESS_CODE_MSG, resultMap);
+////            return ResultUtils.success(ResultUtils.SUCCESS_CODE_MSG, null);
+//        } catch (Exception e) {
+//            logger.error("ERROR EK 报错[{}] 方法名[{}]报错时间[{}]",e.getMessage(),
+//                    Thread.currentThread().getStackTrace()[1].getMethodName(), DateUtils.getDateTime());
+//            return ResultUtils.error(e.getMessage());
+//        }
+//    }
+    @RequestMapping(value = "scanPiece",method = RequestMethod.GET)
+    public @ResponseBody BaseResult appLogin(String mobile,String token) {
+        try {
+            redisService.tokenValidate(token);
+            logger.info("EK 客户扫码进件[mobile[{}]token[{}]]方法名[{}]操作时间[{}]",mobile,token,Thread.currentThread().getStackTrace()[1].getMethodName(),DateUtils.getDateTime());
             // Map<String, Object>params=CommonUtil.object2Map(vo);
             // Map<String, Object>params=new HashMap<String, Object>();
             // params.put("companyId", "999999");
             // 拿商户999999测试 generateVerifyCode
+            String companyId = "000001";
             // 客户已经有过记录 直接跑出商户信息
-          Map<String, Object>resultMap=orderBaseinfoService.scanPiece(companyId==null?"000001":companyId,mobile);
+          Map<String, Object>resultMap=orderBaseinfoService.scanPiece(companyId,mobile);
             return ResultUtils.success(ResultUtils.SUCCESS_CODE_MSG, resultMap);
-//            return ResultUtils.success(ResultUtils.SUCCESS_CODE_MSG, null);
         } catch (Exception e) {
-            logger.error("ERROR EK参数[{}] 报错[{}] 方法名[{}]报错时间[{}]",e.getMessage(),
+            logger.error("ERROR EK参数[{}] 报错[{}] 方法名[{}]报错时间[{}]", mobile,e.getMessage(),
                     Thread.currentThread().getStackTrace()[1].getMethodName(), DateUtils.getDateTime());
             return ResultUtils.error(e.getMessage());
         }

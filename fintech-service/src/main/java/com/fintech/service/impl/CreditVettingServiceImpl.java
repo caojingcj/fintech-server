@@ -61,15 +61,6 @@ public class CreditVettingServiceImpl implements CreditVettingService {
         JsonTools jsonTools = new JsonTools();
         OrderBaseinfo orderBaseInfo = orderBaseinfoMapper.selectByPrimaryKey(orderId);
         OrderDetailinfo orderDetailinfo = orderDetailinfoMapper.selectByPrimaryKey(orderId);
-        // 通过 - 首付比20%以上
-        BigDecimal orderAmount = orderBaseInfo.getOrderAmount();
-        BigDecimal depositAmount = orderDetailinfo.getDepositAmount();
-        BigDecimal totalAmount = orderAmount.add(depositAmount);
-        BigDecimal depositPercent = depositAmount.divide(totalAmount, 4, BigDecimal.ROUND_DOWN);
-        if (orderAmount != null && depositAmount != null && depositPercent.doubleValue() >= 0.2) {
-            logOrder(orderId, CreditVettingResultEnum.通过.getValue(), "通过 - 首付比20%以上");
-            return CreditVettingResultEnum.通过;
-        }
         // 拒绝 - 年龄18岁以下
         String custId = orderBaseInfo.getCustIdCardNo();
         int age = IDCardUtil.getAgeByIdCard(custId);
@@ -85,6 +76,7 @@ public class CreditVettingServiceImpl implements CreditVettingService {
         // 拒绝 - 身份证有效期失效
         CustBaseinfo custBaseInfo = custBaseinfoMapper.selectByPrimaryKey(orderBaseInfo.getCustCellphone());
         if (custBaseInfo.getIdentityStatus().equals(IdentityStatusEnum.未认证.getValue())
+                || custBaseInfo.getCustIdCardValEnd() == null
                 || custBaseInfo.getIdentityStatus().equals(IdentityStatusEnum.已过期.getValue())) {
             logOrder(orderId, CreditVettingResultEnum.拒绝.getValue(), "拒绝 - 身份证有效期失效");
             return CreditVettingResultEnum.拒绝;
@@ -122,12 +114,13 @@ public class CreditVettingServiceImpl implements CreditVettingService {
             logOrder(orderId, CreditVettingResultEnum.拒绝.getValue(), "拒绝 - 同一申请人借款金额高于50w");
             return CreditVettingResultEnum.拒绝;
         }
+        // 获取魔蝎报告
         Map<String, Object> parms = new HashMap<>();
         parms.put("orderId", orderId);
         LogMoxieinfo logMoxieinfo = logMoxieinfoMapper.selectByPrimaryKeySelective(parms);
         // 拒绝 - 报告为空！或者获取失败
         if (logMoxieinfo.getMoxieStatus() == null || logMoxieinfo.getMoxieStatus() != 5) {
-            logOrder(orderId, CreditVettingResultEnum.拒绝.getValue(), "拒绝 - 报告为空！或者获取失败");
+            logOrder(orderId, CreditVettingResultEnum.拒绝.getValue(), "拒绝 - 报告为空或者获取失败");
             return CreditVettingResultEnum.拒绝;
         }
         // 拒绝 - 魔蝎运营商报告 黑名单信息 黑中介分数 <=40分
@@ -137,7 +130,7 @@ public class CreditVettingServiceImpl implements CreditVettingService {
                     "user_info_check.check_black_info", ConstantInterface.Enum.TypeEnum.map);
             if (object == null || Integer
                     .parseInt(MapUtils.getMap2String((Map<String, Object>) object, "phone_gray_score")) <= 40) {
-                logOrder(orderId, CreditVettingResultEnum.拒绝.getValue(), "拒绝 - 魔蝎运营商报告  黑名单信息   黑中介分数   <=40分");
+                logOrder(orderId, CreditVettingResultEnum.拒绝.getValue(), "拒绝 - 魔蝎运营商报告  黑名单信息   黑中介分数 <= 40分");
                 return CreditVettingResultEnum.拒绝;
             }
         }
@@ -174,6 +167,15 @@ public class CreditVettingServiceImpl implements CreditVettingService {
                 return CreditVettingResultEnum.拒绝;
             }
         }
+        // 通过 - 首付比20%以上
+        BigDecimal orderAmount = orderBaseInfo.getOrderAmount();
+        BigDecimal depositAmount = orderDetailinfo.getDepositAmount();
+        BigDecimal totalAmount = orderAmount.add(depositAmount);
+        BigDecimal depositPercent = depositAmount.divide(totalAmount, 4, BigDecimal.ROUND_DOWN);
+        if (orderAmount != null && depositAmount != null && depositPercent.doubleValue() >= 0.2) {
+            logOrder(orderId, CreditVettingResultEnum.通过.getValue(), "通过 - 首付比20%以上");
+            return CreditVettingResultEnum.通过;
+        }
         // 拒绝 - 魔蝎运营商报告 1.5风险分析摘要-魔蝎变量 号码类别--催收公司 近3个月通话次数
         // >=10(call_risk_analysis)/call_cnt_3m
         if (logMoxieinfo.getMoxieStatus() == 5 && jv.validate(logMoxieinfo.getMoxieContent())) {
@@ -187,7 +189,7 @@ public class CreditVettingServiceImpl implements CreditVettingService {
                             Map<String, Object> point = (Map<String, Object>) map.get("analysis_point");
                             if (Integer.parseInt(point.get("call_cnt_3m").toString()) >= 10) {
                                 logOrder(orderId, CreditVettingResultEnum.拒绝.getValue(),
-                                        "拒绝 - 魔蝎运营商报告  1.6活跃分析摘要   通话活跃天数  近3个月-通话活跃天数 <=30天");
+                                        "拒绝 - 魔蝎运营商报告 1.5风险分析摘要-魔蝎变量 号码类别--催收公司 近3个月通话次数 >= 10");
                                 return CreditVettingResultEnum.拒绝;
                             }
                         }
@@ -208,7 +210,7 @@ public class CreditVettingServiceImpl implements CreditVettingService {
                             Map<String, Object> m = (Map<String, Object>) map.get("item");
                             if (Integer.parseInt(m.get("item_3m").toString()) <= 30) {
                                 logOrder(orderId, CreditVettingResultEnum.拒绝.getValue(),
-                                        "拒绝 - 魔蝎运营商报告  1.6活跃分析摘要   通话活跃天数  近3个月-通话活跃天数 <=30天");
+                                        "拒绝 - 魔蝎运营商报告  1.6活跃分析摘要   通话活跃天数  近3个月-通话活跃天数 <= 30天");
                                 return CreditVettingResultEnum.拒绝;
                             }
                         }
@@ -271,44 +273,43 @@ public class CreditVettingServiceImpl implements CreditVettingService {
                 return CreditVettingResultEnum.拒绝;
             }
         }
-        // 通过(且) - 魔蝎近三月通话号码>=10 & 近三月互通电话>=3 互通定义，主叫和被叫都有记录
+        // 拒绝 - 魔蝎近三月通话号码 < 10
         if (logMoxieinfo.getMoxieStatus() == 5 && jv.validate(logMoxieinfo.getMoxieContent())) {
             Object item_3m = jsonTools.getObjectByJson(logMoxieinfo.getMoxieContent(), "active_degree",
                     ConstantInterface.Enum.TypeEnum.arrayList);
-            Object inter_peer_num_3m = jsonTools.getObjectByJson(logMoxieinfo.getMoxieContent(),
-                    "friend_circle.summary", ConstantInterface.Enum.TypeEnum.arrayList);
-            if (item_3m != null && inter_peer_num_3m != null) {
-                boolean flag = true;
+            if (item_3m != null) {
                 ArrayList<Map<String, Object>> list = (ArrayList<Map<String, Object>>) item_3m;
-                ArrayList<Map<String, Object>> peer = (ArrayList<Map<String, Object>>) inter_peer_num_3m;
                 for (Map<String, Object> map : list) {
                     if (map.get("app_point_zh").equals("通话号码数目")) {
                         Map<String, Object> item3m = (Map<String, Object>) map.get("item");
                         if (item3m.containsKey("item_3m")) {
                             if (Integer.parseInt(item3m.get("item_3m").toString()) < 10) {
-                                flag = false;
-                                logOrder(orderId, CreditVettingResultEnum.拒绝.getValue(), "拒绝 -   近三月通话号码<10");
+                                logOrder(orderId, CreditVettingResultEnum.拒绝.getValue(), "拒绝 - 近三月通话号码 < 10");
                                 return CreditVettingResultEnum.拒绝;
                             }
                         }
                     }
                 }
-                for (Map<String, Object> peer3m : peer) {
+            }
+        }
+        // 拒绝 - 近三月互通电话 < 3
+        if (logMoxieinfo.getMoxieStatus() == 5 && jv.validate(logMoxieinfo.getMoxieContent())) {
+            Object inter_peer_num_3m = jsonTools.getObjectByJson(logMoxieinfo.getMoxieContent(),
+                    "friend_circle", ConstantInterface.Enum.TypeEnum.map);
+            if (inter_peer_num_3m != null) {
+                Map<String, Object> peer = (Map<String, Object>) inter_peer_num_3m;
+                ArrayList<Map<String, Object>> list = (ArrayList<Map<String, Object>>)peer.get("summary");
+                for (Map<String, Object> peer3m : list) {
                     if (peer3m.get("key").equals("inter_peer_num_3m")
                             && Integer.parseInt(peer3m.get("value").toString()) < 3) {
-                        flag = false;
-                        logOrder(orderId, CreditVettingResultEnum.拒绝.getValue(), "拒绝 -  近三月互通电话<3 互通定义，主叫和被叫都有记录");
+                        logOrder(orderId, CreditVettingResultEnum.拒绝.getValue(), "拒绝 - 近三月互通电话 < 3");
                         return CreditVettingResultEnum.拒绝;
                     }
                 }
-                if (flag) {
-                    logOrder(orderId, CreditVettingResultEnum.通过.getValue(), "");
-                    return CreditVettingResultEnum.通过;
-                }
             }
         }
-        logOrder(orderId, CreditVettingResultEnum.拒绝.getValue(), "拒绝 - 其它原因");
-        return CreditVettingResultEnum.拒绝;
+        logOrder(orderId, CreditVettingResultEnum.通过.getValue(), "通过 - 正常信审通过");
+        return CreditVettingResultEnum.通过;
     }
 
     @Override

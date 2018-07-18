@@ -82,10 +82,7 @@ public final class ResponseUtil {
      * @param object         需要返回的对象
      * @param callback       跨域请求页面带的值
      * @param methodSeparate JavaScript类型
-     *
-     * @author luoyangwei
-     * @date 2017/08/02
-     * @modify 2017/10/25 加了一个逻辑，如果JSONObject 转型错误，就使用JSONArray尝试
+     *加了一个逻辑，如果JSONObject 转型错误，就使用JSONArray尝试
      */
     public static void setOutputObject(HttpServletResponse response, Object object, String callback,
                                        Integer methodSeparate) {
