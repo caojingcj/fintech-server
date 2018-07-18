@@ -120,7 +120,7 @@ public class CreditVettingServiceImpl implements CreditVettingService {
         LogMoxieinfo logMoxieinfo = logMoxieinfoMapper.selectByPrimaryKeySelective(parms);
         // 拒绝 - 报告为空！或者获取失败
         if (logMoxieinfo.getMoxieStatus() == null || logMoxieinfo.getMoxieStatus() != 5) {
-            logOrder(orderId, CreditVettingResultEnum.拒绝.getValue(), "拒绝 - 报告为空！或者获取失败");
+            logOrder(orderId, CreditVettingResultEnum.拒绝.getValue(), "拒绝 - 报告为空或者获取失败");
             return CreditVettingResultEnum.拒绝;
         }
         // 拒绝 - 魔蝎运营商报告 黑名单信息 黑中介分数 <=40分
@@ -130,7 +130,7 @@ public class CreditVettingServiceImpl implements CreditVettingService {
                     "user_info_check.check_black_info", ConstantInterface.Enum.TypeEnum.map);
             if (object == null || Integer
                     .parseInt(MapUtils.getMap2String((Map<String, Object>) object, "phone_gray_score")) <= 40) {
-                logOrder(orderId, CreditVettingResultEnum.拒绝.getValue(), "拒绝 - 魔蝎运营商报告  黑名单信息   黑中介分数   <=40分");
+                logOrder(orderId, CreditVettingResultEnum.拒绝.getValue(), "拒绝 - 魔蝎运营商报告  黑名单信息   黑中介分数 <= 40分");
                 return CreditVettingResultEnum.拒绝;
             }
         }
@@ -210,7 +210,7 @@ public class CreditVettingServiceImpl implements CreditVettingService {
                             Map<String, Object> m = (Map<String, Object>) map.get("item");
                             if (Integer.parseInt(m.get("item_3m").toString()) <= 30) {
                                 logOrder(orderId, CreditVettingResultEnum.拒绝.getValue(),
-                                        "拒绝 - 魔蝎运营商报告  1.6活跃分析摘要   通话活跃天数  近3个月-通话活跃天数 <=30天");
+                                        "拒绝 - 魔蝎运营商报告  1.6活跃分析摘要   通话活跃天数  近3个月-通话活跃天数 <= 30天");
                                 return CreditVettingResultEnum.拒绝;
                             }
                         }
