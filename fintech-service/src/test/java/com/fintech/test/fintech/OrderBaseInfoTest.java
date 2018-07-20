@@ -11,7 +11,6 @@ import com.fintech.enm.CreditVettingResultEnum;
 import com.fintech.model.vo.OrderBaseinfoVo;
 import com.fintech.service.CreditVettingService;
 import com.fintech.service.OrderBaseinfoService;
-import com.fintech.service.impl.CreditVettingServiceImpl;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(classes = ServiceApplication.class)
@@ -23,7 +22,7 @@ public class OrderBaseInfoTest {
     @Autowired
     private CreditVettingService creditVettingService;
     
-    String orderId = "ODR000000386";
+    String orderId = "ODR000000419";
     
     /**
      * @throws Exception  
@@ -60,6 +59,14 @@ public class OrderBaseInfoTest {
 //    	System.out.println(creditVettingService.creditVetting(orderId));
     }
     
+    /** 
+    * @Title: OrderBaseInfoTest.java 
+    * @author qierkang xyqierkang@163.com   
+    * @date 2018年7月19日 下午2:55:51  
+    * @param @throws Exception    设定文件 
+    * @Description: TODO[ 客户取消 ]
+    * @throws 
+    */
     @Test
     public void testCancelOrder() throws Exception {
     	OrderBaseinfoVo vo=new OrderBaseinfoVo();

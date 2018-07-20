@@ -1,5 +1,6 @@
 package com.fintech.service.impl;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,10 +17,12 @@ import com.fintech.dao.CompanyPeriodFeeMapper;
 import com.fintech.dao.procedure.CompanyProcedureMapper;
 import com.fintech.model.CompanyAccountinfo;
 import com.fintech.model.CompanyBaseinfo;
+import com.fintech.model.vo.CompanyBaseinfoCombox;
 import com.fintech.model.vo.CompanyBaseinfoVo;
 import com.fintech.service.CompanyBaseinfoService;
 import com.fintech.util.BeanUtils;
 import com.fintech.util.CommonUtil;
+import com.fintech.util.enumerator.ConstantInterface;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 
@@ -120,6 +123,26 @@ public class CompanyBaseinfoImpl implements CompanyBaseinfoService {
 		Map<String, Object>companyInfo=new HashMap<>();
 		companyInfo.put("baseInfo", companyBaseinfoMapper.selectByPrimaryKeyInfo(companyId));
 		return companyInfo;
+	}
+
+	/* (非 Javadoc) 
+	* <p>Title: selectCompanyCombox</p> 
+	* <p>Description: </p> 
+	* @return 
+	* @see com.fintech.service.CompanyBaseinfoService#selectCompanyCombox() 
+	*/
+	@Override
+	public List<CompanyBaseinfoCombox> selectCompanyCombox() {
+		Map<String, Object>params=new HashMap<>();
+		params.put("companyStatus", ConstantInterface.Enum.ConstantNumber.ONE.getKey());
+		List<CompanyBaseinfoCombox> baseinfoComboxs=new ArrayList<>();
+		for (CompanyBaseinfo companyBaseinfo : companyBaseinfoMapper.selectByPrimaryKeyList(params)) {
+			CompanyBaseinfoCombox box=new CompanyBaseinfoCombox();
+			box.setCompanyId(companyBaseinfo.getCompanyId());
+			box.setCompanyName(companyBaseinfo.getCompanyId()+"-"+companyBaseinfo.getCompanyName());
+			baseinfoComboxs.add(box);
+		}
+		return baseinfoComboxs;
 	}
 
 }

@@ -20,6 +20,24 @@ public class UserBaseinfoVo extends BaseVO {
 	private Date createTime;
 
 	private Date updatetime;
+	private String searchObject;
+	private String companyName;
+
+	public String getCompanyName() {
+		return companyName;
+	}
+
+	public void setCompanyName(String companyName) {
+		this.companyName = companyName;
+	}
+
+	public String getSearchObject() {
+		return searchObject;
+	}
+
+	public void setSearchObject(String searchObject) {
+		this.searchObject = searchObject;
+	}
 
 	public Integer getId() {
 		return id;
