@@ -167,14 +167,18 @@ public class CreditVettingServiceImpl implements CreditVettingService {
                 return CreditVettingResultEnum.拒绝;
             }
         }
-        // 通过 - 首付比20%以上
+        // 首付比例
         BigDecimal orderAmount = orderBaseInfo.getOrderAmount();
         BigDecimal depositAmount = orderDetailinfo.getDepositAmount();
         BigDecimal totalAmount = orderAmount.add(depositAmount);
         BigDecimal depositPercent = depositAmount.divide(totalAmount, 4, BigDecimal.ROUND_DOWN);
-        if (orderAmount != null && depositAmount != null && depositPercent.doubleValue() >= 0.2) {
-            logOrder(orderId, CreditVettingResultEnum.通过.getValue(), "通过 - 首付比20%以上");
+        if (orderAmount != null && depositAmount != null && depositPercent.doubleValue() >= 0.3) { // 通过 - 首付比30%以上
+            logOrder(orderId, CreditVettingResultEnum.通过.getValue(), "通过 - 首付比30%以上");
             return CreditVettingResultEnum.通过;
+        }
+        if (orderAmount != null && depositAmount != null && depositPercent.doubleValue() < 0.2) { // 拒绝 - 首付比20%以下
+            logOrder(orderId, CreditVettingResultEnum.拒绝.getValue(), "拒绝 - 首付比20%以下");
+            return CreditVettingResultEnum.拒绝;
         }
         // 拒绝 - 魔蝎运营商报告 1.5风险分析摘要-魔蝎变量 号码类别--催收公司 近3个月通话次数
         // >=10(call_risk_analysis)/call_cnt_3m
