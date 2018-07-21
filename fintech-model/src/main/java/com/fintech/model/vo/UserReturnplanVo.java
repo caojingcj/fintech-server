@@ -4,193 +4,248 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 public class UserReturnplanVo extends BaseVO {
-	private Integer id;
+    private Integer id;
 
-	private String orderId;
+    private String orderId;
 
-	private String contractId;
+    private String contractId;
 
-	private String custCellphone;
+    private String custCellphone;
 
-	private String companyId;
+    private String companyId;
 
-	private Integer currentPeriod;
+    private Integer currentPeriod;
 
-	private Integer totalPeriod;
+    private Integer totalPeriod;
 
-	private String returnStatus;
+    private String returnStatus;
 
-	private String returnChannel;
+    private String returnChannel;
 
-	private Date returnDate;
+    private Date returnDate;
 
-	private BigDecimal principalAmount;
+    private BigDecimal principalAmount;
 
-	private BigDecimal interestAmount;
+    private BigDecimal interestAmount;
 
-	private BigDecimal managementAmount;
+    private BigDecimal managementAmount;
 
-	private Boolean isOverdue;
+    private Boolean isOverdue;
 
-	private Integer overdueDays;
+    private Integer overdueDays;
 
-	private BigDecimal overdueAmount;
+    private BigDecimal overdueAmount;
 
-	private Date returnDateAc;
+    private Date returnDateAc;
 
-	private Date createTime;
+    private Date createTime;
 
-	private Date updateTime;
+    private Date updateTime;
 
-	public Integer getId() {
-		return id;
-	}
+    private String returnDateAcStart;
+    private String returnDateAcEnd;
+    private String returnDateStart;
+    private String returnDateEnd;
+    private String custRealname;
+    private String companyName;
 
-	public void setId(Integer id) {
-		this.id = id;
-	}
+    public String getCustRealname() {
+        return custRealname;
+    }
 
-	public String getOrderId() {
-		return orderId;
-	}
+    public void setCustRealname(String custRealname) {
+        this.custRealname = custRealname;
+    }
 
-	public void setOrderId(String orderId) {
-		this.orderId = orderId;
-	}
+    public String getCompanyName() {
+        return companyName;
+    }
 
-	public String getContractId() {
-		return contractId;
-	}
+    public void setCompanyName(String companyName) {
+        this.companyName = companyName;
+    }
 
-	public void setContractId(String contractId) {
-		this.contractId = contractId;
-	}
+    public String getReturnDateAcStart() {
+        return returnDateAcStart;
+    }
 
-	public String getCustCellphone() {
-		return custCellphone;
-	}
+    public void setReturnDateAcStart(String returnDateAcStart) {
+        this.returnDateAcStart = returnDateAcStart;
+    }
 
-	public void setCustCellphone(String custCellphone) {
-		this.custCellphone = custCellphone;
-	}
+    public String getReturnDateAcEnd() {
+        return returnDateAcEnd;
+    }
 
-	public String getCompanyId() {
-		return companyId;
-	}
+    public void setReturnDateAcEnd(String returnDateAcEnd) {
+        this.returnDateAcEnd = returnDateAcEnd;
+    }
 
-	public void setCompanyId(String companyId) {
-		this.companyId = companyId;
-	}
+    public String getReturnDateStart() {
+        return returnDateStart;
+    }
 
-	public Integer getCurrentPeriod() {
-		return currentPeriod;
-	}
+    public void setReturnDateStart(String returnDateStart) {
+        this.returnDateStart = returnDateStart;
+    }
 
-	public void setCurrentPeriod(Integer currentPeriod) {
-		this.currentPeriod = currentPeriod;
-	}
+    public String getReturnDateEnd() {
+        return returnDateEnd;
+    }
 
-	public Integer getTotalPeriod() {
-		return totalPeriod;
-	}
+    public void setReturnDateEnd(String returnDateEnd) {
+        this.returnDateEnd = returnDateEnd;
+    }
 
-	public void setTotalPeriod(Integer totalPeriod) {
-		this.totalPeriod = totalPeriod;
-	}
+    public Integer getId() {
+        return id;
+    }
 
-	public String getReturnStatus() {
-		return returnStatus;
-	}
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
-	public void setReturnStatus(String returnStatus) {
-		this.returnStatus = returnStatus;
-	}
+    public String getOrderId() {
+        return orderId;
+    }
 
-	public String getReturnChannel() {
-		return returnChannel;
-	}
+    public void setOrderId(String orderId) {
+        this.orderId = orderId;
+    }
 
-	public void setReturnChannel(String returnChannel) {
-		this.returnChannel = returnChannel;
-	}
+    public String getContractId() {
+        return contractId;
+    }
 
-	public Date getReturnDate() {
-		return returnDate;
-	}
+    public void setContractId(String contractId) {
+        this.contractId = contractId;
+    }
 
-	public void setReturnDate(Date returnDate) {
-		this.returnDate = returnDate;
-	}
+    public String getCustCellphone() {
+        return custCellphone;
+    }
 
-	public BigDecimal getPrincipalAmount() {
-		return principalAmount;
-	}
+    public void setCustCellphone(String custCellphone) {
+        this.custCellphone = custCellphone;
+    }
 
-	public void setPrincipalAmount(BigDecimal principalAmount) {
-		this.principalAmount = principalAmount;
-	}
+    public String getCompanyId() {
+        return companyId;
+    }
 
-	public BigDecimal getInterestAmount() {
-		return interestAmount;
-	}
+    public void setCompanyId(String companyId) {
+        this.companyId = companyId;
+    }
 
-	public void setInterestAmount(BigDecimal interestAmount) {
-		this.interestAmount = interestAmount;
-	}
+    public Integer getCurrentPeriod() {
+        return currentPeriod;
+    }
 
-	public BigDecimal getManagementAmount() {
-		return managementAmount;
-	}
+    public void setCurrentPeriod(Integer currentPeriod) {
+        this.currentPeriod = currentPeriod;
+    }
 
-	public void setManagementAmount(BigDecimal managementAmount) {
-		this.managementAmount = managementAmount;
-	}
+    public Integer getTotalPeriod() {
+        return totalPeriod;
+    }
 
-	public Boolean getIsOverdue() {
-		return isOverdue;
-	}
+    public void setTotalPeriod(Integer totalPeriod) {
+        this.totalPeriod = totalPeriod;
+    }
 
-	public void setIsOverdue(Boolean isOverdue) {
-		this.isOverdue = isOverdue;
-	}
+    public String getReturnStatus() {
+        return returnStatus;
+    }
 
-	public Integer getOverdueDays() {
-		return overdueDays;
-	}
+    public void setReturnStatus(String returnStatus) {
+        this.returnStatus = returnStatus;
+    }
 
-	public void setOverdueDays(Integer overdueDays) {
-		this.overdueDays = overdueDays;
-	}
+    public String getReturnChannel() {
+        return returnChannel;
+    }
 
-	public BigDecimal getOverdueAmount() {
-		return overdueAmount;
-	}
+    public void setReturnChannel(String returnChannel) {
+        this.returnChannel = returnChannel;
+    }
 
-	public void setOverdueAmount(BigDecimal overdueAmount) {
-		this.overdueAmount = overdueAmount;
-	}
+    public Date getReturnDate() {
+        return returnDate;
+    }
 
-	public Date getReturnDateAc() {
-		return returnDateAc;
-	}
+    public void setReturnDate(Date returnDate) {
+        this.returnDate = returnDate;
+    }
 
-	public void setReturnDateAc(Date returnDateAc) {
-		this.returnDateAc = returnDateAc;
-	}
+    public BigDecimal getPrincipalAmount() {
+        return principalAmount;
+    }
 
-	public Date getCreateTime() {
-		return createTime;
-	}
+    public void setPrincipalAmount(BigDecimal principalAmount) {
+        this.principalAmount = principalAmount;
+    }
 
-	public void setCreateTime(Date createTime) {
-		this.createTime = createTime;
-	}
+    public BigDecimal getInterestAmount() {
+        return interestAmount;
+    }
 
-	public Date getUpdateTime() {
-		return updateTime;
-	}
+    public void setInterestAmount(BigDecimal interestAmount) {
+        this.interestAmount = interestAmount;
+    }
 
-	public void setUpdateTime(Date updateTime) {
-		this.updateTime = updateTime;
-	}
+    public BigDecimal getManagementAmount() {
+        return managementAmount;
+    }
+
+    public void setManagementAmount(BigDecimal managementAmount) {
+        this.managementAmount = managementAmount;
+    }
+
+    public Boolean getIsOverdue() {
+        return isOverdue;
+    }
+
+    public void setIsOverdue(Boolean isOverdue) {
+        this.isOverdue = isOverdue;
+    }
+
+    public Integer getOverdueDays() {
+        return overdueDays;
+    }
+
+    public void setOverdueDays(Integer overdueDays) {
+        this.overdueDays = overdueDays;
+    }
+
+    public BigDecimal getOverdueAmount() {
+        return overdueAmount;
+    }
+
+    public void setOverdueAmount(BigDecimal overdueAmount) {
+        this.overdueAmount = overdueAmount;
+    }
+
+    public Date getReturnDateAc() {
+        return returnDateAc;
+    }
+
+    public void setReturnDateAc(Date returnDateAc) {
+        this.returnDateAc = returnDateAc;
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
+    }
 }

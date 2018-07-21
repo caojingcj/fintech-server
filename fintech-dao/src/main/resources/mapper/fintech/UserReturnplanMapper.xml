@@ -33,18 +33,91 @@
     from user_returnplan
     where ID = #{id,jdbcType=INTEGER}
   </select>
-  <select id="selectByPrimaryKeyList" resultMap="BaseResultMap" parameterType="java.util.Map" >
-    select 
-    <include refid="Base_Column_List" />
-    from user_returnplan
+  
+  <resultMap id="BaseResultMapVo" type="com.fintech.model.vo.UserReturnplanVo" >
+    <id column="ID" property="id" jdbcType="INTEGER" />
+    <result column="ORDER_ID" property="orderId" jdbcType="VARCHAR" />
+    <result column="CONTRACT_ID" property="contractId" jdbcType="VARCHAR" />
+    <result column="CUST_CELLPHONE" property="custCellphone" jdbcType="CHAR" />
+    <result column="COMPANY_ID" property="companyId" jdbcType="CHAR" />
+    <result column="CURRENT_PERIOD" property="currentPeriod" jdbcType="INTEGER" />
+    <result column="TOTAL_PERIOD" property="totalPeriod" jdbcType="INTEGER" />
+    <result column="RETURN_STATUS" property="returnStatus" jdbcType="CHAR" />
+    <result column="RETURN_CHANNEL" property="returnChannel" jdbcType="CHAR" />
+    <result column="RETURN_DATE" property="returnDate" jdbcType="DATE" />
+    <result column="PRINCIPAL_AMOUNT" property="principalAmount" jdbcType="DECIMAL" />
+    <result column="INTEREST_AMOUNT" property="interestAmount" jdbcType="DECIMAL" />
+    <result column="MANAGEMENT_AMOUNT" property="managementAmount" jdbcType="DECIMAL" />
+    <result column="IS_OVERDUE" property="isOverdue" jdbcType="BIT" />
+    <result column="OVERDUE_DAYS" property="overdueDays" jdbcType="INTEGER" />
+    <result column="OVERDUE_AMOUNT" property="overdueAmount" jdbcType="DECIMAL" />
+    <result column="RETURN_DATE_AC" property="returnDateAc" jdbcType="TIMESTAMP" />
+    <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="CUST_REALNAME" property="custRealname" jdbcType="VARCHAR" />
+    <result column="COMPANY_NAME" property="companyName" jdbcType="VARCHAR" />
+  </resultMap>
+  <select id="selectByPrimaryKeyList" resultMap="BaseResultMapVo" parameterType="java.util.Map" >
+    SELECT
+	ur.ID,
+	ur.ORDER_ID,
+	ur.CONTRACT_ID,
+	ur.CUST_CELLPHONE,
+	ur.COMPANY_ID,
+	ur.CURRENT_PERIOD,
+	ur.TOTAL_PERIOD,
+	ur.RETURN_STATUS,
+	ur.RETURN_CHANNEL,
+	ur.RETURN_DATE,
+	ur.PRINCIPAL_AMOUNT,
+	ur.INTEREST_AMOUNT,
+	ur.MANAGEMENT_AMOUNT,
+	ur.IS_OVERDUE,
+	ur.OVERDUE_DAYS,
+	ur.OVERDUE_AMOUNT,
+	ur.RETURN_DATE_AC,
+	ur.CREATE_TIME,
+	ur.UPDATE_TIME ,
+	uc.CUST_REALNAME,
+	ob.COMPANY_NAME
+	FROM
+	user_returnplan ur
+	LEFT JOIN user_contract uc ON ur.CONTRACT_ID = uc.CONTRACT_ID 
+	left join order_baseinfo ob on ur.order_id=ob.order_id
     where  1=1
     <if test="orderId != null" >
-        AND ORDER_ID= #{orderId}
+        AND ur.ORDER_ID= #{orderId}
     </if>
     <if test="custCellphone != null" >
-        AND CUST_CELLPHONE= #{custCellphone} order by RETURN_STATUS,CREATE_TIME
+        AND ur.CUST_CELLPHONE= #{custCellphone}
     </if>
+    <if test="returnChannel != null" >
+        AND ur.RETURN_CHANNEL= #{returnChannel}
+    </if>
+    <if test="returnStatus != null" >
+        AND ur.RETURN_STATUS= #{returnStatus}
+    </if>
+     <if test="returnDateAcStart !=null and returnDateAcStart !=''">
+      and ur.RETURN_DATE_AC &gt;=DATE_FORMAT(#{returnDateAcStart},'%Y-%m-%d')
+    </if>
+    <if test="returnDateAcEnd !=null and returnDateAcEnd !=''">
+      and ur.RETURN_DATE_AC &lt;= DATE_FORMAT(DATE_SUB(#{returnDateAcEnd},INTERVAL -1 DAY),'%Y-%m-%d')
+    </if>
+     <if test="returnDateStart !=null and returnDateStart !=''">
+      and ur.RETURN_DATE &gt;=DATE_FORMAT(#{returnDateStart},'%Y-%m-%d')
+    </if>
+    <if test="returnDateEnd !=null and returnDateEnd !=''">
+      and ur.RETURN_DATE &lt;= DATE_FORMAT(DATE_SUB(#{returnDateEnd},INTERVAL -1 DAY),'%Y-%m-%d')
+    </if>
+     <if test="searchCompanyObject !=null and searchCompanyObject !=''">
+   			AND (ur.COMPANY_ID like CONCAT('%',#{searchCompanyObject},'%') or ob.COMPANY_NAME like  CONCAT('%',#{searchCompanyObject},'%'))
+    </if>
+     <if test="searchUserObject !=null and searchUserObject !=''">
+   			AND (ur.COMPANY_ID like CONCAT('%',#{searchUserObject},'%') or ob.COMPANY_NAME like  CONCAT('%',#{searchUserObject},'%'))
+    </if>
+    order by ur.RETURN_STATUS,ur.CREATE_TIME
   </select>
+  
   <select id="selectByOrderPeriod" resultMap="BaseResultMap" >
     select 
     <include refid="Base_Column_List" />
