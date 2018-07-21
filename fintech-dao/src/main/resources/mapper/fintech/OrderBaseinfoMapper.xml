@@ -336,4 +336,8 @@ WHERE
         </if>
     </select>
   
+  <select id="countOrderByStatus" resultType="java.lang.Integer">
+       select count(*) from order_baseinfo where COMPANY_ID = #{companyId} and ORDER_STATUS in (00,01,02,04)
+  </select>
+  
 </mapper>

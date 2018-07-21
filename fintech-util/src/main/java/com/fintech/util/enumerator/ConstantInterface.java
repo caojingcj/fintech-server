@@ -397,7 +397,9 @@ public interface ConstantInterface {
 	        COMPANY_100103(100103,"商户状态不能为空"),
 	        COMPANY_100104(100104,"商户统一社会信用代码不能为空"),
 	        COMPANY_100105(100105,"商户营业执照名称不能为空"),
-	        COMPANY_100106(100106,"该订单已被后台取消");
+	        COMPANY_100106(100106,"该订单已被后台取消"),
+	        COMPANY_100107(100107,"该商户资料未配置完成无法启用，请检查配置"),
+	        COMPANY_100108(100108,"该商户有订单正在进行中【录入或审批或待审批或待用户签署】无法禁用");
 	        private Integer key;
 	        private String value;
             public Integer getKey() {

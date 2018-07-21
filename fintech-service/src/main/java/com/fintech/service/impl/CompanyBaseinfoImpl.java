@@ -14,6 +14,7 @@ import com.fintech.dao.CompanyBaseinfoMapper;
 import com.fintech.dao.CompanyChannelMapper;
 import com.fintech.dao.CompanyItemMapper;
 import com.fintech.dao.CompanyPeriodFeeMapper;
+import com.fintech.dao.OrderBaseinfoMapper;
 import com.fintech.dao.procedure.CompanyProcedureMapper;
 import com.fintech.model.CompanyAccountinfo;
 import com.fintech.model.CompanyBaseinfo;
@@ -22,6 +23,7 @@ import com.fintech.model.vo.CompanyBaseinfoVo;
 import com.fintech.service.CompanyBaseinfoService;
 import com.fintech.util.BeanUtils;
 import com.fintech.util.CommonUtil;
+import com.fintech.util.FinTechException;
 import com.fintech.util.enumerator.ConstantInterface;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -48,6 +50,8 @@ public class CompanyBaseinfoImpl implements CompanyBaseinfoService {
     private CompanyItemMapper companyItemMapper;
     @Autowired
     private CompanyChannelMapper companyChannelMapper;
+    @Autowired
+    private OrderBaseinfoMapper orderBaseinfoMapper;
 
     /* (非 Javadoc) 
     * <p>Title: insertCompanyBaseInfo</p> 
@@ -90,9 +94,18 @@ public class CompanyBaseinfoImpl implements CompanyBaseinfoService {
 	* 商户启用、禁用 
 	*/
 	@Override
-	public void updateCompanyBaseInfoStatus(CompanyBaseinfoVo vo) {
+	public void updateCompanyBaseInfoStatus(CompanyBaseinfoVo vo)throws Exception {
 		CompanyBaseinfo baseinfo=companyBaseinfoMapper.selectByPrimaryKeyInfo(vo.getCompanyId());
 		baseinfo.setCompanyStatus(vo.getCompanyStatus());
+		if(companyAccountinfoMapper.count(vo.getCompanyId())==ConstantInterface.Enum.ConstantNumber.ZERO.getKey()||
+		        companyChannelMapper.count(vo.getCompanyId())==ConstantInterface.Enum.ConstantNumber.ZERO.getKey()||
+		        companyPeriodFeeMapper.count(vo.getCompanyId())==ConstantInterface.Enum.ConstantNumber.ZERO.getKey()||
+		        companyItemMapper.count(vo.getCompanyId())==ConstantInterface.Enum.ConstantNumber.ZERO.getKey()) {
+		    throw new FinTechException(ConstantInterface.WebValidateConfig.CompanyValidate.COMPANY_100107.toString());
+		}
+		if(orderBaseinfoMapper.countOrderByStatus(vo.getCompanyId())>0) {
+	       throw new FinTechException(ConstantInterface.WebValidateConfig.CompanyValidate.COMPANY_100108.toString());
+		}
 		companyBaseinfoMapper.updateByPrimaryKeySelective(baseinfo);
 	}
 

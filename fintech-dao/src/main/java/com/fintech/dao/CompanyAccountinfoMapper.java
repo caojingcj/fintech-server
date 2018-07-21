@@ -3,6 +3,8 @@ package com.fintech.dao;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.annotations.Param;
+
 import com.fintech.model.CompanyAccountinfo;
 
 public interface CompanyAccountinfoMapper {
@@ -19,4 +21,6 @@ public interface CompanyAccountinfoMapper {
     int updateByPrimaryKeySelective(CompanyAccountinfo record);
 
     int updateByPrimaryKey(CompanyAccountinfo record);
+    
+    int count(@Param("companyId")String companyId);
 }

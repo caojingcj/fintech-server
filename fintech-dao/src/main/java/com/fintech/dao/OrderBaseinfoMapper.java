@@ -39,4 +39,5 @@ public interface OrderBaseinfoMapper {
     
     List<Map<String, Object>> selectOrderBaseInfoTotalByToday(Map<String, Object> parms);
     
+    int countOrderByStatus(@Param("companyId")String companyId);
 }

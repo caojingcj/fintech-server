@@ -3,6 +3,8 @@ package com.fintech.dao;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.annotations.Param;
+
 import com.fintech.model.CompanyChannel;
 
 public interface CompanyChannelMapper {
@@ -17,4 +19,6 @@ public interface CompanyChannelMapper {
     int updateByPrimaryKeySelective(CompanyChannel record);
 
     int updateByPrimaryKey(CompanyChannel record);
+    
+    int count(@Param("companyId")String companyId);
 }

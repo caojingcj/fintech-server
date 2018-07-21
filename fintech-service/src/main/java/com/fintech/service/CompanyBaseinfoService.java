@@ -14,7 +14,7 @@ public interface CompanyBaseinfoService {
 
     void insertCompanyBaseInfo(CompanyBaseinfoVo companyBaseinfo);
 
-    void updateCompanyBaseInfoStatus(CompanyBaseinfoVo vo);
+    void updateCompanyBaseInfoStatus(CompanyBaseinfoVo vo)throws Exception;
     
     PageInfo<CompanyBaseinfo> selectByPrimaryKeyList(CompanyBaseinfoVo companyBaseinfo)throws Exception;
     
