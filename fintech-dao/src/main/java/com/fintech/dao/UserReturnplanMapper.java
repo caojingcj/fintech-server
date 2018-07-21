@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.fintech.model.UserReturnplan;
+import com.fintech.model.domain.UserReturnplanDo;
 
 public interface UserReturnplanMapper {
     int deleteByPrimaryKey(Integer id);
@@ -14,7 +15,7 @@ public interface UserReturnplanMapper {
 
     UserReturnplan selectByPrimaryKey(Integer id);
     
-    List<UserReturnplan> selectByPrimaryKeyList(Map<String, Object>parms);
+    List<UserReturnplanDo> selectByPrimaryKeyList(Map<String, Object>parms);
 
     UserReturnplan selectByOrderPeriod(String orderId, Integer currentPeriod);
     

@@ -180,18 +180,22 @@ public class MoxieImpl implements MoxieService {
      */
     @Override
     public void backMoxieFail(BackMoxieFailVo vo) throws Exception {
-        if(vo.isResult()) {
-            LogMoxieinfo logMoxieinfo = logMoxieinfoMapper.selectByPrimaryKey(vo.getTask_id());
-            if(logMoxieinfo!=null) {
-                logMoxieinfo.setMoxieStatus(ConstantInterface.Enum.ConstantNumber.THREE.getKey());
-                logMoxieinfo.setUpdateTime(new Date());
-                logMoxieinfoMapper.updateByPrimaryKeySelective(logMoxieinfo);
-                OrderBaseinfo baseinfo= orderBaseinfoMapper.selectByPrimaryKey(logMoxieinfo.getOrderId());
-                baseinfo.setOrderStatus(ConstantInterface.Enum.OrderStatus.ORDER_STATUS03.getKey());
-                orderBaseinfoMapper.updateByPrimaryKeySelective(baseinfo);
-                logOrderMapper.insertSelective(new LogOrder(logMoxieinfo.getOrderId(),ConstantInterface.Enum.OrderLogStatus.ORDER_STATUS91.getKey(), ConstantInterface.Enum.OrderStatus.ORDER_STATUS03.getKey(), "拒绝 - 魔蝎回调失败！"));
-            }
+        //如果魔蝎回调失败 直接调用信审服务
+        LogMoxieinfo logMoxieinfo = logMoxieinfoMapper.selectByPrimaryKey(vo.getTask_id());
+        if(logMoxieinfo!=null) {
+            creditVettingService.creditVetting(logMoxieinfo.getOrderId());
         }
+//        if(vo.isResult()) {
+//            if(logMoxieinfo!=null) {
+//                logMoxieinfo.setMoxieStatus(ConstantInterface.Enum.ConstantNumber.THREE.getKey());
+//                logMoxieinfo.setUpdateTime(new Date());
+//                logMoxieinfoMapper.updateByPrimaryKeySelective(logMoxieinfo);
+//                OrderBaseinfo baseinfo= orderBaseinfoMapper.selectByPrimaryKey(logMoxieinfo.getOrderId());
+//                baseinfo.setOrderStatus(ConstantInterface.Enum.OrderStatus.ORDER_STATUS03.getKey());
+//                orderBaseinfoMapper.updateByPrimaryKeySelective(baseinfo);
+//                logOrderMapper.insertSelective(new LogOrder(logMoxieinfo.getOrderId(),ConstantInterface.Enum.OrderLogStatus.ORDER_STATUS91.getKey(), ConstantInterface.Enum.OrderStatus.ORDER_STATUS03.getKey(), "拒绝 - 魔蝎回调失败！"));
+//            }
+//        }
     }
 
     /*

@@ -34,7 +34,7 @@
     where ID = #{id,jdbcType=INTEGER}
   </select>
   
-  <resultMap id="BaseResultMapVo" type="com.fintech.model.vo.UserReturnplanVo" >
+  <resultMap id="BaseResultMapVo" type="com.fintech.model.domain.UserReturnplanDo" >
     <id column="ID" property="id" jdbcType="INTEGER" />
     <result column="ORDER_ID" property="orderId" jdbcType="VARCHAR" />
     <result column="CONTRACT_ID" property="contractId" jdbcType="VARCHAR" />
@@ -88,16 +88,16 @@
     <if test="orderId != null" >
         AND ur.ORDER_ID= #{orderId}
     </if>
-    <if test="custCellphone != null" >
+    <if test="custCellphone != null and custCellphone !='' " >
         AND ur.CUST_CELLPHONE= #{custCellphone}
     </if>
-    <if test="returnChannel != null" >
+    <if test="returnChannel != null and returnChannel !='' " >
         AND ur.RETURN_CHANNEL= #{returnChannel}
     </if>
-    <if test="returnStatus != null" >
+    <if test="returnStatus != null and returnStatus !='' " >
         AND ur.RETURN_STATUS= #{returnStatus}
     </if>
-     <if test="returnDateAcStart !=null and returnDateAcStart !=''">
+     <if test="returnDateAcStart !=null and returnDateAcStart !='' ">
       and ur.RETURN_DATE_AC &gt;=DATE_FORMAT(#{returnDateAcStart},'%Y-%m-%d')
     </if>
     <if test="returnDateAcEnd !=null and returnDateAcEnd !=''">

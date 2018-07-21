@@ -11,6 +11,7 @@ import com.fintech.enm.CreditVettingResultEnum;
 import com.fintech.model.vo.OrderBaseinfoVo;
 import com.fintech.service.CreditVettingService;
 import com.fintech.service.OrderBaseinfoService;
+import com.fintech.service.ReturnPlanService;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(classes = ServiceApplication.class)
@@ -21,6 +22,8 @@ public class OrderBaseInfoTest {
     
     @Autowired
     private CreditVettingService creditVettingService;
+    @Autowired
+    private ReturnPlanService returnPlanService;
     
     String orderId = "ODR000000419";
     
@@ -71,7 +74,8 @@ public class OrderBaseInfoTest {
     public void testCancelOrder() throws Exception {
     	OrderBaseinfoVo vo=new OrderBaseinfoVo();
     	vo.setOrderId(orderId);
-    	orderBaseinfoService.cancelOrder(vo);
+    	returnPlanService.updateCancel(orderId);
+//    	creditVettingService.(vo);
     }
 
 }

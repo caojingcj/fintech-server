@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.fintech.dao.UserReturnplanMapper;
-import com.fintech.model.UserReturnplan;
+import com.fintech.model.domain.UserReturnplanDo;
 import com.fintech.model.vo.UserReturnplanVo;
 import com.fintech.service.RedisService;
 import com.fintech.service.UserReturnPlanService;
@@ -34,11 +34,11 @@ public class UserReturnPlanImpl implements UserReturnPlanService {
 	private UserReturnplanMapper userReturnplanMapper;
 
 	@Override
-	public PageInfo<UserReturnplan> selectByPrimaryKeyList(UserReturnplanVo vo) throws Exception {
+	public PageInfo<UserReturnplanDo> selectByPrimaryKeyList(UserReturnplanVo vo) throws Exception {
 		 	Map<String, Object> parms = CommonUtil.object2Map(vo);
 	        PageHelper.startPage(vo.getPageIndex(), vo.getPageSize());
-	        List<UserReturnplan> list=userReturnplanMapper.selectByPrimaryKeyList(parms);
-	        PageInfo<UserReturnplan> pageLists=new PageInfo<UserReturnplan>(list);
+	        List<UserReturnplanDo> list=userReturnplanMapper.selectByPrimaryKeyList(parms);
+	        PageInfo<UserReturnplanDo> pageLists=new PageInfo<UserReturnplanDo>(list);
 	        return pageLists;
 	}
 

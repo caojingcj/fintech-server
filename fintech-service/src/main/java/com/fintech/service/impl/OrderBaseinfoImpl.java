@@ -53,6 +53,7 @@ import com.fintech.model.OrderDetailinfo;
 import com.fintech.model.UserContract;
 import com.fintech.model.UserReturnplan;
 import com.fintech.model.domain.CompanyItemDo;
+import com.fintech.model.domain.UserReturnplanDo;
 import com.fintech.model.vo.CustBaseinfoVo;
 import com.fintech.model.vo.OrderBaseinfoVo;
 import com.fintech.model.vo.OrderDetailinfoVo;
@@ -620,9 +621,9 @@ public class OrderBaseinfoImpl implements OrderBaseinfoService {
 	   MultiValueMap muMap = new MultiValueMap();
 	   if(custBaseinfo!=null) {
 	       BeanUtils.copyProperties(custBaseinfo, custBaseinfoVo);
-	       custBaseinfoVo.setAge(IDCardUtil.getAgeByIdCard(custBaseinfoVo.getCustIdCardNo()));
+	       custBaseinfoVo.setAge(custBaseinfoVo.getCustIdCardNo()==null?0:IDCardUtil.getAgeByIdCard(custBaseinfoVo.getCustIdCardNo()));
 	       custBaseinfoVo.setCustCellphone(SensitiveInfoUtils.mobilePhone(custBaseinfoVo.getCustCellphone()));
-	       custBaseinfoVo.setCustIdCardNo(SensitiveInfoUtils.idCardNum(custBaseinfoVo.getCustIdCardNo()));
+	       custBaseinfoVo.setCustIdCardNo(custBaseinfoVo.getCustIdCardNo()==null?"无":SensitiveInfoUtils.idCardNum(custBaseinfoVo.getCustIdCardNo()));
 	   }
 	   OrderDetailinfo orderDetailinfo= orderDetailinfoMapper.selectByPrimaryKey(orderId);
 	  List<OrderAttachment> orderAttachments= orderAttachmentMapper.selectByPrimaryKeyList(orderId);
@@ -633,8 +634,8 @@ public class OrderBaseinfoImpl implements OrderBaseinfoService {
 	  }
 	  Map<String, Object>map=new HashMap<>();
 	  map.put("orderId", orderId);
-	  List<UserReturnplan> userReturnplans=userReturnplanMapper.selectByPrimaryKeyList(map);
-	  for (UserReturnplan userReturnplan : userReturnplans) {
+	  List<UserReturnplanDo> userReturnplans=userReturnplanMapper.selectByPrimaryKeyList(map);
+	  for (UserReturnplanDo userReturnplan : userReturnplans) {
 		  userReturnplan.setCustCellphone(SensitiveInfoUtils.mobilePhone(userReturnplan.getCustCellphone()));
 	  }
 	  Map<String, Object>moxieMap=new HashMap<>();
@@ -660,15 +661,6 @@ public class OrderBaseinfoImpl implements OrderBaseinfoService {
 	    return parms;
 	}
 
-	@Override
-	public void cancelOrder(OrderBaseinfoVo vo) {
-		OrderBaseinfo baseinfo=orderBaseinfoMapper.selectByPrimaryKey(vo.getOrderId());
-		baseinfo.setOrderStatus(ConstantInterface.Enum.OrderStatus.ORDER_STATUS11.getKey());
-		orderBaseinfoMapper.updateByPrimaryKeySelective(baseinfo);
-		logOrderMapper.insertSelective(new LogOrder(vo.getOrderId(), ConstantInterface.Enum.OrderLogStatus.ORDER_STATUS11.getKey(), ConstantInterface.Enum.OrderStatus.ORDER_STATUS11.getKey(), ConstantInterface.WebValidateConfig.OrderValidate.ORDER_100201.getValue()));
-	}
-	
-	
 	/* (非 Javadoc) 
 	* <p>Title: orderBaseInfoTotalByToday</p> 
 	* <p>Description: </p> 

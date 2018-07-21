@@ -16,6 +16,7 @@ import com.fintech.service.CreditVettingService;
 import com.fintech.service.LogOrderService;
 import com.fintech.service.OrderBaseinfoService;
 import com.fintech.service.RedisService;
+import com.fintech.service.ReturnPlanService;
 import com.fintech.util.DateUtils;
 import com.fintech.util.result.ResultUtils;
 import com.google.gson.reflect.TypeToken;
@@ -28,6 +29,8 @@ public class OrderBaseinfoController {
     private LogOrderService logOrderService;
     @Autowired
     private OrderBaseinfoService orderBaseinfoService;
+    @Autowired
+    private ReturnPlanService returnPlanService;
     @Autowired
     private RedisService redisService;
     @Autowired
@@ -90,7 +93,7 @@ public class OrderBaseinfoController {
         try {
             redisService.tokenValidate(vo.getToken());
             logger.info("EK运营系统日志： 方法名[{}]参数[{}]操作时间[{}]操作人[{}]",Thread.currentThread().getStackTrace()[1].getMethodName(),vo,DateUtils.getDateTime(),redisService.get(vo.getToken()));
-            orderBaseinfoService.cancelOrder(vo);
+            returnPlanService.updateCancel(vo.getOrderId());
             return ResultUtils.success(ResultUtils.SUCCESS_CODE_MSG);
         } catch (Exception e) {
             logger.error("ERROR EK运营系统日志： 方法名[{}]报错[{}] 参数[{}] 报错时间[{}]",Thread.currentThread().getStackTrace()[1].getMethodName(),e.getMessage(),vo,DateUtils.getDateTime());
