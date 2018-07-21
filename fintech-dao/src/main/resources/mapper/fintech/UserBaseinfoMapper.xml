@@ -148,16 +148,9 @@
     </set>
     where ID = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.fintech.model.UserBaseinfo" >
-    update user_baseinfo
-    set USER_REALNAME = #{userRealname,jdbcType=VARCHAR},
-      USER_LOGIN_NAME = #{userLoginName,jdbcType=VARCHAR},
-      USER_LOGIN_PASSWORD = #{userLoginPassword,jdbcType=VARCHAR},
-      USER_TYPE = #{userType,jdbcType=CHAR},
-      USER_COMPANY_ID = #{userCompanyId,jdbcType=CHAR},
-      IS_ENABLED = #{isEnabled,jdbcType=BIT},
-      CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
-      UPDATETIME = #{updatetime,jdbcType=TIMESTAMP}
+  
+   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from user_baseinfo
     where ID = #{id,jdbcType=INTEGER}
-  </update>
+  </delete>
 </mapper>

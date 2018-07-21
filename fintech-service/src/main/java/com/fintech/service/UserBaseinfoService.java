@@ -15,4 +15,6 @@ public interface UserBaseinfoService {
 	void insertUserBaseInfo(UserBaseinfoVo vo);
 
 	void updateUserBaseInfo(UserBaseinfoVo vo);
+	
+	void deleteUserBaseInfo(UserBaseinfoVo vo);
 }

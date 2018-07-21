@@ -111,5 +111,10 @@ public class UserBaseInfoImpl implements UserBaseinfoService {
 		}
 		userBaseinfoMapper.updateByPrimaryKeySelective(userBaseinfo);
 	}
+	
+	@Override
+    public void deleteUserBaseInfo(UserBaseinfoVo vo) {
+        userBaseinfoMapper.deleteByPrimaryKey(vo.getId());
+    }
 
 }

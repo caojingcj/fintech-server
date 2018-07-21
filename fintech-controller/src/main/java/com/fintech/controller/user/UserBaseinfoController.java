@@ -99,4 +99,27 @@ public class UserBaseinfoController {
     		return ResultUtils.error(ResultUtils.ERROR_CODE,e.getMessage());
     	}
     }
+    
+    /** 
+    * @Title: UserBaseinfoController.java 
+    * @author qierkang xyqierkang@163.com   
+    * @date 2018年7月21日 下午5:32:50  
+    * @param @param vo
+    * @param @return
+    * @param @throws Exception    设定文件 
+    * @Description: TODO[ 这里用一句话描述这个方法的作用 ]
+    * @throws 
+    */
+    @RequestMapping(value ="deleteUserBaseInfo",method = RequestMethod.GET)
+    public @ResponseBody BaseResult deleteUserBaseInfo(UserBaseinfoVo vo) throws Exception {
+        try {
+            redisService.tokenValidate(vo.getToken());
+            logger.info("EK运营系统日志：方法名[{}]参数[{}]操作时间[{}]操作人[{}]",Thread.currentThread().getStackTrace()[1].getMethodName(),vo,DateUtils.getDateTime(),redisService.get(vo.getToken()));
+            userBaseinfoService.deleteUserBaseInfo(vo);
+            return ResultUtils.success(ResultUtils.SUCCESS_CODE_MSG);
+        } catch (Exception e) {
+            logger.error("ERROR EK运营系统日志：方法名[{}]报错[{}] 参数[{}] 报错时间[{}]",Thread.currentThread().getStackTrace()[1].getMethodName(),e.getMessage(),vo,DateUtils.getDateTime());
+            return ResultUtils.error(ResultUtils.ERROR_CODE,e.getMessage());
+        }
+    }
 }
