@@ -316,14 +316,14 @@ WHERE
   </select>
   
   <select id="selectOrderBaseInfoTotalByToday" resultType="java.util.Map" parameterType="java.util.Map">
-        SELECT
+	    SELECT
 		'总计' companyName,
-		ifnull( sum( o.ORDER_STATUS ), 0 ) AS targetMoney,
+		ifnull(sum( o.ORDER_AMOUNT ), 0 ) AS targetMoney,
 		ifnull( sum( CASE o.ORDER_STATUS WHEN 05 THEN o.ORDER_AMOUNT ELSE 0 END ), 0 ) successLoansMoney,
 		ifnull( sum( CASE o.ORDER_STATUS WHEN 05 THEN 1 ELSE 0 END ), 0 ) successCount,
-		ifnull( sum( CASE WHEN 03 THEN o.ORDER_AMOUNT ELSE 0 END ), 0 ) refuseMoney,
+		ifnull( sum( CASE o.ORDER_STATUS WHEN 03 THEN o.ORDER_AMOUNT ELSE 0 END ), 0 ) refuseMoney,
 		ifnull( sum( CASE o.ORDER_STATUS WHEN 03 THEN 1 ELSE 0 END ), 0 ) refuseCount,
-		ifnull( sum( CASE WHEN o.ORDER_STATUS in (05,03) THEN 1 ELSE 0 END ), 0 ) reqCount
+		ifnull( sum( CASE WHEN o.ORDER_STATUS IN ( 05, 03 ) THEN 1 ELSE 0 END ), 0 ) reqCount 
         from order_baseinfo o where 1=1
         <if test="beginDate != null and beginDate !=''">
             and o.CREATE_TIME >=DATE_FORMAT(DATE_SUB(#{beginDate},INTERVAL 0 DAY),'%Y-%m-%d')
