@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.fintech.dao.CustBaseinfoMapper" >
+  <resultMap id="BaseResultMap" type="com.fintech.model.CustBaseinfo" >
+    <id column="CUST_CELLPHONE" property="custCellphone" jdbcType="CHAR" />
+    <result column="IDENTITY_STATUS" property="identityStatus" jdbcType="CHAR" />
+    <result column="CUST_REALNAME" property="custRealname" jdbcType="VARCHAR" />
+    <result column="CUST_ID_CARD_NO" property="custIdCardNo" jdbcType="VARCHAR" />
+    <result column="CUST_NATION" property="custNation" jdbcType="VARCHAR" />
+    <result column="CUST_ADDRESS" property="custAddress" jdbcType="VARCHAR" />
+    <result column="CUST_ID_CARD_VAL_BEGIN" property="custIdCardValBegin" jdbcType="DATE" />
+    <result column="CUST_ID_CARD_VAL_END" property="custIdCardValEnd" jdbcType="DATE" />
+    <result column="CUST_ID_CARD_FRONT" property="custIdCardFront" jdbcType="VARCHAR" />
+    <result column="CUST_ID_CARD_BACK" property="custIdCardBack" jdbcType="VARCHAR" />
+    <result column="IDENTITY_TIME" property="identityTime" jdbcType="TIMESTAMP" />
+    <result column="IS_ENABLED" property="isEnabled" jdbcType="BIT" />
+    <result column="CUST_DEVICE_CODE" property="custDeviceCode" jdbcType="VARCHAR" />
+    <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="UPDATETIME" property="updatetime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    CUST_CELLPHONE, IDENTITY_STATUS, CUST_REALNAME, CUST_ID_CARD_NO, CUST_NATION, CUST_ADDRESS, 
+    CUST_ID_CARD_VAL_BEGIN, CUST_ID_CARD_VAL_END, CUST_ID_CARD_FRONT, CUST_ID_CARD_BACK, 
+    IDENTITY_TIME, IS_ENABLED, CUST_DEVICE_CODE, CREATE_TIME, UPDATETIME
+  </sql>
+  <select id="selectByPrimaryKeyList" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from cust_baseinfo
+    where CUST_CELLPHONE = #{custCellphone,jdbcType=CHAR}
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from cust_baseinfo
+    where CUST_CELLPHONE = #{custCellphone}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from cust_baseinfo
+    where CUST_CELLPHONE = #{custCellphone,jdbcType=CHAR}
+  </delete>
+  <insert id="insert" parameterType="com.fintech.model.CustBaseinfo" >
+    insert into cust_baseinfo (CUST_CELLPHONE, IDENTITY_STATUS, CUST_REALNAME, 
+      CUST_ID_CARD_NO, CUST_NATION, CUST_ADDRESS, 
+      CUST_ID_CARD_VAL_BEGIN, CUST_ID_CARD_VAL_END, CUST_ID_CARD_FRONT, 
+      CUST_ID_CARD_BACK, IDENTITY_TIME, IS_ENABLED, 
+      CUST_DEVICE_CODE, CREATE_TIME, UPDATETIME
+      )
+    values (#{custCellphone,jdbcType=CHAR}, #{identityStatus,jdbcType=CHAR}, #{custRealname,jdbcType=VARCHAR}, 
+      #{custIdCardNo,jdbcType=VARCHAR}, #{custNation,jdbcType=VARCHAR}, #{custAddress,jdbcType=VARCHAR}, 
+      #{custIdCardValBegin,jdbcType=DATE}, #{custIdCardValEnd,jdbcType=DATE}, #{custIdCardFront,jdbcType=VARCHAR}, 
+      #{custIdCardBack,jdbcType=VARCHAR}, #{identityTime,jdbcType=TIMESTAMP}, #{isEnabled,jdbcType=BIT}, 
+      #{custDeviceCode,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updatetime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.fintech.model.CustBaseinfo" >
+    insert into cust_baseinfo
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="custCellphone != null" >
+        CUST_CELLPHONE,
+      </if>
+      <if test="identityStatus != null" >
+        IDENTITY_STATUS,
+      </if>
+      <if test="custRealname != null" >
+        CUST_REALNAME,
+      </if>
+      <if test="custIdCardNo != null" >
+        CUST_ID_CARD_NO,
+      </if>
+      <if test="custNation != null" >
+        CUST_NATION,
+      </if>
+      <if test="custAddress != null" >
+        CUST_ADDRESS,
+      </if>
+      <if test="custIdCardValBegin != null" >
+        CUST_ID_CARD_VAL_BEGIN,
+      </if>
+      <if test="custIdCardValEnd != null" >
+        CUST_ID_CARD_VAL_END,
+      </if>
+      <if test="custIdCardFront != null" >
+        CUST_ID_CARD_FRONT,
+      </if>
+      <if test="custIdCardBack != null" >
+        CUST_ID_CARD_BACK,
+      </if>
+      <if test="identityTime != null" >
+        IDENTITY_TIME,
+      </if>
+      <if test="isEnabled != null" >
+        IS_ENABLED,
+      </if>
+      <if test="custDeviceCode != null" >
+        CUST_DEVICE_CODE,
+      </if>
+      <if test="createTime != null" >
+        CREATE_TIME,
+      </if>
+      <if test="updatetime != null" >
+        UPDATETIME,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="custCellphone != null" >
+        #{custCellphone,jdbcType=CHAR},
+      </if>
+      <if test="identityStatus != null" >
+        #{identityStatus,jdbcType=CHAR},
+      </if>
+      <if test="custRealname != null" >
+        #{custRealname,jdbcType=VARCHAR},
+      </if>
+      <if test="custIdCardNo != null" >
+        #{custIdCardNo,jdbcType=VARCHAR},
+      </if>
+      <if test="custNation != null" >
+        #{custNation,jdbcType=VARCHAR},
+      </if>
+      <if test="custAddress != null" >
+        #{custAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="custIdCardValBegin != null" >
+        #{custIdCardValBegin,jdbcType=DATE},
+      </if>
+      <if test="custIdCardValEnd != null" >
+        #{custIdCardValEnd,jdbcType=DATE},
+      </if>
+      <if test="custIdCardFront != null" >
+        #{custIdCardFront,jdbcType=VARCHAR},
+      </if>
+      <if test="custIdCardBack != null" >
+        #{custIdCardBack,jdbcType=VARCHAR},
+      </if>
+      <if test="identityTime != null" >
+        #{identityTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isEnabled != null" >
+        #{isEnabled,jdbcType=BIT},
+      </if>
+      <if test="custDeviceCode != null" >
+        #{custDeviceCode,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatetime != null" >
+        #{updatetime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.fintech.model.CustBaseinfo" >
+    update cust_baseinfo
+    <set >
+      <if test="identityStatus != null" >
+        IDENTITY_STATUS = #{identityStatus,jdbcType=CHAR},
+      </if>
+      <if test="custRealname != null" >
+        CUST_REALNAME = #{custRealname,jdbcType=VARCHAR},
+      </if>
+      <if test="custIdCardNo != null" >
+        CUST_ID_CARD_NO = #{custIdCardNo,jdbcType=VARCHAR},
+      </if>
+      <if test="custNation != null" >
+        CUST_NATION = #{custNation,jdbcType=VARCHAR},
+      </if>
+      <if test="custAddress != null" >
+        CUST_ADDRESS = #{custAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="custIdCardValBegin != null" >
+        CUST_ID_CARD_VAL_BEGIN = #{custIdCardValBegin,jdbcType=DATE},
+      </if>
+      <if test="custIdCardValEnd != null" >
+        CUST_ID_CARD_VAL_END = #{custIdCardValEnd,jdbcType=DATE},
+      </if>
+      <if test="custIdCardFront != null" >
+        CUST_ID_CARD_FRONT = #{custIdCardFront,jdbcType=VARCHAR},
+      </if>
+      <if test="custIdCardBack != null" >
+        CUST_ID_CARD_BACK = #{custIdCardBack,jdbcType=VARCHAR},
+      </if>
+      <if test="identityTime != null" >
+        IDENTITY_TIME = #{identityTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isEnabled != null" >
+        IS_ENABLED = #{isEnabled,jdbcType=BIT},
+      </if>
+      <if test="custDeviceCode != null" >
+        CUST_DEVICE_CODE = #{custDeviceCode,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatetime != null" >
+        UPDATETIME = #{updatetime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where CUST_CELLPHONE = #{custCellphone,jdbcType=CHAR}
+  </update>
+   <select id="quarteOverdueList" resultMap="BaseResultMap"  >
+    select 
+    <include refid="Base_Column_List" />
+    from cust_baseinfo where to_days(CUST_ID_CARD_VAL_END) <![CDATA[  <  ]]> to_days(now()) and IDENTITY_STATUS <![CDATA[  <>  ]]> 2
+    </select>
+</mapper>

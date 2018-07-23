@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.fintech.dao.LogMoxieinfoMapper" >
+ <resultMap id="BaseResultMap" type="com.fintech.model.LogMoxieinfo" >
+    <id column="ID" property="id" jdbcType="BIGINT" />
+    <result column="MOXIE_MOBILE" property="moxieMobile" jdbcType="VARCHAR" />
+    <result column="MOXIE_IDCARD" property="moxieIdcard" jdbcType="VARCHAR" />
+    <result column="MOXIE_NAME" property="moxieName" jdbcType="VARCHAR" />
+    <result column="MOXIE_CONTENT" property="moxieContent" jdbcType="CHAR" />
+    <result column="MOXIE_TYPE" property="moxieType" jdbcType="VARCHAR" />
+    <result column="ORDER_ID" property="orderId" jdbcType="VARCHAR" />
+    <result column="MOXIE_TASK_ID" property="moxieTaskId" jdbcType="VARCHAR" />
+    <result column="MOXIE_STATUS" property="moxieStatus" jdbcType="INTEGER" />
+    <result column="MOXIE_ONLINE_URL" property="moxieOnlineUrl" jdbcType="VARCHAR" />
+    <result column="REPORT_TIME" property="reportTime" jdbcType="TIMESTAMP" />
+    <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, MOXIE_MOBILE, MOXIE_IDCARD, MOXIE_NAME, MOXIE_CONTENT, MOXIE_TYPE, ORDER_ID, 
+    CREATE_TIME,UPDATE_TIME, MOXIE_TASK_ID,REPORT_TIME,MOXIE_ONLINE_URL,MOXIE_STATUS
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String"   >
+    select 
+    <include refid="Base_Column_List" />
+    from log_moxieinfo
+    where  MOXIE_TASK_ID = #{moxieTaskId}
+  </select>
+  
+  <select id="selectByPrimaryKeySelective" resultMap="BaseResultMap" parameterType="java.util.Map"   >
+    select 
+    <include refid="Base_Column_List" />
+    from log_moxieinfo
+    where 1=1
+    <if test="moxieTaskId != null and moxieTaskId !=''">
+    	and MOXIE_TASK_ID = #{moxieTaskId}
+    </if>
+      <if test="orderId != null and orderId !=''">
+    	and ORDER_ID = #{orderId}
+    </if>
+    and MOXIE_STATUS=5
+    order by CREATE_TIME limit 1
+  </select>
+  
+ <insert id="insertSelective" parameterType="com.fintech.model.LogMoxieinfo" >
+    insert into log_moxieinfo
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="moxieMobile != null" >
+        MOXIE_MOBILE,
+      </if>
+      <if test="moxieIdcard != null" >
+        MOXIE_IDCARD,
+      </if>
+      <if test="moxieName != null" >
+        MOXIE_NAME,
+      </if>
+      <if test="moxieContent != null" >
+        MOXIE_CONTENT,
+      </if>
+      <if test="moxieType != null" >
+        MOXIE_TYPE,
+      </if>
+      <if test="orderId != null" >
+        ORDER_ID,
+      </if>
+      <if test="moxieTaskId != null" >
+        MOXIE_TASK_ID,
+      </if>
+      <if test="moxieStatus != null" >
+        MOXIE_STATUS,
+      </if>
+      <if test="moxieOnlineUrl != null" >
+        MOXIE_ONLINE_URL,
+      </if>
+      <if test="reportTime != null" >
+        REPORT_TIME,
+      </if>
+      <if test="createTime != null" >
+        CREATE_TIME,
+      </if>
+      <if test="updateTime != null" >
+        UPDATE_TIME,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="moxieMobile != null" >
+        #{moxieMobile,jdbcType=VARCHAR},
+      </if>
+      <if test="moxieIdcard != null" >
+        #{moxieIdcard,jdbcType=VARCHAR},
+      </if>
+      <if test="moxieName != null" >
+        #{moxieName,jdbcType=VARCHAR},
+      </if>
+      <if test="moxieContent != null" >
+        #{moxieContent,jdbcType=CHAR},
+      </if>
+      <if test="moxieType != null" >
+        #{moxieType,jdbcType=VARCHAR},
+      </if>
+      <if test="orderId != null" >
+        #{orderId,jdbcType=VARCHAR},
+      </if>
+      <if test="moxieTaskId != null" >
+        #{moxieTaskId,jdbcType=VARCHAR},
+      </if>
+      <if test="moxieStatus != null" >
+        #{moxieStatus,jdbcType=INTEGER},
+      </if>
+      <if test="moxieOnlineUrl != null" >
+        #{moxieOnlineUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="reportTime != null" >
+        #{reportTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.fintech.model.LogMoxieinfo" >
+    update log_moxieinfo
+    <set >
+      <if test="moxieMobile != null" >
+        MOXIE_MOBILE = #{moxieMobile,jdbcType=VARCHAR},
+      </if>
+      <if test="moxieIdcard != null" >
+        MOXIE_IDCARD = #{moxieIdcard,jdbcType=VARCHAR},
+      </if>
+      <if test="moxieName != null" >
+        MOXIE_NAME = #{moxieName,jdbcType=VARCHAR},
+      </if>
+      <if test="moxieContent != null" >
+        MOXIE_CONTENT = #{moxieContent,jdbcType=CHAR},
+      </if>
+      <if test="moxieType != null" >
+        MOXIE_TYPE = #{moxieType,jdbcType=VARCHAR},
+      </if>
+      <if test="orderId != null" >
+        ORDER_ID = #{orderId,jdbcType=VARCHAR},
+      </if>
+      <if test="moxieTaskId != null" >
+        MOXIE_TASK_ID = #{moxieTaskId,jdbcType=VARCHAR},
+      </if>
+      <if test="moxieStatus != null" >
+        MOXIE_STATUS = #{moxieStatus,jdbcType=INTEGER},
+      </if>
+      <if test="moxieOnlineUrl != null" >
+        MOXIE_ONLINE_URL = #{moxieOnlineUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="reportTime != null" >
+        REPORT_TIME = #{reportTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createTime != null" >
+        CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

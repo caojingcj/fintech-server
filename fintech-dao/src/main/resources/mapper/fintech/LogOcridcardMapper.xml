@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.fintech.dao.LogOcridcardMapper" >
+  <resultMap id="BaseResultMap" type="com.fintech.model.LogOcridcard" >
+    <id column="ID" property="id" jdbcType="BIGINT" />
+    <result column="ORDER_ID" property="orderId" jdbcType="VARCHAR" />
+    <result column="OCR_MOBILE" property="ocrMobile" jdbcType="VARCHAR" />
+    <result column="OCR_NAME" property="ocrName" jdbcType="VARCHAR" />
+    <result column="OCR_REQUEST_ID" property="ocrRequestId" jdbcType="VARCHAR" />
+    <result column="OCR_LEGALITY" property="ocrLegality" jdbcType="VARCHAR" />
+    <result column="OCR_SIDE" property="ocrSide" jdbcType="VARCHAR" />
+    <result column="OCR_ID_CARD" property="ocrIdCard" jdbcType="VARCHAR" />
+    <result column="OCR_CONTENT" property="ocrContent" jdbcType="CHAR" />
+    <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, ORDER_ID, OCR_MOBILE, OCR_NAME, OCR_REQUEST_ID, OCR_LEGALITY, OCR_SIDE, OCR_ID_CARD, 
+    OCR_CONTENT, CREATE_TIME, UPDATE_TIME
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from log_ocridcard
+    where ID = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from log_ocridcard
+    where ID = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.fintech.model.LogOcridcard" >
+    insert into log_ocridcard (ID, ORDER_ID, OCR_MOBILE, 
+      OCR_NAME, OCR_REQUEST_ID, OCR_LEGALITY, 
+      OCR_SIDE, OCR_ID_CARD, OCR_CONTENT, 
+      CREATE_TIME, UPDATE_TIME)
+    values (#{id,jdbcType=BIGINT}, #{orderId,jdbcType=VARCHAR}, #{ocrMobile,jdbcType=VARCHAR}, 
+      #{ocrName,jdbcType=VARCHAR}, #{ocrRequestId,jdbcType=VARCHAR}, #{ocrLegality,jdbcType=VARCHAR}, 
+      #{ocrSide,jdbcType=VARCHAR}, #{ocrIdCard,jdbcType=VARCHAR}, #{ocrContent,jdbcType=CHAR}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.fintech.model.LogOcridcard" >
+    insert into log_ocridcard
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="orderId != null" >
+        ORDER_ID,
+      </if>
+      <if test="ocrMobile != null" >
+        OCR_MOBILE,
+      </if>
+      <if test="ocrName != null" >
+        OCR_NAME,
+      </if>
+      <if test="ocrRequestId != null" >
+        OCR_REQUEST_ID,
+      </if>
+      <if test="ocrLegality != null" >
+        OCR_LEGALITY,
+      </if>
+      <if test="ocrSide != null" >
+        OCR_SIDE,
+      </if>
+      <if test="ocrIdCard != null" >
+        OCR_ID_CARD,
+      </if>
+      <if test="ocrContent != null" >
+        OCR_CONTENT,
+      </if>
+      <if test="createTime != null" >
+        CREATE_TIME,
+      </if>
+      <if test="updateTime != null" >
+        UPDATE_TIME,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="orderId != null" >
+        #{orderId,jdbcType=VARCHAR},
+      </if>
+      <if test="ocrMobile != null" >
+        #{ocrMobile,jdbcType=VARCHAR},
+      </if>
+      <if test="ocrName != null" >
+        #{ocrName,jdbcType=VARCHAR},
+      </if>
+      <if test="ocrRequestId != null" >
+        #{ocrRequestId,jdbcType=VARCHAR},
+      </if>
+      <if test="ocrLegality != null" >
+        #{ocrLegality,jdbcType=VARCHAR},
+      </if>
+      <if test="ocrSide != null" >
+        #{ocrSide,jdbcType=VARCHAR},
+      </if>
+      <if test="ocrIdCard != null" >
+        #{ocrIdCard,jdbcType=VARCHAR},
+      </if>
+      <if test="ocrContent != null" >
+        #{ocrContent,jdbcType=CHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.fintech.model.LogOcridcard" >
+    update log_ocridcard
+    <set >
+      <if test="orderId != null" >
+        ORDER_ID = #{orderId,jdbcType=VARCHAR},
+      </if>
+      <if test="ocrMobile != null" >
+        OCR_MOBILE = #{ocrMobile,jdbcType=VARCHAR},
+      </if>
+      <if test="ocrName != null" >
+        OCR_NAME = #{ocrName,jdbcType=VARCHAR},
+      </if>
+      <if test="ocrRequestId != null" >
+        OCR_REQUEST_ID = #{ocrRequestId,jdbcType=VARCHAR},
+      </if>
+      <if test="ocrLegality != null" >
+        OCR_LEGALITY = #{ocrLegality,jdbcType=VARCHAR},
+      </if>
+      <if test="ocrSide != null" >
+        OCR_SIDE = #{ocrSide,jdbcType=VARCHAR},
+      </if>
+      <if test="ocrIdCard != null" >
+        OCR_ID_CARD = #{ocrIdCard,jdbcType=VARCHAR},
+      </if>
+      <if test="ocrContent != null" >
+        OCR_CONTENT = #{ocrContent,jdbcType=CHAR},
+      </if>
+      <if test="createTime != null" >
+        CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.fintech.model.LogOcridcard" >
+    update log_ocridcard
+    set ORDER_ID = #{orderId,jdbcType=VARCHAR},
+      OCR_MOBILE = #{ocrMobile,jdbcType=VARCHAR},
+      OCR_NAME = #{ocrName,jdbcType=VARCHAR},
+      OCR_REQUEST_ID = #{ocrRequestId,jdbcType=VARCHAR},
+      OCR_LEGALITY = #{ocrLegality,jdbcType=VARCHAR},
+      OCR_SIDE = #{ocrSide,jdbcType=VARCHAR},
+      OCR_ID_CARD = #{ocrIdCard,jdbcType=VARCHAR},
+      OCR_CONTENT = #{ocrContent,jdbcType=CHAR},
+      CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+    where ID = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

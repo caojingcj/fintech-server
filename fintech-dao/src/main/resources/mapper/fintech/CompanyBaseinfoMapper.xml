@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.fintech.dao.CompanyBaseinfoMapper" >
+  <resultMap id="BaseResultMap" type="com.fintech.model.CompanyBaseinfo" >
+    <id column="COMPANY_ID" property="companyId" jdbcType="CHAR" />
+    <result column="COMPANY_NAME" property="companyName" jdbcType="VARCHAR" />
+    <result column="COMPANY_TYPE" property="companyType" jdbcType="CHAR" />
+    <result column="COMPANY_STATUS" property="companyStatus" jdbcType="CHAR" />
+    <result column="COMPANY_ADDR_PROVINCE" property="companyAddrProvince" jdbcType="INTEGER" />
+    <result column="COMPANY_ADDR_CITY" property="companyAddrCity" jdbcType="INTEGER" />
+    <result column="COMPANY_ADDR_DISTRICT" property="companyAddrDistrict" jdbcType="INTEGER" />
+    <result column="COMPANY_ADDR" property="companyAddr" jdbcType="VARCHAR" />
+    <result column="COMPANY_USCC" property="companyUscc" jdbcType="CHAR" />
+    <result column="COMPANY_FULL_NAME" property="companyFullName" jdbcType="VARCHAR" />
+    <result column="CORPORATE_NAME" property="corporateName" jdbcType="VARCHAR" />
+    <result column="CORPORATE_ID_CODE" property="corporateIdCode" jdbcType="VARCHAR" />
+    <result column="WEIXIN_CODE_URL" property="weixinCodeUrl" jdbcType="VARCHAR" />
+    <result column="CORPORATE_PHONE" property="corporatePhone" jdbcType="CHAR" />
+    <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="UPDATETIME" property="updatetime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    COMPANY_ID, COMPANY_NAME, COMPANY_TYPE, COMPANY_STATUS, COMPANY_ADDR_PROVINCE, COMPANY_ADDR_CITY, 
+    COMPANY_ADDR_DISTRICT, COMPANY_ADDR, COMPANY_USCC, COMPANY_FULL_NAME, CORPORATE_NAME, 
+    CORPORATE_ID_CODE, CORPORATE_PHONE, CREATE_TIME, UPDATETIME,WEIXIN_CODE_URL
+  </sql>
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap"  parameterType="java.util.Map">
+    select 
+    <include refid="Base_Column_List" />
+    from company_baseinfo
+    where COMPANY_ID =#{companyId,jdbcType=CHAR}
+  </select>
+  
+  <select id="selectByPrimaryKeyInfo" resultMap="BaseResultMap"  parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from company_baseinfo
+    where COMPANY_ID =#{companyId,jdbcType=CHAR}
+  </select>
+  
+  
+  <select id="selectByPrimaryKeyList" resultMap="BaseResultMap"  parameterType="java.util.Map">
+    select 
+    <include refid="Base_Column_List" />
+    from company_baseinfo
+    where 1=1
+    <if test="companyIds != null and companyIds !='' ">
+      and m.company_id in
+      <foreach close=")" collection="companyIds" index="index" item="item" open="(" separator=",">
+        #{item}
+      </foreach>
+    </if>
+    <if test="searchObject !=null and searchObject !=''">
+   			AND (COMPANY_ID like CONCAT('%',#{searchObject},'%') or COMPANY_NAME like  CONCAT('%',#{searchObject},'%'))
+    </if>
+     <if test="companyType != null" >
+        AND COMPANY_TYPE=#{companyType}
+      </if>
+     <if test="companyStatus != null" >
+        AND COMPANY_STATUS=#{companyStatus}
+      </if>
+     ORDER BY COMPANY_ID DESC
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from company_baseinfo
+    where COMPANY_ID = #{companyId,jdbcType=CHAR}
+  </delete>
+  <insert id="insert" parameterType="com.fintech.model.CompanyBaseinfo" >
+    insert into company_baseinfo (COMPANY_ID, COMPANY_NAME, COMPANY_TYPE, 
+      COMPANY_STATUS, COMPANY_ADDR_PROVINCE, COMPANY_ADDR_CITY, 
+      COMPANY_ADDR_DISTRICT, COMPANY_ADDR, COMPANY_USCC, 
+      COMPANY_FULL_NAME, CORPORATE_NAME, CORPORATE_ID_CODE, 
+      CORPORATE_PHONE, CREATE_TIME, UPDATETIME
+      )
+    values (#{companyId,jdbcType=CHAR}, #{companyName,jdbcType=VARCHAR}, #{companyType,jdbcType=CHAR}, 
+      #{companyStatus,jdbcType=CHAR}, #{companyAddrProvince,jdbcType=INTEGER}, #{companyAddrCity,jdbcType=INTEGER}, 
+      #{companyAddrDistrict,jdbcType=INTEGER}, #{companyAddr,jdbcType=VARCHAR}, #{companyUscc,jdbcType=CHAR}, 
+      #{companyFullName,jdbcType=VARCHAR}, #{corporateName,jdbcType=VARCHAR}, #{corporateIdCode,jdbcType=VARCHAR}, 
+      #{corporatePhone,jdbcType=CHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updatetime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.fintech.model.CompanyBaseinfo" >
+    insert into company_baseinfo
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="companyId != null" >
+        COMPANY_ID,
+      </if>
+      <if test="companyName != null" >
+        COMPANY_NAME,
+      </if>
+      <if test="companyType != null" >
+        COMPANY_TYPE,
+      </if>
+      <if test="companyStatus != null" >
+        COMPANY_STATUS,
+      </if>
+      <if test="companyAddrProvince != null" >
+        COMPANY_ADDR_PROVINCE,
+      </if>
+      <if test="companyAddrCity != null" >
+        COMPANY_ADDR_CITY,
+      </if>
+      <if test="companyAddrDistrict != null" >
+        COMPANY_ADDR_DISTRICT,
+      </if>
+      <if test="companyAddr != null" >
+        COMPANY_ADDR,
+      </if>
+      <if test="companyUscc != null" >
+        COMPANY_USCC,
+      </if>
+      <if test="companyFullName != null" >
+        COMPANY_FULL_NAME,
+      </if>
+      <if test="corporateName != null" >
+        CORPORATE_NAME,
+      </if>
+      <if test="corporateIdCode != null" >
+        CORPORATE_ID_CODE,
+      </if>
+      <if test="corporatePhone != null" >
+        CORPORATE_PHONE,
+      </if>
+      <if test="createTime != null" >
+        CREATE_TIME,
+      </if>
+      <if test="updatetime != null" >
+        UPDATETIME,
+      </if>
+      <if test="weixinCodeUrl != null" >
+        WEIXIN_CODE_URL,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="companyId != null" >
+        #{companyId,jdbcType=CHAR},
+      </if>
+      <if test="companyName != null" >
+        #{companyName,jdbcType=VARCHAR},
+      </if>
+      <if test="companyType != null" >
+        #{companyType,jdbcType=CHAR},
+      </if>
+      <if test="companyStatus != null" >
+        #{companyStatus,jdbcType=CHAR},
+      </if>
+      <if test="companyAddrProvince != null" >
+        #{companyAddrProvince,jdbcType=INTEGER},
+      </if>
+      <if test="companyAddrCity != null" >
+        #{companyAddrCity,jdbcType=INTEGER},
+      </if>
+      <if test="companyAddrDistrict != null" >
+        #{companyAddrDistrict,jdbcType=INTEGER},
+      </if>
+      <if test="companyAddr != null" >
+        #{companyAddr,jdbcType=VARCHAR},
+      </if>
+      <if test="companyUscc != null" >
+        #{companyUscc,jdbcType=CHAR},
+      </if>
+      <if test="companyFullName != null" >
+        #{companyFullName,jdbcType=VARCHAR},
+      </if>
+      <if test="corporateName != null" >
+        #{corporateName,jdbcType=VARCHAR},
+      </if>
+      <if test="corporateIdCode != null" >
+        #{corporateIdCode,jdbcType=VARCHAR},
+      </if>
+      <if test="corporatePhone != null" >
+        #{corporatePhone,jdbcType=CHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatetime != null" >
+        #{updatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="weixinCodeUrl != null" >
+        #{weixinCodeUrl},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.fintech.model.CompanyBaseinfo" >
+    update company_baseinfo
+    <set >
+      <if test="companyName != null" >
+        COMPANY_NAME = #{companyName,jdbcType=VARCHAR},
+      </if>
+      <if test="companyType != null" >
+        COMPANY_TYPE = #{companyType,jdbcType=CHAR},
+      </if>
+      <if test="companyStatus != null" >
+        COMPANY_STATUS = #{companyStatus,jdbcType=CHAR},
+      </if>
+      <if test="companyAddrProvince != null" >
+        COMPANY_ADDR_PROVINCE = #{companyAddrProvince,jdbcType=INTEGER},
+      </if>
+      <if test="companyAddrCity != null" >
+        COMPANY_ADDR_CITY = #{companyAddrCity,jdbcType=INTEGER},
+      </if>
+      <if test="companyAddrDistrict != null" >
+        COMPANY_ADDR_DISTRICT = #{companyAddrDistrict,jdbcType=INTEGER},
+      </if>
+      <if test="companyAddr != null" >
+        COMPANY_ADDR = #{companyAddr,jdbcType=VARCHAR},
+      </if>
+      <if test="companyUscc != null" >
+        COMPANY_USCC = #{companyUscc,jdbcType=CHAR},
+      </if>
+      <if test="companyFullName != null" >
+        COMPANY_FULL_NAME = #{companyFullName,jdbcType=VARCHAR},
+      </if>
+      <if test="corporateName != null" >
+        CORPORATE_NAME = #{corporateName,jdbcType=VARCHAR},
+      </if>
+      <if test="corporateIdCode != null" >
+        CORPORATE_ID_CODE = #{corporateIdCode,jdbcType=VARCHAR},
+      </if>
+      <if test="corporatePhone != null" >
+        CORPORATE_PHONE = #{corporatePhone,jdbcType=CHAR},
+      </if>
+      <if test="createTime != null" >
+        CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatetime != null" >
+        UPDATETIME = #{updatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="weixinCodeUrl != null" >
+        WEIXIN_CODE_URL = #{weixinCodeUrl},
+      </if>
+    </set>
+    where COMPANY_ID = #{companyId,jdbcType=CHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.fintech.model.CompanyBaseinfo" >
+    update company_baseinfo
+    set COMPANY_NAME = #{companyName,jdbcType=VARCHAR},
+      COMPANY_TYPE = #{companyType,jdbcType=CHAR},
+      COMPANY_STATUS = #{companyStatus,jdbcType=CHAR},
+      COMPANY_ADDR_PROVINCE = #{companyAddrProvince,jdbcType=INTEGER},
+      COMPANY_ADDR_CITY = #{companyAddrCity,jdbcType=INTEGER},
+      COMPANY_ADDR_DISTRICT = #{companyAddrDistrict,jdbcType=INTEGER},
+      COMPANY_ADDR = #{companyAddr,jdbcType=VARCHAR},
+      COMPANY_USCC = #{companyUscc,jdbcType=CHAR},
+      COMPANY_FULL_NAME = #{companyFullName,jdbcType=VARCHAR},
+      CORPORATE_NAME = #{corporateName,jdbcType=VARCHAR},
+      CORPORATE_ID_CODE = #{corporateIdCode,jdbcType=VARCHAR},
+      CORPORATE_PHONE = #{corporatePhone,jdbcType=CHAR},
+      CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      UPDATETIME = #{updatetime,jdbcType=TIMESTAMP}
+    where COMPANY_ID = #{companyId,jdbcType=CHAR}
+  </update>
+  
+</mapper>

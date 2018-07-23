@@ -1,0 +1,134 @@
+<?xml version="1.0"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+   <parent>
+        <artifactId>fintech</artifactId>
+        <groupId>com.fintech</groupId>
+        <version>1.0-SNAPSHOT</version> 
+    </parent>
+     <modelVersion>4.0.0</modelVersion>
+    <artifactId>fintech-service</artifactId>
+    <packaging>jar</packaging>
+  <dependencies>
+  <!-- 子项目引入 -->
+	<dependency>
+		<groupId>com.fintech</groupId>
+		<artifactId>fintech-dao</artifactId>
+	</dependency>
+	<dependency>
+		<groupId>com.fintech</groupId>
+		<artifactId>fintech-util</artifactId>
+	</dependency>
+	<dependency>
+		<groupId>com.fintech</groupId>
+		<artifactId>fintech-model</artifactId>
+	</dependency>
+  
+<dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-test</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-test</artifactId>
+    </dependency>
+ 		<!-- redis -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-redis</artifactId>
+		</dependency>
+    <dependency>
+		<groupId>junit</groupId>
+		<artifactId>junit</artifactId>
+	</dependency>
+		<!-- 契约锁start -->
+		<dependency>
+			<groupId>com.qiyuesuo.sdk</groupId>
+			<artifactId>sdk-java</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.bouncycastle</groupId>
+			<artifactId>bcprov-jdk15on</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.bouncycastle</groupId>
+			<artifactId>bcpkix-jdk15on</artifactId>
+		</dependency>
+		<!-- 契约锁end -->
+		<dependency>
+                <groupId>com.aliyun.oss</groupId>
+                <artifactId>aliyun-sdk-oss</artifactId>
+            </dependency>
+		
+		<dependency>
+			<groupId>commons-fileupload</groupId>
+			<artifactId>commons-fileupload</artifactId>
+		</dependency>
+		 <dependency>
+            <groupId>dom4j</groupId>
+            <artifactId>dom4j</artifactId>
+        </dependency>
+        
+  </dependencies>
+  
+   <profiles>
+        <profile>
+            <id>test</id>
+            <properties>
+                <env>test</env>
+            </properties>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+        </profile>
+        <profile>
+            <id>prod</id>
+            <properties>
+                <env>prod</env>
+            </properties>
+<!--              <activation> -->
+<!--                 <activeByDefault>true</activeByDefault> -->
+<!--             </activation> -->
+        </profile>
+    </profiles>
+
+    <build>
+        <finalName>fintech-service</finalName>
+        <plugins>
+            <!-- 拷贝当前环境文件 -->
+            <plugin>
+                <artifactId>maven-resources-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>copy-resources</id>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.directory}/classes/</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>src/main/resources/config/${env}</directory>
+                                    <filtering>true</filtering>
+                                </resource> 
+                            </resources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+        <!-- 过滤当前环境文件 -->
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <includes>
+                    <include>*.*</include>
+                     <include>**/*.*</include>
+                    <include>templates/**</include>
+                </includes>
+                <filtering>false</filtering>
+            </resource>
+        </resources>
+    </build>
+</project>

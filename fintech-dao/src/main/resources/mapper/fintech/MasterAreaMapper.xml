@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.fintech.dao.MasterAreaMapper" >
+  <resultMap id="BaseResultMap" type="com.fintech.model.MasterArea" >
+    <id column="AREA_ID" property="areaId" jdbcType="INTEGER" />
+    <result column="AREA_NAME" property="areaName" jdbcType="VARCHAR" />
+    <result column="PARENT_AREA_ID" property="parentAreaId" jdbcType="INTEGER" />
+    <result column="AREA_NAME_ABBR" property="areaNameAbbr" jdbcType="VARCHAR" />
+    <result column="AREA_LEVEL" property="areaLevel" jdbcType="CHAR" />
+    <result column="CITY_CODE" property="cityCode" jdbcType="CHAR" />
+    <result column="ZIP_CODE" property="zipCode" jdbcType="CHAR" />
+    <result column="AREA_FULL_NAME" property="areaFullName" jdbcType="VARCHAR" />
+    <result column="AREA_LNG" property="areaLng" jdbcType="VARCHAR" />
+    <result column="AREA_LAT" property="areaLat" jdbcType="VARCHAR" />
+    <result column="AREA_PINYIN" property="areaPinyin" jdbcType="VARCHAR" />
+    <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="UPDATETIME" property="updatetime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    AREA_ID, AREA_NAME, PARENT_AREA_ID, AREA_NAME_ABBR, AREA_LEVEL, CITY_CODE, ZIP_CODE, 
+    AREA_FULL_NAME, AREA_LNG, AREA_LAT, AREA_PINYIN, CREATE_TIME, UPDATETIME
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.util.Map">
+    select 
+    <include refid="Base_Column_List" />
+    from master_area where 1=1
+    <if test="areaId !=null and areaId !=''">
+      AND AREA_ID = #{areaId,jdbcType=INTEGER}
+    </if>
+    <if test="parentAreaId !=null and parentAreaId !=''">
+      AND PARENT_AREA_ID = #{parentAreaId,jdbcType=INTEGER}
+    </if>
+     <if test="areaLevel !=null and areaLevel !=''">
+      AND AREA_LEVEL = #{areaLevel,jdbcType=INTEGER}
+    </if>
+  </select>
+</mapper>

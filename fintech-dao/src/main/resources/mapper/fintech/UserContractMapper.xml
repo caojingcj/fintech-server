@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.fintech.dao.UserContractMapper" >
+  <resultMap id="BaseResultMap" type="com.fintech.model.UserContract" >
+    <id column="CONTRACT_ID" property="contractId" jdbcType="VARCHAR" />
+    <result column="ORDER_ID" property="orderId" jdbcType="VARCHAR" />
+    <result column="CUST_CELLPHONE" property="custCellphone" jdbcType="CHAR" />
+    <result column="CUST_REALNAME" property="custRealname" jdbcType="VARCHAR" />
+    <result column="CUST_ID_CARD_NO" property="custIdCardNo" jdbcType="VARCHAR" />
+    <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="UPDATETIME" property="updatetime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    CONTRACT_ID, ORDER_ID, CUST_CELLPHONE, CUST_REALNAME, CUST_ID_CARD_NO, CREATE_TIME, 
+    UPDATETIME
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from user_contract
+    where CONTRACT_ID = #{contractId,jdbcType=VARCHAR}
+  </select>
+  <select id="selectByOrderId" resultMap="BaseResultMap" parameterType="java.util.Map" >
+    select 
+    <include refid="Base_Column_List" />
+    from user_contract
+    where ORDER_ID = #{orderId,jdbcType=VARCHAR}  order by CREATE_TIME desc LIMIT 1
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from user_contract
+    where CONTRACT_ID = #{contractId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.fintech.model.UserContract" >
+    insert into user_contract (CONTRACT_ID, ORDER_ID, CUST_CELLPHONE, 
+      CUST_REALNAME, CUST_ID_CARD_NO, CREATE_TIME, 
+      UPDATETIME)
+    values (#{contractId,jdbcType=VARCHAR}, #{orderId,jdbcType=VARCHAR}, #{custCellphone,jdbcType=CHAR}, 
+      #{custRealname,jdbcType=VARCHAR}, #{custIdCardNo,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updatetime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.fintech.model.UserContract" >
+    insert into user_contract
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="contractId != null" >
+        CONTRACT_ID,
+      </if>
+      <if test="orderId != null" >
+        ORDER_ID,
+      </if>
+      <if test="custCellphone != null" >
+        CUST_CELLPHONE,
+      </if>
+      <if test="custRealname != null" >
+        CUST_REALNAME,
+      </if>
+      <if test="custIdCardNo != null" >
+        CUST_ID_CARD_NO,
+      </if>
+      <if test="createTime != null" >
+        CREATE_TIME,
+      </if>
+      <if test="updatetime != null" >
+        UPDATETIME,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="contractId != null" >
+        #{contractId,jdbcType=VARCHAR},
+      </if>
+      <if test="orderId != null" >
+        #{orderId,jdbcType=VARCHAR},
+      </if>
+      <if test="custCellphone != null" >
+        #{custCellphone,jdbcType=CHAR},
+      </if>
+      <if test="custRealname != null" >
+        #{custRealname,jdbcType=VARCHAR},
+      </if>
+      <if test="custIdCardNo != null" >
+        #{custIdCardNo,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatetime != null" >
+        #{updatetime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.fintech.model.UserContract" >
+    update user_contract
+    <set >
+      <if test="orderId != null" >
+        ORDER_ID = #{orderId,jdbcType=VARCHAR},
+      </if>
+      <if test="custCellphone != null" >
+        CUST_CELLPHONE = #{custCellphone,jdbcType=CHAR},
+      </if>
+      <if test="custRealname != null" >
+        CUST_REALNAME = #{custRealname,jdbcType=VARCHAR},
+      </if>
+      <if test="custIdCardNo != null" >
+        CUST_ID_CARD_NO = #{custIdCardNo,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatetime != null" >
+        UPDATETIME = #{updatetime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where CONTRACT_ID = #{contractId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.fintech.model.UserContract" >
+    update user_contract
+    set ORDER_ID = #{orderId,jdbcType=VARCHAR},
+      CUST_CELLPHONE = #{custCellphone,jdbcType=CHAR},
+      CUST_REALNAME = #{custRealname,jdbcType=VARCHAR},
+      CUST_ID_CARD_NO = #{custIdCardNo,jdbcType=VARCHAR},
+      CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      UPDATETIME = #{updatetime,jdbcType=TIMESTAMP}
+    where CONTRACT_ID = #{contractId,jdbcType=VARCHAR}
+  </update>
+</mapper>

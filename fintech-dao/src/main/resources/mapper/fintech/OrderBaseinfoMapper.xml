@@ -1,0 +1,343 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.fintech.dao.OrderBaseinfoMapper" >
+  <resultMap id="BaseResultMap" type="com.fintech.model.OrderBaseinfo" >
+    <id column="ORDER_ID" property="orderId" jdbcType="VARCHAR" />
+    <result column="CUST_CELLPHONE" property="custCellphone" jdbcType="CHAR" />
+    <result column="CUST_REALNAME" property="custRealname" jdbcType="VARCHAR" />
+    <result column="CUST_ID_CARD_NO" property="custIdCardNo" jdbcType="VARCHAR" />
+    <result column="ORDER_STATUS" property="orderStatus" jdbcType="CHAR" />
+    <result column="IS_ASSURE" property="isAssure" jdbcType="BIT" />
+    <result column="COMPANY_ID" property="companyId" jdbcType="CHAR" />
+    <result column="COMPANY_NAME" property="companyName" jdbcType="VARCHAR" />
+    <result column="ITEM_CODE" property="itemCode" jdbcType="CHAR" />
+    <result column="ITEM_NAME" property="itemName" jdbcType="VARCHAR" />
+    <result column="TOTAL_PERIOD" property="totalPeriod" jdbcType="INTEGER" />
+    <result column="ORDER_AMOUNT" property="orderAmount" jdbcType="DECIMAL" />
+    <result column="CONTRACT_ID" property="contractId" jdbcType="VARCHAR" />
+    <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="UPDATETIME" property="updatetime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ORDER_ID, CUST_CELLPHONE, CUST_REALNAME, CUST_ID_CARD_NO, ORDER_STATUS, IS_ASSURE, 
+    COMPANY_ID, COMPANY_NAME, ITEM_CODE, ITEM_NAME, TOTAL_PERIOD, ORDER_AMOUNT, CONTRACT_ID, 
+    CREATE_TIME, UPDATETIME
+  </sql>
+  
+   <resultMap id="BaseResultMapVo" type="com.fintech.model.vo.OrderBaseinfoVo" >
+    <id column="ORDER_ID" property="orderId" jdbcType="VARCHAR" />
+    <result column="CUST_CELLPHONE" property="custCellphone" jdbcType="CHAR" />
+    <result column="CUST_REALNAME" property="custRealname" jdbcType="VARCHAR" />
+    <result column="CUST_ID_CARD_NO" property="custIdCardNo" jdbcType="VARCHAR" />
+    <result column="ORDER_STATUS" property="orderStatus" jdbcType="CHAR" />
+    <result column="IS_ASSURE" property="isAssure" jdbcType="BIT" />
+    <result column="COMPANY_ID" property="companyId" jdbcType="CHAR" />
+    <result column="COMPANY_NAME" property="companyName" jdbcType="VARCHAR" />
+    <result column="ITEM_CODE" property="itemCode" jdbcType="CHAR" />
+    <result column="ITEM_NAME" property="itemName" jdbcType="VARCHAR" />
+    <result column="TOTAL_PERIOD" property="totalPeriod" jdbcType="INTEGER" />
+    <result column="ORDER_AMOUNT" property="orderAmount" jdbcType="DECIMAL" />
+    <result column="CONTRACT_ID" property="contractId" jdbcType="VARCHAR" />
+    <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="UPDATETIME" property="updatetime" jdbcType="TIMESTAMP" />
+    <result column="ORDER_OPERATION" property="orderOperation" jdbcType="VARCHAR" />
+    <result column="COMPANY_CHANNEL_NAME" property="companyChannelName" jdbcType="VARCHAR" />
+  </resultMap>
+  <select id="selectByPrimaryKeyList" resultMap="BaseResultMapVo" parameterType="java.util.Map"  >
+    select 
+    baseinfo.ORDER_ID, baseinfo.CUST_CELLPHONE, baseinfo.CUST_REALNAME, baseinfo.CUST_ID_CARD_NO, baseinfo.ORDER_STATUS, baseinfo.IS_ASSURE, 
+    baseinfo.COMPANY_ID, baseinfo.COMPANY_NAME, baseinfo.ITEM_CODE, baseinfo.ITEM_NAME, baseinfo.TOTAL_PERIOD, baseinfo.ORDER_AMOUNT, baseinfo.CONTRACT_ID, 
+    baseinfo.CREATE_TIME, baseinfo.UPDATETIME,detailinfo.COMPANY_CHANNEL_NAME
+    from order_baseinfo baseinfo left join order_detailinfo detailinfo on baseinfo.order_id=detailinfo.order_id
+    where 1=1
+    <if test="custCellphone != null and custCellphone !=''">
+    	and baseinfo.CUST_CELLPHONE=#{custCellphone}
+    </if>
+     <if test="contractId != null and contractId !=''">
+    	and  baseinfo.CONTRACT_ID=#{contractId}
+    </if>
+    <if test="orderStatus != null and orderStatus !=''">
+    	and  baseinfo.ORDER_STATUS=#{orderStatus}
+    </if>
+    <if test="companyId != 'ALL'.toString() and companyId != null and companyId !=''">
+    	and  baseinfo.COMPANY_ID=#{companyId}
+    </if>
+    <if test="isAssure != null and isAssure !=''">
+    	and  baseinfo.IS_ASSURE=#{isAssure}
+    </if>
+    <if test="searchOrderName !=null and searchOrderName !=''">
+   			AND ( baseinfo.CUST_REALNAME like CONCAT('%',#{searchOrderName},'%') or  baseinfo.CUST_CELLPHONE like  CONCAT('%',#{searchOrderName},'%' ) or  baseinfo.CONTRACT_ID like  CONCAT('%',#{searchOrderName},'%' ))
+    </if>
+        <if test="searchCompanyName !=null and searchCompanyName !=''">
+   			AND ( baseinfo.COMPANY_ID like CONCAT('%',#{searchCompanyName},'%') or  baseinfo.COMPANY_NAME like  CONCAT('%',#{searchCompanyName},'%'))
+    </if>
+    <if test="beginDate !=null and beginDate !=''">
+      and  baseinfo.CREATE_TIME &gt;=DATE_FORMAT(#{beginDate},'%Y-%m-%d')
+    </if>
+    <if test="endDate !=null and endDate !=''">
+      and  baseinfo.CREATE_TIME &lt;= DATE_FORMAT(DATE_SUB(#{endDate},INTERVAL -1 DAY),'%Y-%m-%d')
+    </if>
+    order by  baseinfo.create_time desc
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String"  >
+    select 
+    <include refid="Base_Column_List" />
+    from order_baseinfo
+    where ORDER_ID = #{orderId,jdbcType=VARCHAR}
+  </select>
+  <select id="selectByPrimaryKeySelective" resultMap="BaseResultMap" parameterType="java.util.Map">
+    select 
+    <include refid="Base_Column_List" />
+    from order_baseinfo
+    where 1=1
+     <if test="custCellphone != null and custCellphone !=''">
+    	and CUST_CELLPHONE=#{custCellphone}
+    </if>
+    <if test="orderStatus != null and orderStatus !=''">
+    	and ORDER_STATUS=#{orderStatus}
+    </if>
+  </select>
+  
+  <select id="selectByPrimaryKeyWx" resultMap="BaseResultMap" parameterType="java.util.Map">
+    select 
+    <include refid="Base_Column_List" />
+    from order_baseinfo
+    where  CUST_CELLPHONE=#{custCellphone} and ORDER_STATUS  in (00,01,02,04)
+  </select>
+  
+  
+  <select id="selectOrderStatusCount" resultType="java.lang.Integer"  parameterType="java.lang.String" >
+    select count(*) from order_baseinfo where (ORDER_STATUS=01 or ORDER_STATUS=04) and CUST_CELLPHONE=#{custCellphone}
+  </select>
+  
+  
+  <select id="selectByOrderAmountJudge" resultType="java.util.HashMap" parameterType="java.lang.String">
+  SELECT
+CASE
+	a.amount 
+	WHEN a.amount > 0 THEN
+	1 ELSE 0 
+	END as amount,
+	a.statusCount 
+FROM
+	(
+SELECT
+	sum( ORDER_AMOUNT ) > 500000 AS amount,
+	count( ORDER_STATUS = 05 ) AS statusCount 
+FROM
+	order_baseinfo 
+WHERE
+	CUST_CELLPHONE = #{custCellphone} 
+	AND ORDER_STATUS = 05 
+	) a
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from order_baseinfo
+    where ORDER_ID = #{orderId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.fintech.model.OrderBaseinfo" >
+    insert into order_baseinfo (ORDER_ID, CUST_CELLPHONE, CUST_REALNAME, 
+      CUST_ID_CARD_NO, ORDER_STATUS, IS_ASSURE, 
+      COMPANY_ID, COMPANY_NAME, ITEM_CODE, 
+      ITEM_NAME, TOTAL_PERIOD, ORDER_AMOUNT, 
+      CONTRACT_ID, CREATE_TIME, UPDATETIME
+      )
+    values (#{orderId,jdbcType=VARCHAR}, #{custCellphone,jdbcType=CHAR}, #{custRealname,jdbcType=VARCHAR}, 
+      #{custIdCardNo,jdbcType=VARCHAR}, #{orderStatus,jdbcType=CHAR}, #{isAssure,jdbcType=BIT}, 
+      #{companyId,jdbcType=CHAR}, #{companyName,jdbcType=VARCHAR}, #{itemCode,jdbcType=CHAR}, 
+      #{itemName,jdbcType=VARCHAR}, #{totalPeriod,jdbcType=INTEGER}, #{orderAmount,jdbcType=DECIMAL}, 
+      #{contractId,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updatetime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.fintech.model.OrderBaseinfo" >
+    insert into order_baseinfo
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="orderId != null" >
+        ORDER_ID,
+      </if>
+      <if test="custCellphone != null" >
+        CUST_CELLPHONE,
+      </if>
+      <if test="custRealname != null" >
+        CUST_REALNAME,
+      </if>
+      <if test="custIdCardNo != null" >
+        CUST_ID_CARD_NO,
+      </if>
+      <if test="orderStatus != null" >
+        ORDER_STATUS,
+      </if>
+      <if test="isAssure != null" >
+        IS_ASSURE,
+      </if>
+      <if test="companyId != null" >
+        COMPANY_ID,
+      </if>
+      <if test="companyName != null" >
+        COMPANY_NAME,
+      </if>
+      <if test="itemCode != null" >
+        ITEM_CODE,
+      </if>
+      <if test="itemName != null" >
+        ITEM_NAME,
+      </if>
+      <if test="totalPeriod != null" >
+        TOTAL_PERIOD,
+      </if>
+      <if test="orderAmount != null" >
+        ORDER_AMOUNT,
+      </if>
+      <if test="contractId != null" >
+        CONTRACT_ID,
+      </if>
+      <if test="createTime != null" >
+        CREATE_TIME,
+      </if>
+      <if test="updatetime != null" >
+        UPDATETIME,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="orderId != null" >
+        #{orderId,jdbcType=VARCHAR},
+      </if>
+      <if test="custCellphone != null" >
+        #{custCellphone,jdbcType=CHAR},
+      </if>
+      <if test="custRealname != null" >
+        #{custRealname,jdbcType=VARCHAR},
+      </if>
+      <if test="custIdCardNo != null" >
+        #{custIdCardNo,jdbcType=VARCHAR},
+      </if>
+      <if test="orderStatus != null" >
+        #{orderStatus,jdbcType=CHAR},
+      </if>
+      <if test="isAssure != null" >
+        #{isAssure,jdbcType=BIT},
+      </if>
+      <if test="companyId != null" >
+        #{companyId,jdbcType=CHAR},
+      </if>
+      <if test="companyName != null" >
+        #{companyName,jdbcType=VARCHAR},
+      </if>
+      <if test="itemCode != null" >
+        #{itemCode,jdbcType=CHAR},
+      </if>
+      <if test="itemName != null" >
+        #{itemName,jdbcType=VARCHAR},
+      </if>
+      <if test="totalPeriod != null" >
+        #{totalPeriod,jdbcType=INTEGER},
+      </if>
+      <if test="orderAmount != null" >
+        #{orderAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="contractId != null" >
+        #{contractId,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatetime != null" >
+        #{updatetime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.fintech.model.OrderBaseinfo" >
+    update order_baseinfo
+    <set >
+      <if test="custCellphone != null" >
+        CUST_CELLPHONE = #{custCellphone,jdbcType=CHAR},
+      </if>
+      <if test="custRealname != null" >
+        CUST_REALNAME = #{custRealname,jdbcType=VARCHAR},
+      </if>
+      <if test="custIdCardNo != null" >
+        CUST_ID_CARD_NO = #{custIdCardNo,jdbcType=VARCHAR},
+      </if>
+      <if test="orderStatus != null" >
+        ORDER_STATUS = #{orderStatus,jdbcType=CHAR},
+      </if>
+      <if test="isAssure != null" >
+        IS_ASSURE = #{isAssure,jdbcType=BIT},
+      </if>
+      <if test="companyId != null" >
+        COMPANY_ID = #{companyId,jdbcType=CHAR},
+      </if>
+      <if test="companyName != null" >
+        COMPANY_NAME = #{companyName,jdbcType=VARCHAR},
+      </if>
+      <if test="itemCode != null" >
+        ITEM_CODE = #{itemCode,jdbcType=CHAR},
+      </if>
+      <if test="itemName != null" >
+        ITEM_NAME = #{itemName,jdbcType=VARCHAR},
+      </if>
+      <if test="totalPeriod != null" >
+        TOTAL_PERIOD = #{totalPeriod,jdbcType=INTEGER},
+      </if>
+      <if test="orderAmount != null" >
+        ORDER_AMOUNT = #{orderAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="contractId != null" >
+        CONTRACT_ID = #{contractId,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatetime != null" >
+        UPDATETIME = #{updatetime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where ORDER_ID = #{orderId,jdbcType=VARCHAR}
+  </update>
+  
+   <select id="selectQuarteCancelOrder" resultMap="BaseResultMap" >
+    select 
+    <include refid="Base_Column_List" />
+    from order_baseinfo where to_days(CREATE_TIME) - to_days(now()) and ORDER_STATUS=00;
+  </select>
+  
+   <select id="selectQuarteOrderStatus04" resultMap="BaseResultMap" >
+    select 
+    <include refid="Base_Column_List" />
+    from order_baseinfo WHERE DATEDIFF(CREATE_TIME,NOW())=-3 and ORDER_STATUS=04
+  </select>
+  
+   <select id="selectScanPiece" resultMap="BaseResultMap" parameterType="java.util.Map">
+    select 
+    <include refid="Base_Column_List" />
+    from order_baseinfo
+    where CUST_CELLPHONE=#{custCellphone} and ORDER_STATUS=#{orderStatus}
+  </select>
+  
+  <select id="selectOrderBaseInfoTotalByToday" resultType="java.util.Map" parameterType="java.util.Map">
+	    SELECT
+		'总计' companyName,
+		ifnull(sum( o.ORDER_AMOUNT ), 0 ) AS targetMoney,
+		ifnull( sum( CASE o.ORDER_STATUS WHEN 05 THEN o.ORDER_AMOUNT ELSE 0 END ), 0 ) successLoansMoney,
+		ifnull( sum( CASE o.ORDER_STATUS WHEN 05 THEN 1 ELSE 0 END ), 0 ) successCount,
+		ifnull( sum( CASE o.ORDER_STATUS WHEN 03 THEN o.ORDER_AMOUNT ELSE 0 END ), 0 ) refuseMoney,
+		ifnull( sum( CASE o.ORDER_STATUS WHEN 03 THEN 1 ELSE 0 END ), 0 ) refuseCount,
+		ifnull( sum( CASE WHEN o.ORDER_STATUS IN ( 05, 03 ) THEN 1 ELSE 0 END ), 0 ) reqCount 
+        from order_baseinfo o where 1=1
+        <if test="beginDate != null and beginDate !=''">
+            and o.CREATE_TIME >=DATE_FORMAT(DATE_SUB(#{beginDate},INTERVAL 0 DAY),'%Y-%m-%d')
+        </if>
+        <if test="endDate != null and endDate !=''">
+            and o.CREATE_TIME &lt;= DATE_FORMAT(DATE_SUB(#{endDate},INTERVAL -1 DAY),'%Y-%m-%d')
+        </if>
+        <if test="companyId != null and companyId !=''">
+            and COMPANY_ID=#{companyId}
+        </if>
+    </select>
+  
+  <select id="countOrderByStatus" resultType="java.lang.Integer">
+       select count(*) from order_baseinfo where COMPANY_ID = #{companyId} and ORDER_STATUS in (00,01,02,04)
+  </select>
+  
+</mapper>

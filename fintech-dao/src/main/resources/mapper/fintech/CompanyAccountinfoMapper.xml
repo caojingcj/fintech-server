@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.fintech.dao.CompanyAccountinfoMapper" >
+  <resultMap id="BaseResultMap" type="com.fintech.model.CompanyAccountinfo" >
+    <id column="ID" property="id" jdbcType="INTEGER" />
+    <result column="COMPANY_ID" property="companyId" jdbcType="CHAR" />
+    <result column="COMPANY_ACCOUNT_NAME" property="companyAccountName" jdbcType="VARCHAR" />
+    <result column="COMPANY_ACCOUNT_NO" property="companyAccountNo" jdbcType="VARCHAR" />
+    <result column="COMPANY_ACCOUNT_BRANCH" property="companyAccountBranch" jdbcType="VARCHAR" />
+    <result column="ACCOUNT_TYPE" property="accountType" jdbcType="CHAR" />
+    <result column="IS_ENABLED" property="isEnabled" jdbcType="BIT" />
+    <result column="BANK_CODE" property="bankCode" jdbcType="CHAR" />
+    <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="UPDATETIME" property="updatetime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, COMPANY_ID, COMPANY_ACCOUNT_NAME, COMPANY_ACCOUNT_NO, COMPANY_ACCOUNT_BRANCH, 
+    ACCOUNT_TYPE, IS_ENABLED, BANK_CODE, CREATE_TIME, UPDATETIME
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap"  parameterType="java.util.Map">
+    select 
+    <include refid="Base_Column_List" />
+    from company_accountinfo
+    where COMPANY_ID = #{companyId} and IS_ENABLED=1 order by CREATE_TIME desc limit 1 
+  </select>
+  
+  <select id="selectByPrimaryKeyList" resultMap="BaseResultMap"  parameterType="java.util.Map">
+    select 
+    <include refid="Base_Column_List" />
+    from company_accountinfo
+    where 
+    <if test="id != null" >
+    ID = #{id,jdbcType=INTEGER}
+    </if>
+    <if test="companyId != null" >
+    COMPANY_ID = #{companyId}
+      </if>
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from company_accountinfo
+    where ID = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.fintech.model.CompanyAccountinfo" >
+    insert into company_accountinfo (ID, COMPANY_ID, COMPANY_ACCOUNT_NAME, 
+      COMPANY_ACCOUNT_NO, COMPANY_ACCOUNT_BRANCH, 
+      ACCOUNT_TYPE, IS_ENABLED, BANK_CODE, 
+      CREATE_TIME, UPDATETIME)
+    values (#{id,jdbcType=INTEGER}, #{companyId,jdbcType=CHAR}, #{companyAccountName,jdbcType=VARCHAR}, 
+      #{companyAccountNo,jdbcType=VARCHAR}, #{companyAccountBranch,jdbcType=VARCHAR}, 
+      #{accountType,jdbcType=CHAR}, #{isEnabled,jdbcType=BIT}, #{bankCode,jdbcType=CHAR}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updatetime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.fintech.model.CompanyAccountinfo" >
+    insert into company_accountinfo
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="companyId != null" >
+        COMPANY_ID,
+      </if>
+      <if test="companyAccountName != null" >
+        COMPANY_ACCOUNT_NAME,
+      </if>
+      <if test="companyAccountNo != null" >
+        COMPANY_ACCOUNT_NO,
+      </if>
+      <if test="companyAccountBranch != null" >
+        COMPANY_ACCOUNT_BRANCH,
+      </if>
+      <if test="accountType != null" >
+        ACCOUNT_TYPE,
+      </if>
+      <if test="isEnabled != null" >
+        IS_ENABLED,
+      </if>
+      <if test="bankCode != null" >
+        BANK_CODE,
+      </if>
+      <if test="createTime != null" >
+        CREATE_TIME,
+      </if>
+      <if test="updatetime != null" >
+        UPDATETIME,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="companyId != null" >
+        #{companyId,jdbcType=CHAR},
+      </if>
+      <if test="companyAccountName != null" >
+        #{companyAccountName,jdbcType=VARCHAR},
+      </if>
+      <if test="companyAccountNo != null" >
+        #{companyAccountNo,jdbcType=VARCHAR},
+      </if>
+      <if test="companyAccountBranch != null" >
+        #{companyAccountBranch,jdbcType=VARCHAR},
+      </if>
+      <if test="accountType != null" >
+        #{accountType,jdbcType=CHAR},
+      </if>
+      <if test="isEnabled != null" >
+        #{isEnabled,jdbcType=BIT},
+      </if>
+      <if test="bankCode != null" >
+        #{bankCode,jdbcType=CHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatetime != null" >
+        #{updatetime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.fintech.model.CompanyAccountinfo" >
+    update company_accountinfo
+    <set >
+      <if test="companyId != null" >
+        COMPANY_ID = #{companyId,jdbcType=CHAR},
+      </if>
+      <if test="companyAccountName != null" >
+        COMPANY_ACCOUNT_NAME = #{companyAccountName,jdbcType=VARCHAR},
+      </if>
+      <if test="companyAccountNo != null" >
+        COMPANY_ACCOUNT_NO = #{companyAccountNo,jdbcType=VARCHAR},
+      </if>
+      <if test="companyAccountBranch != null" >
+        COMPANY_ACCOUNT_BRANCH = #{companyAccountBranch,jdbcType=VARCHAR},
+      </if>
+      <if test="accountType != null" >
+        ACCOUNT_TYPE = #{accountType,jdbcType=CHAR},
+      </if>
+      <if test="isEnabled != null" >
+        IS_ENABLED = #{isEnabled,jdbcType=BIT},
+      </if>
+      <if test="bankCode != null" >
+        BANK_CODE = #{bankCode,jdbcType=CHAR},
+      </if>
+      <if test="createTime != null" >
+        CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatetime != null" >
+        UPDATETIME = #{updatetime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.fintech.model.CompanyAccountinfo" >
+    update company_accountinfo
+    set COMPANY_ID = #{companyId,jdbcType=CHAR},
+      COMPANY_ACCOUNT_NAME = #{companyAccountName,jdbcType=VARCHAR},
+      COMPANY_ACCOUNT_NO = #{companyAccountNo,jdbcType=VARCHAR},
+      COMPANY_ACCOUNT_BRANCH = #{companyAccountBranch,jdbcType=VARCHAR},
+      ACCOUNT_TYPE = #{accountType,jdbcType=CHAR},
+      IS_ENABLED = #{isEnabled,jdbcType=BIT},
+      BANK_CODE = #{bankCode,jdbcType=CHAR},
+      CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      UPDATETIME = #{updatetime,jdbcType=TIMESTAMP}
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <select id="count" resultType="java.lang.Integer">
+  select count(*) from company_accountinfo where COMPANY_ID = #{companyId} and IS_ENABLED=1
+  </select>
+</mapper>

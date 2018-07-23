@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.fintech.dao.CompanyPeriodFeeMapper" >
+  <resultMap id="BaseResultMap" type="com.fintech.model.CompanyPeriodFee" >
+    <id column="ID" property="id" jdbcType="INTEGER" />
+    <result column="COMPANY_ID" property="companyId" jdbcType="CHAR" />
+    <result column="PERIOD" property="period" jdbcType="INTEGER" />
+    <result column="RATE_TOTAL" property="rateTotal" jdbcType="DECIMAL" />
+    <result column="RATE_MANAGE" property="rateManage" jdbcType="DECIMAL" />
+    <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="UPDATETIME" property="updatetime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, COMPANY_ID, PERIOD, RATE_TOTAL, RATE_MANAGE, CREATE_TIME, UPDATETIME
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.util.Map">
+    select 
+    <include refid="Base_Column_List" />
+    from company_period_fee
+    where COMPANY_ID =#{companyId,jdbcType=CHAR}
+  </select>
+  <select id="selectByPrimaryKeyList" resultMap="BaseResultMap" parameterType="java.util.Map">
+    select 
+    <include refid="Base_Column_List" />
+    from company_period_fee
+    where COMPANY_ID =#{companyId,jdbcType=CHAR}
+  </select>
+  
+  <select id="selectByCompanyIdAndPeriod" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from company_period_fee
+    where COMPANY_ID =#{arg0}
+      and PERIOD =#{arg1}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from company_period_fee
+    where ID = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.fintech.model.CompanyPeriodFee" >
+    insert into company_period_fee (ID, COMPANY_ID, PERIOD, 
+      RATE_TOTAL, RATE_MANAGE, CREATE_TIME, 
+      UPDATETIME)
+    values (#{id,jdbcType=INTEGER}, #{companyId,jdbcType=CHAR}, #{period,jdbcType=INTEGER}, 
+      #{rateTotal,jdbcType=DECIMAL}, #{rateManage,jdbcType=DECIMAL}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updatetime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.fintech.model.CompanyPeriodFee" >
+    insert into company_period_fee
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="companyId != null" >
+        COMPANY_ID,
+      </if>
+      <if test="period != null" >
+        PERIOD,
+      </if>
+      <if test="rateTotal != null" >
+        RATE_TOTAL,
+      </if>
+      <if test="rateManage != null" >
+        RATE_MANAGE,
+      </if>
+      <if test="createTime != null" >
+        CREATE_TIME,
+      </if>
+      <if test="updatetime != null" >
+        UPDATETIME,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="companyId != null" >
+        #{companyId,jdbcType=CHAR},
+      </if>
+      <if test="period != null" >
+        #{period,jdbcType=INTEGER},
+      </if>
+      <if test="rateTotal != null" >
+        #{rateTotal,jdbcType=DECIMAL},
+      </if>
+      <if test="rateManage != null" >
+        #{rateManage,jdbcType=DECIMAL},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatetime != null" >
+        #{updatetime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.fintech.model.CompanyPeriodFee" >
+    update company_period_fee
+    <set >
+      <if test="companyId != null" >
+        COMPANY_ID = #{companyId,jdbcType=CHAR},
+      </if>
+      <if test="period != null" >
+        PERIOD = #{period,jdbcType=INTEGER},
+      </if>
+      <if test="rateTotal != null" >
+        RATE_TOTAL = #{rateTotal,jdbcType=DECIMAL},
+      </if>
+      <if test="rateManage != null" >
+        RATE_MANAGE = #{rateManage,jdbcType=DECIMAL},
+      </if>
+      <if test="createTime != null" >
+        CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatetime != null" >
+        UPDATETIME = #{updatetime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.fintech.model.CompanyPeriodFee" >
+    update company_period_fee
+    set COMPANY_ID = #{companyId,jdbcType=CHAR},
+      PERIOD = #{period,jdbcType=INTEGER},
+      RATE_TOTAL = #{rateTotal,jdbcType=DECIMAL},
+      RATE_MANAGE = #{rateManage,jdbcType=DECIMAL},
+      CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      UPDATETIME = #{updatetime,jdbcType=TIMESTAMP}
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+  
+   <select id="count" resultType="java.lang.Integer">
+  select count(*) from company_period_fee where COMPANY_ID = #{companyId}
+  </select>
+</mapper>

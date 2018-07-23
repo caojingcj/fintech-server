@@ -1,0 +1,3038 @@
+{
+	"info": {
+		"_postman_id": "cb024b6d-bede-4cd7-90f1-86543c133e71",
+		"name": "FinTech",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "运营系统",
+			"description": null,
+			"item": [
+				{
+					"name": "登录模块",
+					"description": null,
+					"item": [
+						{
+							"name": "登录",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "https://www.duodingfen.com/fintech-web/manage/login?name=csss&password=123123",
+									"protocol": "https",
+									"host": [
+										"www",
+										"duodingfen",
+										"com"
+									],
+									"path": [
+										"fintech-web",
+										"manage",
+										"login"
+									],
+									"query": [
+										{
+											"key": "name",
+											"value": "csss"
+										},
+										{
+											"key": "password",
+											"value": "123123"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "登出",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "localhost:8084/manage/loginout?token=123qweqwfr32r2d2",
+									"host": [
+										"localhost"
+									],
+									"port": "8084",
+									"path": [
+										"manage",
+										"loginout"
+									],
+									"query": [
+										{
+											"key": "token",
+											"value": "123qweqwfr32r2d2"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "商户模块",
+					"description": null,
+					"item": [
+						{
+							"name": "财务信息",
+							"description": "",
+							"item": [
+								{
+									"name": "新增",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"token\": \"s8uGiHnjPshP5fcqqjZ8QBRdlF1L6W-M\",\n    \"companyId\": \"000001\",\n    \"companyAccountName\": \"青岛红房子妇科医院支行\",\n    \"companyAccountNo\": \"467658192600\",\n    \"companyAccountBranch\": \"中国银行\",\n    \"bankCode\": \"01020000\",\n    \"accountType\": \"1\"\n}"
+										},
+										"url": {
+											"raw": "localhost:8084/manage/company/accountinfo/insertAccountInfo",
+											"host": [
+												"localhost"
+											],
+											"port": "8084",
+											"path": [
+												"manage",
+												"company",
+												"accountinfo",
+												"insertAccountInfo"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "更新",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"token\": \"s8uGiHnjPshP5fcqqjZ8QBRdlF1L6W-M\",\n    \"id\": \"12\",\n    \"companyId\": \"000001\",\n    \"companyAccountName\": \"青岛红房子妇科医院支行123123\",\n    \"companyAccountNo\": \"467658192600\",\n    \"companyAccountBranch\": \"中国银行\",\n    \"bankCode\": \"01020000\",\n    \"accountType\": \"1\"\n}"
+										},
+										"url": {
+											"raw": "localhost:8084/manage/company/accountinfo/updateAccountInfo",
+											"host": [
+												"localhost"
+											],
+											"port": "8084",
+											"path": [
+												"manage",
+												"company",
+												"accountinfo",
+												"updateAccountInfo"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "删除",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": ""
+										},
+										"url": {
+											"raw": "localhost:8084/manage/company/accountinfo/deleteAccountInfo?id=12&token=s8uGiHnjPshP5fcqqjZ8QBRdlF1L6W-M",
+											"host": [
+												"localhost"
+											],
+											"port": "8084",
+											"path": [
+												"manage",
+												"company",
+												"accountinfo",
+												"deleteAccountInfo"
+											],
+											"query": [
+												{
+													"key": "id",
+													"value": "12"
+												},
+												{
+													"key": "token",
+													"value": "s8uGiHnjPshP5fcqqjZ8QBRdlF1L6W-M"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "启用\\禁用",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"token\": \"s8uGiHnjPshP5fcqqjZ8QBRdlF1L6W-M\",\n    \"id\": \"12\",\n    \"isEnabled\": true\n}"
+										},
+										"url": {
+											"raw": "localhost:8084/manage/company/accountinfo/updateAccountInfo",
+											"host": [
+												"localhost"
+											],
+											"port": "8084",
+											"path": [
+												"manage",
+												"company",
+												"accountinfo",
+												"updateAccountInfo"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "列表",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": ""
+										},
+										"url": {
+											"raw": "localhost:8084/manage/company/accountinfo/selectCompanyAccountInfoList?companyId=000001&token=s8uGiHnjPshP5fcqqjZ8QBRdlF1L6W-M",
+											"host": [
+												"localhost"
+											],
+											"port": "8084",
+											"path": [
+												"manage",
+												"company",
+												"accountinfo",
+												"selectCompanyAccountInfoList"
+											],
+											"query": [
+												{
+													"key": "companyId",
+													"value": "000001"
+												},
+												{
+													"key": "token",
+													"value": "s8uGiHnjPshP5fcqqjZ8QBRdlF1L6W-M"
+												}
+											]
+										}
+									},
+									"response": []
+								}
+							],
+							"_postman_isSubFolder": true
+						},
+						{
+							"name": "渠道信息",
+							"description": "",
+							"item": [
+								{
+									"name": "新增",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"token\": \"s8uGiHnjPshP5fcqqjZ8QBRdlF1L6W-M\",\n    \"companyId\": \"000001\",\n    \"channelName\": \"尔康\",\n    \"channelPhone\": \"13813948485\"\n}"
+										},
+										"url": {
+											"raw": "localhost:8084/manage/company/channel/insertChannel",
+											"host": [
+												"localhost"
+											],
+											"port": "8084",
+											"path": [
+												"manage",
+												"company",
+												"channel",
+												"insertChannel"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "更新",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"token\": \"s8uGiHnjPshP5fcqqjZ8QBRdlF1L6W-M\",\n    \"id\":\"4\",\n    \"companyId\": \"000001\",\n    \"channelName\": \"尔康123\",\n    \"channelPhone\": \"13813948485\"\n}"
+										},
+										"url": {
+											"raw": "localhost:8084/manage/company/channel/updateChannel",
+											"host": [
+												"localhost"
+											],
+											"port": "8084",
+											"path": [
+												"manage",
+												"company",
+												"channel",
+												"updateChannel"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "删除",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": ""
+										},
+										"url": {
+											"raw": "localhost:8084/manage/company/channel/deleteChannel?id=4&token=s8uGiHnjPshP5fcqqjZ8QBRdlF1L6W-M",
+											"host": [
+												"localhost"
+											],
+											"port": "8084",
+											"path": [
+												"manage",
+												"company",
+												"channel",
+												"deleteChannel"
+											],
+											"query": [
+												{
+													"key": "id",
+													"value": "4"
+												},
+												{
+													"key": "token",
+													"value": "s8uGiHnjPshP5fcqqjZ8QBRdlF1L6W-M"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "启用\\禁用",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"token\": \"s8uGiHnjPshP5fcqqjZ8QBRdlF1L6W-M\",\n    \"id\":\"4\",\n    \"companyId\": \"000001\",\n    \"channelName\": \"尔康123\",\n    \"channelPhone\": \"13813948485\"\n}"
+										},
+										"url": {
+											"raw": "localhost:8084/manage/company/channel/updateChannel",
+											"host": [
+												"localhost"
+											],
+											"port": "8084",
+											"path": [
+												"manage",
+												"company",
+												"channel",
+												"updateChannel"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "列表",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": ""
+										},
+										"url": {
+											"raw": "localhost:8084/manage/company/channel/selectCompanyChannelList?companyId=000001&pageNum=1&pageSize=10&token=s8uGiHnjPshP5fcqqjZ8QBRdlF1L6W-M",
+											"host": [
+												"localhost"
+											],
+											"port": "8084",
+											"path": [
+												"manage",
+												"company",
+												"channel",
+												"selectCompanyChannelList"
+											],
+											"query": [
+												{
+													"key": "companyId",
+													"value": "000001"
+												},
+												{
+													"key": "pageNum",
+													"value": "1"
+												},
+												{
+													"key": "pageSize",
+													"value": "10"
+												},
+												{
+													"key": "token",
+													"value": "s8uGiHnjPshP5fcqqjZ8QBRdlF1L6W-M"
+												}
+											]
+										}
+									},
+									"response": []
+								}
+							],
+							"_postman_isSubFolder": true
+						},
+						{
+							"name": "项目配置",
+							"description": "",
+							"item": [
+								{
+									"name": "新增",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"token\": \"s8uGiHnjPshP5fcqqjZ8QBRdlF1L6W-M\",\n    \"companyId\": \"000001\",\n    \"itemCode\": \"1004\"\n}"
+										},
+										"url": {
+											"raw": "localhost:8084/manage/company/item/insertItem",
+											"host": [
+												"localhost"
+											],
+											"port": "8084",
+											"path": [
+												"manage",
+												"company",
+												"item",
+												"insertItem"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "更新",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"token\": \"s8uGiHnjPshP5fcqqjZ8QBRdlF1L6W-M\",\n    \"id\": \"5\",\n    \"companyId\": \"000001\",\n    \"itemCode\": \"1005\"\n}"
+										},
+										"url": {
+											"raw": "localhost:8084/manage/company/item/updateItem",
+											"host": [
+												"localhost"
+											],
+											"port": "8084",
+											"path": [
+												"manage",
+												"company",
+												"item",
+												"updateItem"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "删除",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": ""
+										},
+										"url": {
+											"raw": "localhost:8084/manage/company/item/deleteItem?id=5&token=s8uGiHnjPshP5fcqqjZ8QBRdlF1L6W-M",
+											"host": [
+												"localhost"
+											],
+											"port": "8084",
+											"path": [
+												"manage",
+												"company",
+												"item",
+												"deleteItem"
+											],
+											"query": [
+												{
+													"key": "id",
+													"value": "5"
+												},
+												{
+													"key": "token",
+													"value": "s8uGiHnjPshP5fcqqjZ8QBRdlF1L6W-M"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "列表",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": ""
+										},
+										"url": {
+											"raw": "localhost:8084/manage/company/item/selectCompanyItemList?companyId=000001&token=s8uGiHnjPshP5fcqqjZ8QBRdlF1L6W-M",
+											"host": [
+												"localhost"
+											],
+											"port": "8084",
+											"path": [
+												"manage",
+												"company",
+												"item",
+												"selectCompanyItemList"
+											],
+											"query": [
+												{
+													"key": "companyId",
+													"value": "000001"
+												},
+												{
+													"key": "token",
+													"value": "s8uGiHnjPshP5fcqqjZ8QBRdlF1L6W-M"
+												}
+											]
+										}
+									},
+									"response": []
+								}
+							],
+							"_postman_isSubFolder": true
+						},
+						{
+							"name": "费率信息",
+							"description": "",
+							"item": [
+								{
+									"name": "新增",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"token\": \"s8uGiHnjPshP5fcqqjZ8QBRdlF1L6W-M\",\n    \"companyId\": \"000001\",\n    \"period\": \"24\",\n    \"rateTotal\": \"24\",\n    \"rateManage\": \"3\"\n}"
+										},
+										"url": {
+											"raw": "localhost:8084/manage/company/periodfee/insertPeriodFee",
+											"host": [
+												"localhost"
+											],
+											"port": "8084",
+											"path": [
+												"manage",
+												"company",
+												"periodfee",
+												"insertPeriodFee"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "更新",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"token\": \"s8uGiHnjPshP5fcqqjZ8QBRdlF1L6W-M\",\n    \"id\": \"8\",\n    \"companyId\": \"000001\",\n    \"period\": \"24\",\n    \"rateTotal\": \"24\",\n    \"rateManage\": \"4\"\n}"
+										},
+										"url": {
+											"raw": "localhost:8084/manage/company/periodfee/updatePeriodFee",
+											"host": [
+												"localhost"
+											],
+											"port": "8084",
+											"path": [
+												"manage",
+												"company",
+												"periodfee",
+												"updatePeriodFee"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "删除",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": ""
+										},
+										"url": {
+											"raw": "localhost:8084/manage/company/periodfee/deletePeriodFee?id=8&token=s8uGiHnjPshP5fcqqjZ8QBRdlF1L6W-M",
+											"host": [
+												"localhost"
+											],
+											"port": "8084",
+											"path": [
+												"manage",
+												"company",
+												"periodfee",
+												"deletePeriodFee"
+											],
+											"query": [
+												{
+													"key": "id",
+													"value": "8"
+												},
+												{
+													"key": "token",
+													"value": "s8uGiHnjPshP5fcqqjZ8QBRdlF1L6W-M"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "列表",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": ""
+										},
+										"url": {
+											"raw": "localhost:8084/manage/company/periodfee/selectCompanyPeriodFeeList?companyId=000001&token=s8uGiHnjPshP5fcqqjZ8QBRdlF1L6W-M",
+											"host": [
+												"localhost"
+											],
+											"port": "8084",
+											"path": [
+												"manage",
+												"company",
+												"periodfee",
+												"selectCompanyPeriodFeeList"
+											],
+											"query": [
+												{
+													"key": "companyId",
+													"value": "000001"
+												},
+												{
+													"key": "token",
+													"value": "s8uGiHnjPshP5fcqqjZ8QBRdlF1L6W-M"
+												}
+											]
+										}
+									},
+									"response": []
+								}
+							],
+							"_postman_isSubFolder": true
+						},
+						{
+							"name": "商户新增",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "companyName",
+											"value": "3",
+											"type": "text"
+										},
+										{
+											"key": "companyType",
+											"value": "ydyd",
+											"type": "text"
+										},
+										{
+											"key": "companyStatus",
+											"value": "1",
+											"type": "text"
+										},
+										{
+											"key": "companyUscc",
+											"value": "asdsaccccc",
+											"type": "text"
+										},
+										{
+											"key": "companyFullName",
+											"value": "asdasdasd",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "localhost:8084/manage/company/insertCompanyBaseInfo",
+									"host": [
+										"localhost"
+									],
+									"port": "8084",
+									"path": [
+										"manage",
+										"company",
+										"insertCompanyBaseInfo"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "商户列表查询",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "localhost:8084/manage/company/selectCompanyBaseInfos?searchObject=000&pageIndex=1&pageSize=5&token=s8uGiHnjPshP5fcqqjZ8QBRdlF1L6W-M",
+									"host": [
+										"localhost"
+									],
+									"port": "8084",
+									"path": [
+										"manage",
+										"company",
+										"selectCompanyBaseInfos"
+									],
+									"query": [
+										{
+											"key": "searchObject",
+											"value": "000"
+										},
+										{
+											"key": "pageIndex",
+											"value": "1"
+										},
+										{
+											"key": "pageSize",
+											"value": "5"
+										},
+										{
+											"key": "token",
+											"value": "s8uGiHnjPshP5fcqqjZ8QBRdlF1L6W-M"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "商户详情",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "localhost:8084/manage/company/selectCompanyBaseInfoDetails?companyId=000001&token=s8uGiHnjPshP5fcqqjZ8QBRdlF1L6W-M",
+									"host": [
+										"localhost"
+									],
+									"port": "8084",
+									"path": [
+										"manage",
+										"company",
+										"selectCompanyBaseInfoDetails"
+									],
+									"query": [
+										{
+											"key": "companyId",
+											"value": "000001"
+										},
+										{
+											"key": "token",
+											"value": "s8uGiHnjPshP5fcqqjZ8QBRdlF1L6W-M"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "商户禁用\\启用",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "localhost:8084/manage/company/updateCompanyBaseInfoStatus?companyId=000001&companyStatus=0&token=s8uGiHnjPshP5fcqqjZ8QBRdlF1L6W-M",
+									"host": [
+										"localhost"
+									],
+									"port": "8084",
+									"path": [
+										"manage",
+										"company",
+										"updateCompanyBaseInfoStatus"
+									],
+									"query": [
+										{
+											"key": "companyId",
+											"value": "000001"
+										},
+										{
+											"key": "companyStatus",
+											"value": "0"
+										},
+										{
+											"key": "token",
+											"value": "s8uGiHnjPshP5fcqqjZ8QBRdlF1L6W-M"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "商户新增",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\n}"
+								},
+								"url": {
+									"raw": "localhost:8084/companyBaseinfo/insertCompanyBaseInfo",
+									"host": [
+										"localhost"
+									],
+									"port": "8084",
+									"path": [
+										"companyBaseinfo",
+										"insertCompanyBaseInfo"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "共通模块",
+					"description": null,
+					"item": [
+						{
+							"name": "获取省市区",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "localhost:8084/masterArea/queryMasterAreaByKey?parentAreaId=110100",
+									"host": [
+										"localhost"
+									],
+									"port": "8084",
+									"path": [
+										"masterArea",
+										"queryMasterAreaByKey"
+									],
+									"query": [
+										{
+											"key": "parentAreaId",
+											"value": "110100"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "登录短信查询",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "localhost:8084/logsms/selectByPrimaryKeyList?sendMobile=932&token=s8uGiHnjPshP5fcqqjZ8QBRdlF1L6W-M",
+									"host": [
+										"localhost"
+									],
+									"port": "8084",
+									"path": [
+										"logsms",
+										"selectByPrimaryKeyList"
+									],
+									"query": [
+										{
+											"key": "sendMobile",
+											"value": "932"
+										},
+										{
+											"key": "token",
+											"value": "s8uGiHnjPshP5fcqqjZ8QBRdlF1L6W-M"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "查询项目列表",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "localhost:8084/manage/company/item/selectMasterCompanyItemList?token=s8uGiHnjPshP5fcqqjZ8QBRdlF1L6W-M",
+									"host": [
+										"localhost"
+									],
+									"port": "8084",
+									"path": [
+										"manage",
+										"company",
+										"item",
+										"selectMasterCompanyItemList"
+									],
+									"query": [
+										{
+											"key": "token",
+											"value": "s8uGiHnjPshP5fcqqjZ8QBRdlF1L6W-M"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "查询银行列表",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"token\": \"s8uGiHnjPshP5fcqqjZ8QBRdlF1L6W-M\",\n    \"id\": \"12\",\n    \"isEnabled\": true\n}"
+								},
+								"url": {
+									"raw": "localhost:8084/manage/company/accountinfo/selectMasterBankList?token=s8uGiHnjPshP5fcqqjZ8QBRdlF1L6W-M",
+									"host": [
+										"localhost"
+									],
+									"port": "8084",
+									"path": [
+										"manage",
+										"company",
+										"accountinfo",
+										"selectMasterBankList"
+									],
+									"query": [
+										{
+											"key": "token",
+											"value": "s8uGiHnjPshP5fcqqjZ8QBRdlF1L6W-M"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "订单模块",
+					"description": null,
+					"item": [
+						{
+							"name": "查询订单列表",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "localhost:8084/manage/order/queryOrderByKeyPage?token=WZW-AusBPs43otpdrMPiWljqZjwT5a79&pageIndex=1&pageSize=5",
+									"host": [
+										"localhost"
+									],
+									"port": "8084",
+									"path": [
+										"manage",
+										"order",
+										"queryOrderByKeyPage"
+									],
+									"query": [
+										{
+											"key": "token",
+											"value": "WZW-AusBPs43otpdrMPiWljqZjwT5a79"
+										},
+										{
+											"key": "pageIndex",
+											"value": "1"
+										},
+										{
+											"key": "pageSize",
+											"value": "5"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "查询订单详情",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "localhost:8084/manage/order/selectOrderDetails?token=s8uGiHnjPshP5fcqqjZ8QBRdlF1L6W-M&orderId=ODR000000231",
+									"host": [
+										"localhost"
+									],
+									"port": "8084",
+									"path": [
+										"manage",
+										"order",
+										"selectOrderDetails"
+									],
+									"query": [
+										{
+											"key": "token",
+											"value": "s8uGiHnjPshP5fcqqjZ8QBRdlF1L6W-M"
+										},
+										{
+											"key": "orderId",
+											"value": "ODR000000231"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "订单取消",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "localhost:8084/manage/order/cancelOrder?token=s8uGiHnjPshP5fcqqjZ8QBRdlF1L6W-M&orderId=ODR000000231",
+									"host": [
+										"localhost"
+									],
+									"port": "8084",
+									"path": [
+										"manage",
+										"order",
+										"cancelOrder"
+									],
+									"query": [
+										{
+											"key": "token",
+											"value": "s8uGiHnjPshP5fcqqjZ8QBRdlF1L6W-M"
+										},
+										{
+											"key": "orderId",
+											"value": "ODR000000231"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"_postman_isSubFolder": true
+				}
+			]
+		},
+		{
+			"name": "三方数据",
+			"description": null,
+			"item": [
+				{
+					"name": "魔蝎数据",
+					"description": null,
+					"item": [
+						{
+							"name": "运营商",
+							"description": null,
+							"item": [
+								{
+									"name": "原始数据",
+									"description": null,
+									"item": [
+										{
+											"name": "魔蝎-获取运营商报告全量",
+											"request": {
+												"method": "GET",
+												"header": [
+													{
+														"key": "Authorization",
+														"value": "token db401c3ba5694a7b91205f8749d993f3"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": "{\"appNo\":\"2018060600001316\",\"mobile\":\"13813948485\",\"task_id\":\"6f91bbd0-76da-11e8-b29a-00163e13fa10\",\"cloud\":\"data\"}"
+												},
+												"url": {
+													"raw": "https://api.51datakey.com/carrier/v3/mobiles/13813948485/mxdata-ex?task_id=6f91bbd0-76da-11e8-b29a-00163e13fa10",
+													"protocol": "https",
+													"host": [
+														"api",
+														"51datakey",
+														"com"
+													],
+													"path": [
+														"carrier",
+														"v3",
+														"mobiles",
+														"13813948485",
+														"mxdata-ex"
+													],
+													"query": [
+														{
+															"key": "task_id",
+															"value": "6f91bbd0-76da-11e8-b29a-00163e13fa10"
+														}
+													]
+												}
+											},
+											"response": []
+										},
+										{
+											"name": "魔蝎-获取账号基本记录",
+											"request": {
+												"method": "GET",
+												"header": [
+													{
+														"key": "Authorization",
+														"value": "token db401c3ba5694a7b91205f8749d993f3"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": "{\"appNo\":\"2018060600001316\",\"mobile\":\"13813948485\",\"task_id\":\"6f91bbd0-76da-11e8-b29a-00163e13fa10\",\"cloud\":\"data\"}"
+												},
+												"url": {
+													"raw": "https://api.51datakey.com/carrier/v3/mobiles/13813948485/basic?task_id=6f91bbd0-76da-11e8-b29a-00163e13fa10",
+													"protocol": "https",
+													"host": [
+														"api",
+														"51datakey",
+														"com"
+													],
+													"path": [
+														"carrier",
+														"v3",
+														"mobiles",
+														"13813948485",
+														"basic"
+													],
+													"query": [
+														{
+															"key": "task_id",
+															"value": "6f91bbd0-76da-11e8-b29a-00163e13fa10"
+														}
+													]
+												}
+											},
+											"response": []
+										},
+										{
+											"name": "魔蝎-获取账号账单记录",
+											"request": {
+												"method": "GET",
+												"header": [
+													{
+														"key": "Authorization",
+														"value": "token db401c3ba5694a7b91205f8749d993f3"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": "{\"appNo\":\"2018060600001316\",\"mobile\":\"13813948485\",\"task_id\":\"6f91bbd0-76da-11e8-b29a-00163e13fa10\",\"cloud\":\"data\"}"
+												},
+												"url": {
+													"raw": "https://api.51datakey.com/carrier/v3/mobiles/13813948485/bill?task_id=6f91bbd0-76da-11e8-b29a-00163e13fa10",
+													"protocol": "https",
+													"host": [
+														"api",
+														"51datakey",
+														"com"
+													],
+													"path": [
+														"carrier",
+														"v3",
+														"mobiles",
+														"13813948485",
+														"bill"
+													],
+													"query": [
+														{
+															"key": "task_id",
+															"value": "6f91bbd0-76da-11e8-b29a-00163e13fa10"
+														}
+													]
+												}
+											},
+											"response": []
+										},
+										{
+											"name": "魔蝎-获取账号通话详单",
+											"request": {
+												"method": "GET",
+												"header": [
+													{
+														"key": "Authorization",
+														"value": "token db401c3ba5694a7b91205f8749d993f3"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": "{\"appNo\":\"2018060600001316\",\"mobile\":\"13813948485\",\"task_id\":\"6f91bbd0-76da-11e8-b29a-00163e13fa10\",\"cloud\":\"data\"}"
+												},
+												"url": {
+													"raw": "https://api.51datakey.com/carrier/v3/mobiles/13813948485/call?task_id=6f91bbd0-76da-11e8-b29a-00163e13fa10",
+													"protocol": "https",
+													"host": [
+														"api",
+														"51datakey",
+														"com"
+													],
+													"path": [
+														"carrier",
+														"v3",
+														"mobiles",
+														"13813948485",
+														"call"
+													],
+													"query": [
+														{
+															"key": "task_id",
+															"value": "6f91bbd0-76da-11e8-b29a-00163e13fa10"
+														}
+													]
+												}
+											},
+											"response": []
+										},
+										{
+											"name": "魔蝎-获取账号短信详单",
+											"request": {
+												"method": "GET",
+												"header": [
+													{
+														"key": "Authorization",
+														"value": "token db401c3ba5694a7b91205f8749d993f3"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": "{\"appNo\":\"2018060600001316\",\"mobile\":\"13813948485\",\"task_id\":\"6f91bbd0-76da-11e8-b29a-00163e13fa10\",\"cloud\":\"data\"}"
+												},
+												"url": {
+													"raw": "https://api.51datakey.com/carrier/v3/mobiles/13813948485/sms?task_id=6f91bbd0-76da-11e8-b29a-00163e13fa10",
+													"protocol": "https",
+													"host": [
+														"api",
+														"51datakey",
+														"com"
+													],
+													"path": [
+														"carrier",
+														"v3",
+														"mobiles",
+														"13813948485",
+														"sms"
+													],
+													"query": [
+														{
+															"key": "task_id",
+															"value": "6f91bbd0-76da-11e8-b29a-00163e13fa10"
+														}
+													]
+												}
+											},
+											"response": []
+										}
+									],
+									"_postman_isSubFolder": true
+								},
+								{
+									"name": "用户报告数据",
+									"description": null,
+									"item": [
+										{
+											"name": "魔蝎-获取运营商报告全量",
+											"request": {
+												"method": "GET",
+												"header": [
+													{
+														"key": "Authorization",
+														"value": "token db401c3ba5694a7b91205f8749d993f3"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": "{\"appNo\":\"2018060600001316\",\"mobile\":\"13813948485\",\"task_id\":\"6f91bbd0-76da-11e8-b29a-00163e13fa10\",\"cloud\":\"data\"}"
+												},
+												"url": {
+													"raw": "https://api.51datakey.com/carrier/v3/mobiles/13813948485/mxdata-ex?task_id=6f91bbd0-76da-11e8-b29a-00163e13fa10",
+													"protocol": "https",
+													"host": [
+														"api",
+														"51datakey",
+														"com"
+													],
+													"path": [
+														"carrier",
+														"v3",
+														"mobiles",
+														"13813948485",
+														"mxdata-ex"
+													],
+													"query": [
+														{
+															"key": "task_id",
+															"value": "6f91bbd0-76da-11e8-b29a-00163e13fa10"
+														}
+													]
+												}
+											},
+											"response": []
+										},
+										{
+											"name": "魔蝎-获取运营商报告全量 Copy",
+											"request": {
+												"method": "GET",
+												"header": [
+													{
+														"key": "Authorization",
+														"value": "token db401c3ba5694a7b91205f8749d993f3"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": "{\"appNo\":\"2018060600001316\",\"mobile\":\"13813948485\",\"task_id\":\"6f91bbd0-76da-11e8-b29a-00163e13fa10\",\"cloud\":\"data\"}"
+												},
+												"url": {
+													"raw": "https://api.51datakey.com/carrier/v3/mobiles/13813948485/mxdata-ex?task_id=6f91bbd0-76da-11e8-b29a-00163e13fa10",
+													"protocol": "https",
+													"host": [
+														"api",
+														"51datakey",
+														"com"
+													],
+													"path": [
+														"carrier",
+														"v3",
+														"mobiles",
+														"13813948485",
+														"mxdata-ex"
+													],
+													"query": [
+														{
+															"key": "task_id",
+															"value": "6f91bbd0-76da-11e8-b29a-00163e13fa10"
+														}
+													]
+												}
+											},
+											"response": []
+										}
+									],
+									"_postman_isSubFolder": true
+								}
+							],
+							"_postman_isSubFolder": true
+						},
+						{
+							"name": "魔杖",
+							"description": null,
+							"item": [
+								{
+									"name": "魔杖-获取分析报告token",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Authorization",
+												"value": "token db401c3ba5694a7b91205f8749d993f3"
+											},
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\"customer_id\":\"2453\",\"secret\":\"556eb160aecb4508b7031c2d3d70386a\"}"
+										},
+										"url": {
+											"raw": "https://api.51datakey.com/magic-wand/api/v1/token?task_id=6f91bbd0-76da-11e8-b29a-00163e13fa10",
+											"protocol": "https",
+											"host": [
+												"api",
+												"51datakey",
+												"com"
+											],
+											"path": [
+												"magic-wand",
+												"api",
+												"v1",
+												"token"
+											],
+											"query": [
+												{
+													"key": "task_id",
+													"value": "6f91bbd0-76da-11e8-b29a-00163e13fa10"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "魔杖-获取魔杖报告结果",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Authorization",
+												"value": "token eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1MzAzNzUzMDgsImlhdCI6MTUzMDI4ODkwOCwiY29udGVudCI6eyJyb2xlIjoiVEVOQU5UIiwidGVuYW50IjoiMjQ1MyJ9fQ.LxJxwePlh51pqhyKSO4Jr80zLV19sLlb4NMN34UI9fI"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\"customer_id\":\"2453\",\"secret\":\"556eb160aecb4508b7031c2d3d70386a\",\"task_id\":\"6f91bbd0-76da-11e8-b29a-00163e13fa10\",\"cloud\":\"data\"}"
+										},
+										"url": {
+											"raw": "https://api.51datakey.com/magic-wand/api/v2/tasks/report?task_id=6f91bbd0-76da-11e8-b29a-00163e13fa10",
+											"protocol": "https",
+											"host": [
+												"api",
+												"51datakey",
+												"com"
+											],
+											"path": [
+												"magic-wand",
+												"api",
+												"v2",
+												"tasks",
+												"report"
+											],
+											"query": [
+												{
+													"key": "task_id",
+													"value": "6f91bbd0-76da-11e8-b29a-00163e13fa10"
+												}
+											]
+										}
+									},
+									"response": []
+								}
+							],
+							"_postman_isSubFolder": true
+						}
+					],
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "faceID",
+					"description": null,
+					"item": [
+						{
+							"name": "身份认证信息正面",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "api_key",
+											"value": "YKKi9DLDQyTDv6ASGZw9--ibzXT0YXen",
+											"type": "text"
+										},
+										{
+											"key": "api_secret",
+											"value": "Ub6FhkWrLbAs5lbwpYK1tDOKUxrGxc2I",
+											"type": "text"
+										},
+										{
+											"key": "image",
+											"type": "file",
+											"value": ""
+										}
+									]
+								},
+								"url": {
+									"raw": "https://api.faceid.com/faceid/v1/ocridcard",
+									"protocol": "https",
+									"host": [
+										"api",
+										"faceid",
+										"com"
+									],
+									"path": [
+										"faceid",
+										"v1",
+										"ocridcard"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "身份认证信息反面",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "api_key",
+											"value": "YKKi9DLDQyTDv6ASGZw9--ibzXT0YXen",
+											"type": "text"
+										},
+										{
+											"key": "api_secret",
+											"value": "Ub6FhkWrLbAs5lbwpYK1tDOKUxrGxc2I",
+											"type": "text"
+										},
+										{
+											"key": "image",
+											"type": "file",
+											"value": ""
+										}
+									]
+								},
+								"url": {
+									"raw": "https://api.faceid.com/faceid/v1/ocridcard",
+									"protocol": "https",
+									"host": [
+										"api",
+										"faceid",
+										"com"
+									],
+									"path": [
+										"faceid",
+										"v1",
+										"ocridcard"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "身份认证信息verify 对比",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "api_key",
+											"value": "YKKi9DLDQyTDv6ASGZw9--ibzXT0YXen",
+											"type": "text"
+										},
+										{
+											"key": "api_secret",
+											"value": "Ub6FhkWrLbAs5lbwpYK1tDOKUxrGxc2I",
+											"type": "text"
+										},
+										{
+											"key": "image",
+											"type": "file",
+											"value": ""
+										},
+										{
+											"key": "comparison_type",
+											"value": "1",
+											"type": "text"
+										},
+										{
+											"key": "face_image_type",
+											"value": "raw_image",
+											"type": "text"
+										},
+										{
+											"key": "idcard_name",
+											"value": "戚尔康",
+											"type": "text"
+										},
+										{
+											"key": "idcard_number",
+											"value": "320830199207180035",
+											"type": "text"
+										},
+										{
+											"key": "image_ref",
+											"type": "file",
+											"value": "",
+											"disabled": true
+										}
+									]
+								},
+								"url": {
+									"raw": "https://api.megvii.com/faceid/v2/verify",
+									"protocol": "https",
+									"host": [
+										"api",
+										"megvii",
+										"com"
+									],
+									"path": [
+										"faceid",
+										"v2",
+										"verify"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "微信公众号",
+					"description": null,
+					"item": [
+						{
+							"name": "获取access_token接口 /token",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "api_key",
+											"value": "YKKi9DLDQyTDv6ASGZw9--ibzXT0YXen",
+											"type": "text"
+										},
+										{
+											"key": "api_secret",
+											"value": "Ub6FhkWrLbAs5lbwpYK1tDOKUxrGxc2I",
+											"type": "text"
+										},
+										{
+											"key": "image",
+											"type": "file",
+											"value": ""
+										}
+									]
+								},
+								"url": {
+									"raw": "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=wx4e291d39c10f3c63&secret=1ac45a12a035d3a279b69d7f0e58aaa5",
+									"protocol": "https",
+									"host": [
+										"api",
+										"weixin",
+										"qq",
+										"com"
+									],
+									"path": [
+										"cgi-bin",
+										"token"
+									],
+									"query": [
+										{
+											"key": "grant_type",
+											"value": "client_credential"
+										},
+										{
+											"key": "appid",
+											"value": "wx4e291d39c10f3c63"
+										},
+										{
+											"key": "secret",
+											"value": "1ac45a12a035d3a279b69d7f0e58aaa5"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "获取用户基本信息",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "api_key",
+											"value": "YKKi9DLDQyTDv6ASGZw9--ibzXT0YXen",
+											"type": "text"
+										},
+										{
+											"key": "api_secret",
+											"value": "Ub6FhkWrLbAs5lbwpYK1tDOKUxrGxc2I",
+											"type": "text"
+										},
+										{
+											"key": "image",
+											"type": "file",
+											"value": ""
+										}
+									]
+								},
+								"url": {
+									"raw": "https://api.weixin.qq.com/cgi-bin/user/info?access_token=11_QS9v5uvW6M9MIoIT-yOJypXEAFRv7Irtz3S6igv8-hjhqKT1Z-_BnN3wyI1LeiS3MGT1XKUeO6zaIHSnUPKvQGHPRDtw4JW6OqJpFWubQjRARDSGa6Vn0LB6GaDIz6BIWiSAODv_cRvFJYeTTUEeAGABCM&openid=odL5x0VK1d4LhfYUSCi3crVjTBZM&lang=zh_CN",
+									"protocol": "https",
+									"host": [
+										"api",
+										"weixin",
+										"qq",
+										"com"
+									],
+									"path": [
+										"cgi-bin",
+										"user",
+										"info"
+									],
+									"query": [
+										{
+											"key": "access_token",
+											"value": "11_QS9v5uvW6M9MIoIT-yOJypXEAFRv7Irtz3S6igv8-hjhqKT1Z-_BnN3wyI1LeiS3MGT1XKUeO6zaIHSnUPKvQGHPRDtw4JW6OqJpFWubQjRARDSGa6Vn0LB6GaDIz6BIWiSAODv_cRvFJYeTTUEeAGABCM"
+										},
+										{
+											"key": "openid",
+											"value": "odL5x0VK1d4LhfYUSCi3crVjTBZM"
+										},
+										{
+											"key": "lang",
+											"value": "zh_CN"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "获取jsapi_ticket接口 /token",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "api_key",
+											"value": "YKKi9DLDQyTDv6ASGZw9--ibzXT0YXen",
+											"type": "text"
+										},
+										{
+											"key": "api_secret",
+											"value": "Ub6FhkWrLbAs5lbwpYK1tDOKUxrGxc2I",
+											"type": "text"
+										},
+										{
+											"key": "image",
+											"type": "file",
+											"value": ""
+										}
+									]
+								},
+								"url": {
+									"raw": "https://api.weixin.qq.com/cgi-bin/ticket/getticket?access_token=wx4e291d39c10f3c63&type=jsapi",
+									"protocol": "https",
+									"host": [
+										"api",
+										"weixin",
+										"qq",
+										"com"
+									],
+									"path": [
+										"cgi-bin",
+										"ticket",
+										"getticket"
+									],
+									"query": [
+										{
+											"key": "access_token",
+											"value": "wx4e291d39c10f3c63"
+										},
+										{
+											"key": "type",
+											"value": "jsapi"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"_postman_isSubFolder": true
+				}
+			]
+		},
+		{
+			"name": "APP",
+			"description": null,
+			"item": [
+				{
+					"name": "登录",
+					"description": null,
+					"item": [
+						{
+							"name": "客户获取验证码",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "localhost:8084/app/appLogin/appLoginRegister?mobile=18267924536",
+									"host": [
+										"localhost"
+									],
+									"port": "8084",
+									"path": [
+										"app",
+										"appLogin",
+										"appLoginRegister"
+									],
+									"query": [
+										{
+											"key": "mobile",
+											"value": "18267924536"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "客户登录注册",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "localhost:8084/app/appLogin/appLoginVerification?mobile=18267924536&code=1416",
+									"host": [
+										"localhost"
+									],
+									"port": "8084",
+									"path": [
+										"app",
+										"appLogin",
+										"appLoginVerification"
+									],
+									"query": [
+										{
+											"key": "mobile",
+											"value": "18267924536"
+										},
+										{
+											"key": "code",
+											"value": "1416"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "客户登出",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "localhost:8084/app/appLogin/appLoginout?token=i_3S3fmaHpRkuKueIv48BxMe6Xm7McwB",
+									"host": [
+										"localhost"
+									],
+									"port": "8084",
+									"path": [
+										"app",
+										"appLogin",
+										"appLoginout"
+									],
+									"query": [
+										{
+											"key": "token",
+											"value": "i_3S3fmaHpRkuKueIv48BxMe6Xm7McwB"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "进件",
+					"description": null,
+					"item": [
+						{
+							"name": "扫码跳转商户",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "localhost:8084/app/orderbaseinfo/scanPiece?mobile=13813948485&token=GOzlC3u9VnzLzuJwIdtGmoB7XzXAzsqR",
+									"host": [
+										"localhost"
+									],
+									"port": "8084",
+									"path": [
+										"app",
+										"orderbaseinfo",
+										"scanPiece"
+									],
+									"query": [
+										{
+											"key": "mobile",
+											"value": "13813948485"
+										},
+										{
+											"key": "token",
+											"value": "GOzlC3u9VnzLzuJwIdtGmoB7XzXAzsqR"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "个人信息填写",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"maritalStatus\": \"0\",\n    \"educationalStatus\": \"2\",\n    \"vocationStatus\": \"3\",\n    \"commAddr\": \"上海徐汇\",\n    \"contactName\": \"尔康\",\n    \"contactPhone\": \"13813948484\",\n    \"depositAmount\": \"1000\",\n    \"token\": \"0UsKBPtoQDX7i8kEGorm8s3OyTG8WqCS\",\n    \"orderId\": \"ODR000000231\"\n}"
+								},
+								"url": {
+									"raw": "localhost:8084/app/orderbaseinfo/saveDetailinfo",
+									"host": [
+										"localhost"
+									],
+									"port": "8084",
+									"path": [
+										"app",
+										"orderbaseinfo",
+										"saveDetailinfo"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "客户附件上传",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/x-www-form-urlencoded"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "token",
+											"value": "-S-zmTySnxVOcYBVK9mr3C9lPDvEDq-4",
+											"type": "text"
+										},
+										{
+											"key": "orderId",
+											"value": "ODR000000020",
+											"type": "text"
+										},
+										{
+											"key": "file",
+											"type": "file",
+											"value": ""
+										},
+										{
+											"key": "atthType",
+											"value": "0",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "localhost:8084/app/orderbaseinfo/saveOrderAttachment?token=2_Yv74mR9Y16qphiBtQcXRVVX8NUqOGu&orderId=ODR000000167&atthType=0&serverId=dulsV9LRTapEpoH1P5dOKRZe-AWiuhnbwbyI2j2FUlRLBYWj0aslehOrjt41cfYO",
+									"host": [
+										"localhost"
+									],
+									"port": "8084",
+									"path": [
+										"app",
+										"orderbaseinfo",
+										"saveOrderAttachment"
+									],
+									"query": [
+										{
+											"key": "token",
+											"value": "2_Yv74mR9Y16qphiBtQcXRVVX8NUqOGu"
+										},
+										{
+											"key": "orderId",
+											"value": "ODR000000167"
+										},
+										{
+											"key": "atthType",
+											"value": "0"
+										},
+										{
+											"key": "serverId",
+											"value": "dulsV9LRTapEpoH1P5dOKRZe-AWiuhnbwbyI2j2FUlRLBYWj0aslehOrjt41cfYO"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "项目信息填写",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "token",
+											"value": "-S-zmTySnxVOcYBVK9mr3C9lPDvEDq-4",
+											"type": "text"
+										},
+										{
+											"key": "orderId",
+											"value": "ODR000000020",
+											"type": "text"
+										},
+										{
+											"key": "companyId",
+											"value": "999999",
+											"type": "text"
+										},
+										{
+											"key": "companyName",
+											"value": "测试商户",
+											"type": "text"
+										},
+										{
+											"key": "itemCode",
+											"value": "1000",
+											"type": "text"
+										},
+										{
+											"key": "itemName",
+											"value": "眼部整形",
+											"type": "text"
+										},
+										{
+											"key": "totalPeriod",
+											"value": "12",
+											"type": "text"
+										},
+										{
+											"key": "orderAmount",
+											"value": "20000",
+											"type": "text"
+										},
+										{
+											"key": "companyChannelId",
+											"value": "1",
+											"type": "text"
+										},
+										{
+											"key": "companyChannelName",
+											"value": "张三",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "localhost:8084/app/orderbaseinfo/saveProject",
+									"host": [
+										"localhost"
+									],
+									"port": "8084",
+									"path": [
+										"app",
+										"orderbaseinfo",
+										"saveProject"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "魔蝎-运营商验证",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "token db401c3ba5694a7b91205f8749d993f3"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\"appNo\":\"2018060600001316\",\"mobile\":\"13813948485\",\"task_id\":\"6f91bbd0-76da-11e8-b29a-00163e13fa10\",\"cloud\":\"data\"}"
+								},
+								"url": {
+									"raw": "https://api.51datakey.com/h5/importV3/#/carrier?userId=13816386980&apiKey=fd434ebca9f24b658a98f9d9ee883b15&backUrl=http://open.51datakey.com/DeveloperCenter/ApiTest/CARRIER/2018060600001316/test&_k=xcphxw",
+									"protocol": "https",
+									"host": [
+										"api",
+										"51datakey",
+										"com"
+									],
+									"path": [
+										"h5",
+										"importV3",
+										""
+									],
+									"hash": "/carrier?userId=13816386980&apiKey=fd434ebca9f24b658a98f9d9ee883b15&backUrl=http://open.51datakey.com/DeveloperCenter/ApiTest/CARRIER/2018060600001316/test&_k=xcphxw"
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "客户签署协议",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "token",
+											"value": "-S-zmTySnxVOcYBVK9mr3C9lPDvEDq-4",
+											"type": "text"
+										},
+										{
+											"key": "orderId",
+											"value": "ODR000000020",
+											"type": "text"
+										},
+										{
+											"key": "companyId",
+											"value": "999999",
+											"type": "text"
+										},
+										{
+											"key": "companyName",
+											"value": "测试商户",
+											"type": "text"
+										},
+										{
+											"key": "itemCode",
+											"value": "1000",
+											"type": "text"
+										},
+										{
+											"key": "itemName",
+											"value": "眼部整形",
+											"type": "text"
+										},
+										{
+											"key": "totalPeriod",
+											"value": "12",
+											"type": "text"
+										},
+										{
+											"key": "orderAmount",
+											"value": "20000",
+											"type": "text"
+										},
+										{
+											"key": "companyChannelId",
+											"value": "1",
+											"type": "text"
+										},
+										{
+											"key": "companyChannelName",
+											"value": "张三",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "localhost:8084/app/orderbaseinfo/remoteSignCaOrder?token=0UsKBPtoQDX7i8kEGorm8s3OyTG8WqCS&orderId=ODR000000317",
+									"host": [
+										"localhost"
+									],
+									"port": "8084",
+									"path": [
+										"app",
+										"orderbaseinfo",
+										"remoteSignCaOrder"
+									],
+									"query": [
+										{
+											"key": "token",
+											"value": "0UsKBPtoQDX7i8kEGorm8s3OyTG8WqCS"
+										},
+										{
+											"key": "orderId",
+											"value": "ODR000000317"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "客户订单列表",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "token",
+											"value": "-S-zmTySnxVOcYBVK9mr3C9lPDvEDq-4",
+											"type": "text"
+										},
+										{
+											"key": "orderId",
+											"value": "ODR000000020",
+											"type": "text"
+										},
+										{
+											"key": "companyId",
+											"value": "999999",
+											"type": "text"
+										},
+										{
+											"key": "companyName",
+											"value": "测试商户",
+											"type": "text"
+										},
+										{
+											"key": "itemCode",
+											"value": "1000",
+											"type": "text"
+										},
+										{
+											"key": "itemName",
+											"value": "眼部整形",
+											"type": "text"
+										},
+										{
+											"key": "totalPeriod",
+											"value": "12",
+											"type": "text"
+										},
+										{
+											"key": "orderAmount",
+											"value": "20000",
+											"type": "text"
+										},
+										{
+											"key": "companyChannelId",
+											"value": "1",
+											"type": "text"
+										},
+										{
+											"key": "companyChannelName",
+											"value": "张三",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "localhost:8084/app/orderbaseinfo/orderBaseinfos?token=VAAzs1tHrqukck1HZu16wYhwWOEpEvYi",
+									"host": [
+										"localhost"
+									],
+									"port": "8084",
+									"path": [
+										"app",
+										"orderbaseinfo",
+										"orderBaseinfos"
+									],
+									"query": [
+										{
+											"key": "token",
+											"value": "VAAzs1tHrqukck1HZu16wYhwWOEpEvYi"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "客户签署协议预览",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "token",
+											"value": "-S-zmTySnxVOcYBVK9mr3C9lPDvEDq-4",
+											"type": "text"
+										},
+										{
+											"key": "orderId",
+											"value": "ODR000000020",
+											"type": "text"
+										},
+										{
+											"key": "companyId",
+											"value": "999999",
+											"type": "text"
+										},
+										{
+											"key": "companyName",
+											"value": "测试商户",
+											"type": "text"
+										},
+										{
+											"key": "itemCode",
+											"value": "1000",
+											"type": "text"
+										},
+										{
+											"key": "itemName",
+											"value": "眼部整形",
+											"type": "text"
+										},
+										{
+											"key": "totalPeriod",
+											"value": "12",
+											"type": "text"
+										},
+										{
+											"key": "orderAmount",
+											"value": "20000",
+											"type": "text"
+										},
+										{
+											"key": "companyChannelId",
+											"value": "1",
+											"type": "text"
+										},
+										{
+											"key": "companyChannelName",
+											"value": "张三",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "http://192.168.1.14:8084/app/orderbaseinfo/previewCaOrder?orderId=ODR000000092&token=VAAzs1tHrqukck1HZu16wYhwWOEpEvYi",
+									"protocol": "http",
+									"host": [
+										"192",
+										"168",
+										"1",
+										"14"
+									],
+									"port": "8084",
+									"path": [
+										"app",
+										"orderbaseinfo",
+										"previewCaOrder"
+									],
+									"query": [
+										{
+											"key": "orderId",
+											"value": "ODR000000092"
+										},
+										{
+											"key": "token",
+											"value": "VAAzs1tHrqukck1HZu16wYhwWOEpEvYi"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "客户订单详情",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "token",
+											"value": "-S-zmTySnxVOcYBVK9mr3C9lPDvEDq-4",
+											"type": "text"
+										},
+										{
+											"key": "orderId",
+											"value": "ODR000000020",
+											"type": "text"
+										},
+										{
+											"key": "companyId",
+											"value": "999999",
+											"type": "text"
+										},
+										{
+											"key": "companyName",
+											"value": "测试商户",
+											"type": "text"
+										},
+										{
+											"key": "itemCode",
+											"value": "1000",
+											"type": "text"
+										},
+										{
+											"key": "itemName",
+											"value": "眼部整形",
+											"type": "text"
+										},
+										{
+											"key": "totalPeriod",
+											"value": "12",
+											"type": "text"
+										},
+										{
+											"key": "orderAmount",
+											"value": "20000",
+											"type": "text"
+										},
+										{
+											"key": "companyChannelId",
+											"value": "1",
+											"type": "text"
+										},
+										{
+											"key": "companyChannelName",
+											"value": "张三",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "localhost:8084/app/orderbaseinfo/orderBaseinfoDetail?token=VAAzs1tHrqukck1HZu16wYhwWOEpEvYi&orderId=ODR000000092",
+									"host": [
+										"localhost"
+									],
+									"port": "8084",
+									"path": [
+										"app",
+										"orderbaseinfo",
+										"orderBaseinfoDetail"
+									],
+									"query": [
+										{
+											"key": "token",
+											"value": "VAAzs1tHrqukck1HZu16wYhwWOEpEvYi"
+										},
+										{
+											"key": "orderId",
+											"value": "ODR000000092"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "客户我要还款",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "token",
+											"value": "-S-zmTySnxVOcYBVK9mr3C9lPDvEDq-4",
+											"type": "text"
+										},
+										{
+											"key": "orderId",
+											"value": "ODR000000020",
+											"type": "text"
+										},
+										{
+											"key": "companyId",
+											"value": "999999",
+											"type": "text"
+										},
+										{
+											"key": "companyName",
+											"value": "测试商户",
+											"type": "text"
+										},
+										{
+											"key": "itemCode",
+											"value": "1000",
+											"type": "text"
+										},
+										{
+											"key": "itemName",
+											"value": "眼部整形",
+											"type": "text"
+										},
+										{
+											"key": "totalPeriod",
+											"value": "12",
+											"type": "text"
+										},
+										{
+											"key": "orderAmount",
+											"value": "20000",
+											"type": "text"
+										},
+										{
+											"key": "companyChannelId",
+											"value": "1",
+											"type": "text"
+										},
+										{
+											"key": "companyChannelName",
+											"value": "张三",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "localhost:8084/app/orderbaseinfo/userReturnplans?token=VAAzs1tHrqukck1HZu16wYhwWOEpEvYi",
+									"host": [
+										"localhost"
+									],
+									"port": "8084",
+									"path": [
+										"app",
+										"orderbaseinfo",
+										"userReturnplans"
+									],
+									"query": [
+										{
+											"key": "token",
+											"value": "VAAzs1tHrqukck1HZu16wYhwWOEpEvYi"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "身份认证信息正面",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "token",
+											"value": "2_Yv74mR9Y16qphiBtQcXRVVX8NUqOGu",
+											"type": "text"
+										},
+										{
+											"key": "file",
+											"type": "file",
+											"value": ""
+										},
+										{
+											"key": "orderId",
+											"value": "ODR000000138",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "localhost:8084/app/orderbaseinfo/saveIdentityPositive?serverId=dulsV9LRTapEpoH1P5dOKRZe-AWiuhnbwbyI2j2FUlRLBYWj0aslehOrjt41cfYO&token=2_Yv74mR9Y16qphiBtQcXRVVX8NUqOGu&orderId=ODR000000138",
+									"host": [
+										"localhost"
+									],
+									"port": "8084",
+									"path": [
+										"app",
+										"orderbaseinfo",
+										"saveIdentityPositive"
+									],
+									"query": [
+										{
+											"key": "serverId",
+											"value": "dulsV9LRTapEpoH1P5dOKRZe-AWiuhnbwbyI2j2FUlRLBYWj0aslehOrjt41cfYO"
+										},
+										{
+											"key": "token",
+											"value": "2_Yv74mR9Y16qphiBtQcXRVVX8NUqOGu"
+										},
+										{
+											"key": "orderId",
+											"value": "ODR000000138"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "身份认证信息反面",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "token",
+											"value": "EnXl9wHjW-6-43x2Snlz6lEy5oWHoH5L",
+											"type": "text"
+										},
+										{
+											"key": "file",
+											"type": "file",
+											"value": ""
+										},
+										{
+											"key": "orderId",
+											"value": "ODR000000138",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "localhost:8084/app/orderbaseinfo/saveIdentitySide?serverId=dulsV9LRTapEpoH1P5dOKRZe-AWiuhnbwbyI2j2FUlRLBYWj0aslehOrjt41cfYO&token=2_Yv74mR9Y16qphiBtQcXRVVX8NUqOGu&orderId=ODR000000167",
+									"host": [
+										"localhost"
+									],
+									"port": "8084",
+									"path": [
+										"app",
+										"orderbaseinfo",
+										"saveIdentitySide"
+									],
+									"query": [
+										{
+											"key": "serverId",
+											"value": "dulsV9LRTapEpoH1P5dOKRZe-AWiuhnbwbyI2j2FUlRLBYWj0aslehOrjt41cfYO"
+										},
+										{
+											"key": "token",
+											"value": "2_Yv74mR9Y16qphiBtQcXRVVX8NUqOGu"
+										},
+										{
+											"key": "orderId",
+											"value": "ODR000000167"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "魔蝎-获取回调状态",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "token",
+											"value": "-S-zmTySnxVOcYBVK9mr3C9lPDvEDq-4",
+											"type": "text"
+										},
+										{
+											"key": "orderId",
+											"value": "ODR000000020",
+											"type": "text"
+										},
+										{
+											"key": "companyId",
+											"value": "999999",
+											"type": "text"
+										},
+										{
+											"key": "companyName",
+											"value": "测试商户",
+											"type": "text"
+										},
+										{
+											"key": "itemCode",
+											"value": "1000",
+											"type": "text"
+										},
+										{
+											"key": "itemName",
+											"value": "眼部整形",
+											"type": "text"
+										},
+										{
+											"key": "totalPeriod",
+											"value": "12",
+											"type": "text"
+										},
+										{
+											"key": "orderAmount",
+											"value": "20000",
+											"type": "text"
+										},
+										{
+											"key": "companyChannelId",
+											"value": "1",
+											"type": "text"
+										},
+										{
+											"key": "companyChannelName",
+											"value": "张三",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "localhost:8084/app/orderbaseinfo/userReturnplans?token=VAAzs1tHrqukck1HZu16wYhwWOEpEvYi",
+									"host": [
+										"localhost"
+									],
+									"port": "8084",
+									"path": [
+										"app",
+										"orderbaseinfo",
+										"userReturnplans"
+									],
+									"query": [
+										{
+											"key": "token",
+											"value": "VAAzs1tHrqukck1HZu16wYhwWOEpEvYi"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "微信",
+					"description": null,
+					"item": [
+						{
+							"name": "获取JS-SDK验签",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "localhost:8084/app/weixin/wxJSSignature?token=10z9SG1PDXhm5TbVdNeSvfUt7WnXPm4X",
+									"host": [
+										"localhost"
+									],
+									"port": "8084",
+									"path": [
+										"app",
+										"weixin",
+										"wxJSSignature"
+									],
+									"query": [
+										{
+											"key": "token",
+											"value": "10z9SG1PDXhm5TbVdNeSvfUt7WnXPm4X"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"_postman_isSubFolder": true
+				}
+			]
+		},
+		{
+			"name": "测试",
+			"description": null,
+			"item": [
+				{
+					"name": "魔蝎-获取运营商报告全量",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "60debdaf-3483-4a2f-8467-95be18a80620",
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "localhost:8084/app/moxie/getMXPresentation?moxieMobile=13813948485&orderId=1123213123&moxieIdcard=320830199207180035&moxieName=戚尔康&moxieType=mxdataex&moxieTaskId=6f91bbd0-76da-11e8-b29a-00163e13fa10",
+							"host": [
+								"localhost"
+							],
+							"port": "8084",
+							"path": [
+								"app",
+								"moxie",
+								"getMXPresentation"
+							],
+							"query": [
+								{
+									"key": "moxieMobile",
+									"value": "13813948485"
+								},
+								{
+									"key": "orderId",
+									"value": "1123213123"
+								},
+								{
+									"key": "moxieIdcard",
+									"value": "320830199207180035"
+								},
+								{
+									"key": "moxieName",
+									"value": "戚尔康"
+								},
+								{
+									"key": "moxieType",
+									"value": "mxdataex"
+								},
+								{
+									"key": "moxieTaskId",
+									"value": "6f91bbd0-76da-11e8-b29a-00163e13fa10"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "魔蝎回调backMoxieTaskSubmit",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"mobile\":\"18267924536\",\"timestamp\":1476327176764,\"name\":\"戚尔康\",\"idcard\":\"320830199207180035\",\"task_id\":\"5786c450-7ef4-11e8-ae66-00163e0d2629\",\"user_id\":\"ODR000000227\"}"
+						},
+						"url": {
+							"raw": "localhost:8084/app/moxie/backMoxieTaskSubmit",
+							"host": [
+								"localhost"
+							],
+							"port": "8084",
+							"path": [
+								"app",
+								"moxie",
+								"backMoxieTaskSubmit"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "魔蝎回调backMoxieTask",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"mobile\":\"13813948485\",\"timestamp\":1476327176764,\"name\":\"戚尔康\",\"idcard\":\"320830199207180035\",\"task_id\":\"6f91bbd0-76da-11e8-b29a-00163e13fa10\",\"user_id\":\"13813948485\"}"
+						},
+						"url": {
+							"raw": "localhost:8084/app/moxie/backMoxieTaskSubmit",
+							"host": [
+								"localhost"
+							],
+							"port": "8084",
+							"path": [
+								"app",
+								"moxie",
+								"backMoxieTaskSubmit"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
